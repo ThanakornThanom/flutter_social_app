@@ -10,18 +10,6 @@ class FeedVM extends ChangeNotifier {
     return _amityGlobalFeedPosts;
   }
 
-  Future<void> login(String userID) async {
-    log("login with $userID");
-    await AmityCoreClient.login(userID)
-        .displayName(userID)
-        .submit()
-        .then((value) {
-      log("success");
-    }).catchError((error, stackTrace) {
-      throw error.toString();
-    });
-  }
-
   void initAmityGlobalfeed() async {
     log("initAmityGlobalfeed");
     //inititate the PagingController

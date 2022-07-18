@@ -7,6 +7,7 @@ import 'package:verbose_share_world/auth/login_navigator.dart';
 import 'package:verbose_share_world/components/custom_button.dart';
 import 'package:verbose_share_world/components/entry_field.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
+import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 
 class LoginUi extends StatefulWidget {
@@ -71,7 +72,7 @@ class _LoginUiState extends State<LoginUi> {
                   label: S.of(context).signIn,
                   onTap: () async {
                     log("tap signIn");
-                    await Provider.of<FeedVM>(context, listen: false)
+                    await Provider.of<AmityVM>(context, listen: false)
                         .login(_phoneController.text);
 
                     Navigator.pushNamed(context, LoginRoutes.registration);

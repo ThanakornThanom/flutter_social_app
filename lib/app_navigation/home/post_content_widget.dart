@@ -31,38 +31,35 @@ class TextPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textdata = post.data as TextData;
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Wrap(
-                alignment: WrapAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      // Navigator.of(context)
-                      //     .push(MaterialPageRoute(builder: (context) => CommentScreen()));
-                    },
-                    child: post.children == null
-                        ? Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(textdata.text.toString()),
-                          )
-                        : Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              post.children.toString(),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                  ),
-                ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => CommentScreen(
+                  amityPost: post,
+                )));
+      },
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        textdata.text.toString(),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -81,8 +78,10 @@ class ImagePost extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => CommentScreen()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CommentScreen(
+                      amityPost: post,
+                    )));
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),

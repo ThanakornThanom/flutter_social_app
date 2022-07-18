@@ -1,10 +1,18 @@
+import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
+import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
+import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
 
 class CommentScreen extends StatefulWidget {
+  final AmityPost amityPost;
+
+  const CommentScreen({Key? key, required this.amityPost}) : super(key: key);
+
   @override
   _CommentScreenState createState() => _CommentScreenState();
 }
@@ -18,18 +26,18 @@ class Comments {
 
 class _CommentScreenState extends State<CommentScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    //query comment here
+    Provider.of<PostVM>(context, listen: false)
+        .queryComments(widget.amityPost.postId!);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    List<Comments> _comments = [
-      Comments('assets/images/Layer707.png', 'Emili Williamson'),
-      Comments('assets/images/Layer709.png', 'Harshu Makkar'),
-      Comments('assets/images/Layer948.png', 'Mrs. White'),
-      Comments('assets/images/Layer884.png', 'Marie Black'),
-      Comments('assets/images/Layer915.png', 'Emili Williamson'),
-      Comments('assets/images/Layer946.png', 'Emili Williamson'),
-      Comments('assets/images/Layer948.png', 'Emili Williamson'),
-      Comments('assets/images/Layer949.png', 'Emili Williamson'),
-      Comments('assets/images/Layer950.png', 'Emili Williamson'),
-    ];
+    var postData = widget.amityPost.data as TextData;
     final theme = Theme.of(context);
     final mediaQuery = MediaQuery.of(context);
     final bHeight = mediaQuery.size.height - mediaQuery.padding.top;
@@ -52,6 +60,8 @@ class _CommentScreenState extends State<CommentScreen> {
                       ),
                       IconButton(
                         onPressed: () {
+                          Provider.of<PostVM>(context, listen: false)
+                              .clearComments();
                           Navigator.of(context).pop();
                         },
                         icon: Icon(Icons.chevron_left),
@@ -61,7 +71,7 @@ class _CommentScreenState extends State<CommentScreen> {
                   FadedSlideAnimation(
                     child: Container(
                       height: (bHeight - 60) * 0.6,
-                      color: Color.fromRGBO(27, 77, 42, 1),
+                      color: Colors.white,
                       // decoration: BoxDecoration(),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -94,8 +104,11 @@ class _CommentScreenState extends State<CommentScreen> {
                                       children: [
                                         CircleAvatar(
                                           radius: 25,
-                                          backgroundImage: AssetImage(
-                                              'assets/images/Layer884.png'),
+                                          backgroundImage: AssetImage(widget
+                                                  .amityPost
+                                                  .postedUser!
+                                                  .avatarUrl ??
+                                              ""),
                                         ),
                                         SizedBox(width: 10),
                                         Expanded(
@@ -107,7 +120,8 @@ class _CommentScreenState extends State<CommentScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                S.of(context).emiliWilliamson,
+                                                widget.amityPost.postedUser!
+                                                    .displayName!,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                               Text(
@@ -161,7 +175,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                     padding:
                                         const EdgeInsets.fromLTRB(10, 10, 0, 9),
                                     child: Text(
-                                      'Finding myself !!',
+                                      postData.text ?? "",
                                       textAlign: TextAlign.left,
                                       style: theme.textTheme.headline6!
                                           .copyWith(
@@ -176,47 +190,57 @@ class _CommentScreenState extends State<CommentScreen> {
                           Expanded(
                             // height: constraints.maxHeight * 0.7,
                             // color: Colors.white,
-                            child: ListView.builder(
-                              itemCount: _comments.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  color: Colors.white,
-                                  child: ListTile(
-                                    leading: CircleAvatar(
-                                      backgroundImage:
-                                          AssetImage(_comments[index].image),
-                                    ),
-                                    title: RichText(
-                                      text: TextSpan(
-                                        style: theme.textTheme.bodyText1!
-                                            .copyWith(fontSize: 17),
-                                        children: [
-                                          TextSpan(
-                                            text: _comments[index].name,
-                                            style: theme.textTheme.headline6!
-                                                .copyWith(fontSize: 14),
-                                          ),
-                                          TextSpan(
-                                              text: '   ' +
-                                                  S.of(context).today1000Am,
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  color: Colors.grey)),
-                                        ],
+                            child: Consumer<PostVM>(
+                                builder: (context, vm, widget) {
+                              return ListView.builder(
+                                itemCount: vm.getAmityPosts().length,
+                                itemBuilder: (context, index) {
+                                  var _comments = vm.getAmityPosts();
+                                  var _commentData =
+                                      _comments[index].data as CommentTextData;
+                                  return Container(
+                                    color: Colors.white,
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              _comments[index]
+                                                      .user!
+                                                      .avatarUrl ??
+                                                  "")),
+                                      title: RichText(
+                                        text: TextSpan(
+                                          style: theme.textTheme.bodyText1!
+                                              .copyWith(fontSize: 17),
+                                          children: [
+                                            TextSpan(
+                                              text: _comments[index]
+                                                  .user!
+                                                  .displayName!,
+                                              style: theme.textTheme.headline6!
+                                                  .copyWith(fontSize: 14),
+                                            ),
+                                            TextSpan(
+                                                text: '   ' +
+                                                    S.of(context).today1000Am,
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Colors.grey)),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    subtitle: Text(
-                                      S.of(context).wowLooksStunning,
-                                      style:
-                                          theme.textTheme.subtitle2!.copyWith(
-                                        fontSize: 12,
+                                      subtitle: Text(
+                                        _commentData.text!,
+                                        style:
+                                            theme.textTheme.subtitle2!.copyWith(
+                                          fontSize: 12,
+                                        ),
                                       ),
+                                      trailing: Icon(Icons.favorite_border),
                                     ),
-                                    trailing: Icon(Icons.favorite_border),
-                                  ),
-                                );
-                              },
-                            ),
+                                  );
+                                },
+                              );
+                            }),
                           ),
                         ],
                       ),
