@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 
 class FeedVM extends ChangeNotifier {
   var _amityGlobalFeedPosts = <AmityPost>[];
+  var _amityImagePosts = <AmityPost>[];
   late PagingController<AmityPost> _controller;
   List<AmityPost> getAmityPosts() {
     return _amityGlobalFeedPosts;
+  }
+
+  List<AmityPost> getAmityImagePosts() {
+    return _amityImagePosts;
   }
 
   Future<void> login(String userID) async {
@@ -20,6 +25,10 @@ class FeedVM extends ChangeNotifier {
     }).catchError((error, stackTrace) {
       throw error.toString();
     });
+  }
+
+  void getAmityImagePost(AmityPost post) async {
+    
   }
 
   void initAmityGlobalfeed() async {
@@ -56,4 +65,5 @@ class FeedVM extends ChangeNotifier {
     //   );
     notifyListeners();
   }
+
 }

@@ -80,6 +80,24 @@ class ImagePostWidget extends StatelessWidget {
   final AmityPost post;
   final ThemeData theme;
 
+  Widget postWidgets() {
+    List<Widget> widgets = [];
+    if (post.data != null) {
+     widgets.add(AmityPostWidget(post));
+    }
+    final childrenPosts = post.children;
+    if (childrenPosts != null && childrenPosts.isNotEmpty) {
+      for (var childPost in childrenPosts) {
+        widgets.add(AmityPostWidget(childPost));
+      }
+    }
+    return Column(
+      children: widgets,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -139,7 +157,9 @@ class ImagePostWidget extends StatelessWidget {
                 ],
               ),
             ),
-            AmityPostWidget(post: post),
+            postWidgets(),
+            // AmityPostWidget(post),
+            // AmityPostWidget(post),
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Row(
