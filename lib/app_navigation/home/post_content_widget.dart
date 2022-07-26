@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:optimized_cached_image/optimized_cached_image.dart';
 
 import '../comments.dart';
 
@@ -42,9 +43,7 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
     }
   }
 
-  void getVideoPost() {
-
-  }
+  void getVideoPost() {}
 
   void getImagePost() {
     final imageData = post.data as ImageData;
@@ -73,11 +72,11 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   Widget postWidget() {
     switch (post.type) {
       case AmityDataType.TEXT:
-       print("enter post widget text post");
+        print("enter post widget text post");
         return TextPost(post: post);
       case AmityDataType.IMAGE:
         print("enter post widget image post");
-        return ImagePost(post: post);
+        return ImagePost(post: post,imageURL: imageURL,);
       default:
         return TextPost(post: post);
     }
@@ -105,17 +104,16 @@ class TextPost extends StatelessWidget {
                 alignment: WrapAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      // Navigator.of(context)
-                      //     .push(MaterialPageRoute(builder: (context) => CommentScreen()));
-                    },
-                    child: post.type == AmityDataType.TEXT
-                        ? Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(textdata.text.toString()),
-                          )
-                        : Container()
-                  ),
+                      onTap: () {
+                        // Navigator.of(context)
+                        //     .push(MaterialPageRoute(builder: (context) => CommentScreen()));
+                      },
+                      child: post.type == AmityDataType.TEXT
+                          ? Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text(textdata.text.toString()),
+                            )
+                          : Container()),
                 ],
               ),
             ),
@@ -128,7 +126,9 @@ class TextPost extends StatelessWidget {
 
 class ImagePost extends StatelessWidget {
   final AmityPost post;
-  const ImagePost({Key? key, required this.post}) : super(key: key);
+  final String? imageURL;
+  const ImagePost({Key? key, required this.post, String? this.imageURL})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +145,11 @@ class ImagePost extends StatelessWidget {
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            child: Image.asset("assets/images/Layer707.png"),
+            child: OptimizedCacheImage(
+              imageUrl: imageURL ?? "",
+              placeholder: (context, url) =>  Container(color: Colors.grey,),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ), //Image.asset("assets/images/Layer707.png"),
           ),
         ),
       ],
