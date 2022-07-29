@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/story/add_story.dart';
 import 'package:verbose_share_world/post/upload.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
+import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 
 class CustomHomeFloatingActionButton extends StatefulWidget {
   @override
@@ -27,6 +29,7 @@ class _CustomHomeFloatingActionButtonState
       heroTag: 'home',
       onPressed: () {
         setState(() {
+          Provider.of<AmityVM>(context, listen: false).getUserByID("autest");
           _isSheetOpen = !_isSheetOpen;
         });
         if (_isSheetOpen) {

@@ -12,14 +12,15 @@ class AmityPostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (post.type) {
-      case AmityDataType.TEXT:
-        return TextPost(post: post);
-
-      case AmityDataType.IMAGE:
-        return ImagePost(post: post);
-      default:
-        return TextPost(post: post);
+    if (post.data is TextData) {
+      log("is Text post");
+      return TextPost(post: post);
+    } else if (post.data is ImageData) {
+      log("is image post");
+      return ImagePost(post: post);
+    } else {
+      log("is other type: ${post.data.toString()}");
+      return TextPost(post: post);
     }
   }
 }

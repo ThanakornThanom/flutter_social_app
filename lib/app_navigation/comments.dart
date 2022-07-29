@@ -104,7 +104,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                       children: [
                                         CircleAvatar(
                                           radius: 25,
-                                          backgroundImage: AssetImage(widget
+                                          backgroundImage: NetworkImage(widget
                                                   .amityPost
                                                   .postedUser!
                                                   .avatarUrl ??

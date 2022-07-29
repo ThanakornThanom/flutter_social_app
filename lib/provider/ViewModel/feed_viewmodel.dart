@@ -17,8 +17,9 @@ class FeedVM extends ChangeNotifier {
         .getGlobalFeed()
         .getPagingData()
         .then((value) {
-      _amityGlobalFeedPosts = value.item1;
+      _amityGlobalFeedPosts = value.data;
     });
+
     // _controller = await PagingController(
     //   pageFuture: (token) => AmitySocialClient.newFeedRepository()
     //       .getGlobalFeed()

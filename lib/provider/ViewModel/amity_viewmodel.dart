@@ -9,10 +9,19 @@ class AmityVM extends ChangeNotifier {
     await AmityCoreClient.login(userID)
         .displayName(userID)
         .submit()
-        .then((value) {
+        .then((value) async {
       log("success");
+      await getUserByID("autest");
     }).catchError((error, stackTrace) {
       throw error.toString();
+    });
+  }
+
+  Future<void> getUserByID(String id) async {
+    await AmityCoreClient.newUserRepository().getUser(id).then((user) {
+      log("IsGlobalban: ${user.isGlobalBan}");
+    }).onError((error, stackTrace) {
+      log(error.toString());
     });
   }
 }

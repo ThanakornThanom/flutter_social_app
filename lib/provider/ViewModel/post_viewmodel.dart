@@ -16,11 +16,27 @@ class PostVM extends ChangeNotifier {
 
 // To query for all first level comments without parentId
   Future<void> queryComments(String postId) async {
-    log("queryComments for post:$postId");
-    _commentRepository.getComments().post(postId).getPagingData().then((value) {
-      _amityComments = value.item1;
-      notifyListeners();
-    });
+    _commentController = PagingController(
+      pageFuture: (token) => AmitySocialClient.newCommentRepository()
+          .getComments()
+          .post(postId)
+          .includeDeleted(true) //optional
+          .getPagingData(token: token, limit: 20),
+      pageSize: 20,
+    )..addListener(
+        () {
+          if (_commentController.error == null) {
+            //handle results, we suggest to clear the previous items
+            //and add with the latest _controller.loadedItems
+            _amityComments.clear();
+            _amityComments.addAll(_commentController.loadedItems);
+            //update widgets
+          } else {
+            //error on pagination controller
+            //update widgets
+          }
+        },
+      );
 
     // _commentController = await PagingController(
     //   pageFuture: (token) => _commentRepository
@@ -47,6 +63,35 @@ class PostVM extends ChangeNotifier {
     //       }
     //     },
     //   );
+  }
+
+  Future<void> subscribeComments(String postId) async {
+    _commentController = await PagingController(
+      pageFuture: (token) => _commentRepository
+          .getComments()
+          .post(postId)
+          .includeDeleted(false) //optional
+          .getPagingData(token: token, limit: 20),
+      pageSize: 20,
+    )
+      ..addListener(
+        () {
+          log("query");
+          if (_commentController.error == null) {
+            //handle results, we suggest to clear the previous items
+            //and add with the latest _controller.loadedItems
+            _amityComments.clear();
+            _amityComments.addAll(_commentController.loadedItems);
+            //update widgets
+            notifyListeners();
+          } else {
+            //error on pagination controller
+            //update widgets
+            log("error");
+          }
+        },
+      );
+    print("end f");
   }
 
   void clearComments() {
