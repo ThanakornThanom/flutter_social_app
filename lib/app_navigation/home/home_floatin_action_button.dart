@@ -24,7 +24,7 @@ class _CustomHomeFloatingActionButtonState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return FloatingActionButton(
-      heroTag: 'home',
+      heroTag: null,
       onPressed: () {
         setState(() {
           _isSheetOpen = !_isSheetOpen;
