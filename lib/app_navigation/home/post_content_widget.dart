@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
@@ -8,30 +9,35 @@ import 'package:optimized_cached_image/optimized_cached_image.dart';
 import '../comments.dart';
 
 class AmityPostWidget extends StatefulWidget {
-  final AmityPost post;
-  const AmityPostWidget(this.post);
+  final List<AmityPost> posts;
+  final bool isChildrenPost;
+  const AmityPostWidget(this.posts, this.isChildrenPost);
   @override
   _AmityPostWidgetState createState() => _AmityPostWidgetState();
 }
 
 class _AmityPostWidgetState extends State<AmityPostWidget> {
-  AmityPost post = AmityPost(postId: "");
-  String? imageURL;
+  List<AmityPost> posts = [];
+  bool isChildrenPost = false;
+  List<String> imageURLs = [];
   bool isLoading = true;
   @override
   void initState() {
-    post = widget.post;
+    posts = widget.posts;
+    isChildrenPost = widget.isChildrenPost;
     super.initState();
-    checkPostType();
+    if (!isChildrenPost) {
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      checkPostType();
+    }
   }
 
   void checkPostType() {
-    switch (post.type) {
-      case AmityDataType.TEXT:
-        setState(() {
-          isLoading = false;
-        });
-        break;
+    print("check post type ${posts[0].type}");
+    switch (posts[0].type) {
       case AmityDataType.IMAGE:
         getImagePost();
         break;
@@ -46,39 +52,33 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   void getVideoPost() {}
 
   void getImagePost() {
-    final imageData = post.data as ImageData;
-    final largeImageUrl = imageData.getUrl(AmityImageSize.FULL);
+    print("enter get image post");
+    List<String> imageUrlList = [];
+    for (var post in posts) {
+      final imageData = post.data as ImageData;
+      final largeImageUrl = imageData.getUrl(AmityImageSize.FULL);
+      imageUrlList.add(largeImageUrl);
+    }
     setState(() {
       isLoading = false;
-      imageURL = largeImageUrl;
+      imageURLs = imageUrlList;
     });
-    // final childrenPosts = post.children;
-    // if (childrenPosts?.isNotEmpty == true) {
-    //   if (childrenPosts?[0].type == AmityDataType.IMAGE) {
-    //     final AmityPostData? amityPostData = childrenPosts?[0].data;
-    //     if (amityPostData != null) {
-    //       final imageData = amityPostData as ImageData;
-    //       //to get the full image url without transcoding
-    //       final largeImageUrl = imageData.getUrl(AmityImageSize.FULL);
-    //       setState(() {
-    //         isLoading = false;
-    //         imageURL = largeImageUrl;
-    //       });
-    //     }
-    //   }
-    // }
   }
 
   Widget postWidget() {
-    switch (post.type) {
-      case AmityDataType.TEXT:
-        print("enter post widget text post");
-        return TextPost(post: post);
-      case AmityDataType.IMAGE:
-        print("enter post widget image post");
-        return ImagePost(post: post,imageURL: imageURL,);
-      default:
-        return TextPost(post: post);
+    if (!isChildrenPost) {
+      return TextPost(post: posts[0]);
+    } else {
+      switch (posts[0].type) {
+        case AmityDataType.IMAGE:
+          print("enter post widget image post");
+          return ImagePost(
+            posts: posts,
+            imageURLs: imageURLs,
+          );
+        default:
+          return Container();
+      }
     }
   }
 
@@ -125,34 +125,68 @@ class TextPost extends StatelessWidget {
 }
 
 class ImagePost extends StatelessWidget {
-  final AmityPost post;
-  final String? imageURL;
-  const ImagePost({Key? key, required this.post, String? this.imageURL})
+  final List<AmityPost> posts;
+  final List<String> imageURLs;
+  const ImagePost({Key? key, required this.posts, required this.imageURLs})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Padding(
-        //   padding: EdgeInsets.all(10),
-        //   child: Text(post.data.toString()),
-        // ),
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => CommentScreen()));
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: 250.0,
+        disableCenter: false,
+        enableInfiniteScroll: imageURLs.isNotEmpty,
+        viewportFraction: imageURLs.length > 1 ? 0.9 : 1.0,
+      ),
+      items: imageURLs.map((url) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.symmetric(
+                  horizontal: imageURLs.length > 1 ? 5.0 : 0.0),
+              decoration: BoxDecoration(color: Colors.transparent),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: OptimizedCacheImage(
+                  imageUrl: url,
+                  fit: BoxFit.fill,
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey,
+                  ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              ),
+            );
           },
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: OptimizedCacheImage(
-              imageUrl: imageURL ?? "",
-              placeholder: (context, url) =>  Container(color: Colors.grey,),
-              errorWidget: (context, url, error) => Icon(Icons.error),
-            ), //Image.asset("assets/images/Layer707.png"),
-          ),
-        ),
-      ],
+        );
+      }).toList(),
     );
+    // Column(
+    //   children: [
+    //     // Padding(
+    //     //   padding: EdgeInsets.all(10),
+    //     //   child: Text(post.data.toString()),
+    //     // ),
+    //     // GestureDetector(
+    //     //   onTap: () {
+    //     //     Navigator.of(context)
+    //     //         .push(MaterialPageRoute(builder: (context) => CommentScreen()));
+    //     //   },
+    //     //   child: ClipRRect(
+    //     //     borderRadius: BorderRadius.circular(15),
+    //     //     child: Container()
+    //     //     // OptimizedCacheImage(
+    //     //     //   imageUrl: imageURL ?? "",
+    //     //     //   placeholder: (context, url) => Container(
+    //     //     //     color: Colors.grey,
+    //     //     //   ),
+    //     //     //   errorWidget: (context, url, error) => Icon(Icons.error),
+    //     //     // ), //Image.asset("assets/images/Layer707.png"),
+    //     //   ),
+    //     // ),
+    //   ],
+    // );
   }
 }

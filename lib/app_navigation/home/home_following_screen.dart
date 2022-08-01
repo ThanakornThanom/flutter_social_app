@@ -83,13 +83,11 @@ class ImagePostWidget extends StatelessWidget {
   Widget postWidgets() {
     List<Widget> widgets = [];
     if (post.data != null) {
-     widgets.add(AmityPostWidget(post));
+     widgets.add(AmityPostWidget([post],false));
     }
     final childrenPosts = post.children;
     if (childrenPosts != null && childrenPosts.isNotEmpty) {
-      for (var childPost in childrenPosts) {
-        widgets.add(AmityPostWidget(childPost));
-      }
+      widgets.add(AmityPostWidget(childrenPosts,true));
     }
     return Column(
       children: widgets,
