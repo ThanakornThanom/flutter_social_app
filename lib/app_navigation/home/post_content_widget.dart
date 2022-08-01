@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
+import 'package:video_player/video_player.dart';
 
 import '../comments.dart';
 
@@ -20,6 +22,7 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   List<AmityPost> posts = [];
   bool isChildrenPost = false;
   List<String> imageURLs = [];
+  String videoUrl = "";
   bool isLoading = true;
   @override
   void initState() {
@@ -36,7 +39,6 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   }
 
   void checkPostType() {
-    print("check post type ${posts[0].type}");
     switch (posts[0].type) {
       case AmityDataType.IMAGE:
         getImagePost();
@@ -49,10 +51,18 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
     }
   }
 
-  void getVideoPost() {}
+  void getVideoPost() {
+    final videoData = posts[0].data as VideoData;
+
+    videoData.getVideo(AmityVideoQuality.HIGH).then((AmityVideo video) {
+      setState(() {
+        isLoading = false;
+        videoUrl = video.fileUrl;
+      });
+    });
+  }
 
   void getImagePost() {
-    print("enter get image post");
     List<String> imageUrlList = [];
     for (var post in posts) {
       final imageData = post.data as ImageData;
@@ -76,6 +86,8 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
             posts: posts,
             imageURLs: imageURLs,
           );
+        case AmityDataType.VIDEO:
+          return VideoPost(post: posts[0], videoURL: videoUrl);
         default:
           return Container();
       }
@@ -163,30 +175,75 @@ class ImagePost extends StatelessWidget {
         );
       }).toList(),
     );
-    // Column(
-    //   children: [
-    //     // Padding(
-    //     //   padding: EdgeInsets.all(10),
-    //     //   child: Text(post.data.toString()),
-    //     // ),
-    //     // GestureDetector(
-    //     //   onTap: () {
-    //     //     Navigator.of(context)
-    //     //         .push(MaterialPageRoute(builder: (context) => CommentScreen()));
-    //     //   },
-    //     //   child: ClipRRect(
-    //     //     borderRadius: BorderRadius.circular(15),
-    //     //     child: Container()
-    //     //     // OptimizedCacheImage(
-    //     //     //   imageUrl: imageURL ?? "",
-    //     //     //   placeholder: (context, url) => Container(
-    //     //     //     color: Colors.grey,
-    //     //     //   ),
-    //     //     //   errorWidget: (context, url, error) => Icon(Icons.error),
-    //     //     // ), //Image.asset("assets/images/Layer707.png"),
-    //     //   ),
-    //     // ),
-    //   ],
-    // );
+  }
+}
+
+class VideoPost extends StatefulWidget {
+  final AmityPost post;
+  final String videoURL;
+  const VideoPost({Key? key, required this.post, required this.videoURL})
+      : super(key: key);
+  @override
+  VideoPostState createState() => VideoPostState();
+}
+
+class VideoPostState extends State<VideoPost> {
+  AmityPost post = AmityPost(postId: "");
+  String videoURL = "";
+  late VideoPlayerController videoPlayerController;
+  ChewieController? chewieController;
+
+  @override
+  void initState() {
+    post = widget.post;
+    videoURL = widget.videoURL;
+    initializePlayer();
+  }
+
+  @override
+  void dispose() {
+    videoPlayerController.dispose();
+    chewieController?.dispose();
+    super.dispose();
+  }
+
+  Future<void> initializePlayer() async {
+    videoPlayerController = VideoPlayerController.network(videoURL);
+    await videoPlayerController.initialize();
+    ChewieController controller = ChewieController(
+      videoPlayerController: videoPlayerController,
+      autoPlay: true,
+      looping: true,
+    );
+    setState(() {
+      chewieController = controller;
+    });
+    print(
+        "check if chewie is initialized ${chewieController != null && chewieController!.videoPlayerController.value.isInitialized}");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 250,
+      color: Colors.black,
+      child: Center(
+          child: 
+          chewieController != null &&
+                  chewieController!.videoPlayerController.value.isInitialized
+              ? Chewie(
+                  controller: chewieController!,
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 20),
+                    Text('Loading',style: TextStyle(fontWeight:FontWeight.w500 )),
+                    // SizedBox(height: 20),
+                  ],
+                ),
+          ),
+    );
   }
 }
