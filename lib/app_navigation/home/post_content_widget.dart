@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:video_player/video_player.dart';
 
@@ -81,7 +82,6 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
     } else {
       switch (posts[0].type) {
         case AmityDataType.IMAGE:
-          print("enter post widget image post");
           return ImagePost(
             posts: posts,
             imageURLs: imageURLs,
@@ -212,24 +212,27 @@ class VideoPostState extends State<VideoPost> {
     await videoPlayerController.initialize();
     ChewieController controller = ChewieController(
       videoPlayerController: videoPlayerController,
-      autoPlay: true,
+      autoPlay: false,
+      deviceOrientationsAfterFullScreen: [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown
+      ],
       looping: true,
     );
     setState(() {
       chewieController = controller;
     });
-    print(
-        "check if chewie is initialized ${chewieController != null && chewieController!.videoPlayerController.value.isInitialized}");
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 250,
-      color: Colors.black,
-      child: Center(
-          child: 
-          chewieController != null &&
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        height: 250,
+        color: Colors.black,
+        child: Center(
+          child: chewieController != null &&
                   chewieController!.videoPlayerController.value.isInitialized
               ? Chewie(
                   controller: chewieController!,
@@ -239,11 +242,13 @@ class VideoPostState extends State<VideoPost> {
                   children: const [
                     CircularProgressIndicator(),
                     SizedBox(height: 20),
-                    Text('Loading',style: TextStyle(fontWeight:FontWeight.w500 )),
+                    Text('Loading',
+                        style: TextStyle(fontWeight: FontWeight.w500)),
                     // SizedBox(height: 20),
                   ],
                 ),
-          ),
+        ),
+      ),
     );
   }
 }
