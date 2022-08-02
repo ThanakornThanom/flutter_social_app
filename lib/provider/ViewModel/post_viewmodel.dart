@@ -4,127 +4,67 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 
 class PostVM extends ChangeNotifier {
-  var _amityComments = <AmityComment>[];
+  late PagingController<AmityComment> _controller;
+  final amityComments = <AmityComment>[];
 
-  List<AmityComment> getAmityPosts() {
-    return _amityComments;
-  }
+  final scrollcontroller = ScrollController();
+  bool loading = false;
 
-  late PagingController<AmityComment> _commentController;
-  CommentRepository _commentRepository =
-      AmitySocialClient.newCommentRepository();
+  AmityComment? _replyToComment;
 
-// To query for all first level comments without parentId
-  Future<void> queryComments(String postId) async {
-    _commentController = PagingController(
+  AmityCommentSortOption _sortOption = AmityCommentSortOption.LAST_CREATED;
+
+  void listenForComments(String postID) {
+    _controller = PagingController(
       pageFuture: (token) => AmitySocialClient.newCommentRepository()
           .getComments()
-          .post(postId)
-          .includeDeleted(true) //optional
+          .post(postID)
+          .sortBy(_sortOption)
           .getPagingData(token: token, limit: 20),
       pageSize: 20,
     )..addListener(
         () {
-          if (_commentController.error == null) {
-            //handle results, we suggest to clear the previous items
-            //and add with the latest _controller.loadedItems
-            _amityComments.clear();
-            _amityComments.addAll(_commentController.loadedItems);
-            //update widgets
-          } else {
-            //error on pagination controller
-            //update widgets
-          }
-        },
-      );
-
-    // _commentController = await PagingController(
-    //   pageFuture: (token) => _commentRepository
-    //       .getComments()
-    //       .post(postId)
-    //       .includeDeleted(false) //optional
-    //       .getPagingData(token: token, limit: 20),
-    //   pageSize: 20,
-    // )
-    //   ..addListener(
-    //     () {
-    //       log("query");
-    //       if (_commentController.error == null) {
-    //         //handle results, we suggest to clear the previous items
-    //         //and add with the latest _controller.loadedItems
-    //         _amityComments.clear();
-    //         _amityComments.addAll(_commentController.loadedItems);
-    //         //update widgets
-    //         notifyListeners();
-    //       } else {
-    //         //error on pagination controller
-    //         //update widgets
-    //         log("error");
-    //       }
-    //     },
-    //   );
-  }
-
-  Future<void> subscribeComments(String postId) async {
-    _commentController = await PagingController(
-      pageFuture: (token) => _commentRepository
-          .getComments()
-          .post(postId)
-          .includeDeleted(false) //optional
-          .getPagingData(token: token, limit: 20),
-      pageSize: 20,
-    )
-      ..addListener(
-        () {
-          log("query");
-          if (_commentController.error == null) {
-            //handle results, we suggest to clear the previous items
-            //and add with the latest _controller.loadedItems
-            _amityComments.clear();
-            _amityComments.addAll(_commentController.loadedItems);
-            //update widgets
+          print("listenForComments...");
+          if (_controller.error == null) {
+            amityComments.clear();
+            amityComments.addAll(_controller.loadedItems);
             notifyListeners();
           } else {
-            //error on pagination controller
-            //update widgets
-            log("error");
+            //Error on pagination controller
+
+            print("error");
           }
         },
       );
-    print("end f");
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _controller.fetchNextPage();
+    });
+
+    scrollcontroller.addListener(loadnextpage);
   }
 
-  void clearComments() {
-    _amityComments = [];
+  void loadnextpage() {
+    if ((scrollcontroller.position.pixels ==
+            scrollcontroller.position.maxScrollExtent) &&
+        _controller.hasMoreItems) {
+      _controller.fetchNextPage();
+    }
   }
 
-  final amityRepliedComments = <AmityComment>[];
-  late PagingController<AmityComment> _repliedCommentController;
+  Future<void> createComment(String postId, String text) async {
+    final _comment = await AmitySocialClient.newCommentRepository()
+        .createComment()
+        .post(postId)
+        .create()
+        .text(text)
+        .send();
+    _controller.addAtIndex(0, _comment);
 
-// To query for replies on a comment, pass the commentId as a parentId
-  void queryRepliedComments(String postId, String commentParentId) {
-    _repliedCommentController = PagingController(
-      pageFuture: (token) => _commentRepository
-          .getComments()
-          .post(postId)
-          .parentId(commentParentId)
-          .includeDeleted(true) //optional
-          .getPagingData(token: token, limit: 20),
-      pageSize: 20,
-    )..addListener(
-        () {
-          if (_repliedCommentController.error == null) {
-            //handle results, we suggest to clear the previous items
-            //and add with the latest _controller.loadedItems
-            _amityComments.clear();
-            _amityComments.addAll(_repliedCommentController.loadedItems);
-            //update widgets
-            notifyListeners();
-          } else {
-            //error on pagination controller
-            //update widgets
-          }
-        },
-      );
+    AmitySocialClient.newPostRepository().getPost("asdasd").then((value) {
+      print("getpost : ${value}");
+    }).onError((error, stackTrace) {
+      print(error);
+    });
   }
 }
