@@ -118,8 +118,8 @@ class TextPost extends StatelessWidget {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        // Navigator.of(context)
-                        //     .push(MaterialPageRoute(builder: (context) => CommentScreen()));
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) => CommentScreen(amityPost: post,)));
                       },
                       child: post.type == AmityDataType.TEXT
                           ? Padding(
@@ -128,12 +128,12 @@ class TextPost extends StatelessWidget {
                             )
                           : Container()),
                 ],
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+              ),)
+            ],
+          ),
+        ],
+      );
+    
   }
 }
 

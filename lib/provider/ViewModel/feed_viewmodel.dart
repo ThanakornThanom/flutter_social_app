@@ -11,26 +11,6 @@ class FeedVM extends ChangeNotifier {
     return _amityGlobalFeedPosts;
   }
 
-  List<AmityPost> getAmityImagePosts() {
-    return _amityImagePosts;
-  }
-
-  Future<void> login(String userID) async {
-    log("login with $userID");
-    await AmityCoreClient.login(userID)
-        .displayName(userID)
-        .submit()
-        .then((value) {
-      log("success");
-    }).catchError((error, stackTrace) {
-      throw error.toString();
-    });
-  }
-
-  void getAmityImagePost(AmityPost post) async {
-    
-  }
-
   void initAmityGlobalfeed() async {
     log("initAmityGlobalfeed");
     //inititate the PagingController
@@ -38,8 +18,9 @@ class FeedVM extends ChangeNotifier {
         .getGlobalFeed()
         .getPagingData()
         .then((value) {
-      _amityGlobalFeedPosts = value.item1;
+      _amityGlobalFeedPosts = value.data;
     });
+
     // _controller = await PagingController(
     //   pageFuture: (token) => AmitySocialClient.newFeedRepository()
     //       .getGlobalFeed()

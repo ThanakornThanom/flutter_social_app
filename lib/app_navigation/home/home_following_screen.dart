@@ -119,7 +119,7 @@ class ImagePostWidget extends StatelessWidget {
                               (NetworkImage(post.postedUser?.avatarUrl ?? "")))
                       : CircleAvatar(
                           backgroundImage:
-                              AssetImage("assets/images/Layer707.png")),
+                              AssetImage("assets/images/user_placeholder.png")),
                 ),
               ),
               title: Text(

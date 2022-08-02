@@ -10,7 +10,9 @@ import 'package:verbose_share_world/app_theme/app_theme.dart';
 import 'package:verbose_share_world/auth/login_navigator.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/locale/language_cubit.dart';
+import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
+import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
 import 'package:verbose_share_world/routes/routes.dart';
 
 Future<void> main() async {
@@ -33,7 +35,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<AmityVM>(create: ((context) => AmityVM())),
         ChangeNotifierProvider<FeedVM>(create: ((context) => FeedVM())),
+        ChangeNotifierProvider<PostVM>(create: ((context) => PostVM())),
       ],
       child: BlocProvider<LanguageCubit>(
         create: (context) => LanguageCubit()..getCurrentLanguage(),

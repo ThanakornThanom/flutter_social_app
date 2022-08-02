@@ -7,7 +7,7 @@ packages:
       name: amity_sdk
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0"
+    version: "0.4.0"
   animation_wrappers:
     dependency: "direct main"
     description:
