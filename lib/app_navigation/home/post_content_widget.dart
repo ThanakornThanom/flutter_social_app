@@ -10,6 +10,7 @@ import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:video_player/video_player.dart';
 
 import '../comments.dart';
+import 'image_viewer.dart';
 
 class AmityPostWidget extends StatefulWidget {
   final List<AmityPost> posts;
@@ -67,7 +68,7 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
     List<String> imageUrlList = [];
     for (var post in posts) {
       final imageData = post.data as ImageData;
-      final largeImageUrl = imageData.getUrl(AmityImageSize.FULL);
+      final largeImageUrl = imageData.getUrl(AmityImageSize.LARGE);
       imageUrlList.add(largeImageUrl);
     }
     setState(() {
@@ -148,32 +149,57 @@ class ImagePost extends StatelessWidget {
       options: CarouselOptions(
         height: 250.0,
         disableCenter: false,
-        enableInfiniteScroll: imageURLs.isNotEmpty,
+        enableInfiniteScroll: imageURLs.length > 1,
         viewportFraction: imageURLs.length > 1 ? 0.9 : 1.0,
       ),
       items: imageURLs.map((url) {
         return Builder(
           builder: (BuildContext context) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.symmetric(
-                  horizontal: imageURLs.length > 1 ? 5.0 : 0.0),
-              decoration: BoxDecoration(color: Colors.transparent),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: OptimizedCacheImage(
-                  imageUrl: url,
-                  fit: BoxFit.fill,
-                  placeholder: (context, url) => Container(
-                    color: Colors.grey,
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(_goToImageViewer(url));
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.symmetric(
+                    horizontal: imageURLs.length > 1 ? 5.0 : 0.0),
+                decoration: BoxDecoration(color: Colors.transparent),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: OptimizedCacheImage(
+                    imageUrl: url,
+                    fit: BoxFit.fill,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey,
+                    ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),
             );
           },
         );
       }).toList(),
+    );
+  }
+
+  Route _goToImageViewer(String url) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => ImageViewer(
+          imageURLs: imageURLs, initialIndex: imageURLs.indexOf(url)),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 }
