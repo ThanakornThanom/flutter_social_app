@@ -48,10 +48,18 @@ class _CommentScreenState extends State<CommentScreen> {
     }
   }
 
+  bool isMediaPosts() {
+    final childrenPosts = post.children;
+    if (childrenPosts != null && childrenPosts.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
   Widget mediaPostWidgets() {
     final childrenPosts = post.children;
     if (childrenPosts != null && childrenPosts.isNotEmpty) {
-      return AmityPostWidget(childrenPosts, true,false);
+      return AmityPostWidget(childrenPosts, true, false);
     }
     return Container();
   }
@@ -80,15 +88,17 @@ class _CommentScreenState extends State<CommentScreen> {
                 ),
                 Stack(
                   children: [
-                    Container(
-                        width: double.infinity,
-                        height: (bHeight - 60) * 0.4,
-                        child: mediaPostWidgets()
-                        // Image.asset(
-                        //   'assets/images/Layer709.png',
-                        //   fit: BoxFit.fitWidth,
-                        // ),
-                        ),
+                    isMediaPosts()
+                        ? Container(
+                            width: double.infinity,
+                            height: (bHeight - 120) * 0.4,
+                            child: mediaPostWidgets()
+                            // Image.asset(
+                            //   'assets/images/Layer709.png',
+                            //   fit: BoxFit.fitWidth,
+                            // ),
+                            )
+                        : Container(),
                   ],
                 ),
                 Expanded(
