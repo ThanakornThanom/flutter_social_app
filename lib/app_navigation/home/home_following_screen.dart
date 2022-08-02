@@ -54,8 +54,13 @@ class _HomeFollowingTabScreenState extends State<HomeFollowingTabScreen> {
                   physics: BouncingScrollPhysics(),
                   itemCount: vm.getAmityPosts().length,
                   itemBuilder: (context, index) {
-                    return ImagePostWidget(
-                        post: vm.getAmityPosts()[index], theme: theme);
+                    return StreamBuilder<AmityPost>(
+                        stream: vm.getAmityPosts()[index].listen,
+                        initialData: vm.getAmityPosts()[index],
+                        builder: (context, snapshot) {
+                          return ImagePostWidget(
+                              post: snapshot.data!, theme: theme);
+                        });
                   },
                 ),
                 beginOffset: Offset(0, 0.3),
@@ -83,11 +88,11 @@ class ImagePostWidget extends StatelessWidget {
   Widget postWidgets() {
     List<Widget> widgets = [];
     if (post.data != null) {
-     widgets.add(AmityPostWidget([post],false));
+      widgets.add(AmityPostWidget([post], false));
     }
     final childrenPosts = post.children;
     if (childrenPosts != null && childrenPosts.isNotEmpty) {
-      widgets.add(AmityPostWidget(childrenPosts,true));
+      widgets.add(AmityPostWidget(childrenPosts, true));
     }
     return Column(
       children: widgets,
@@ -163,40 +168,40 @@ class ImagePostWidget extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.remove_red_eye,
-                        size: 18,
-                        color: ApplicationColors.grey,
-                      ),
-                      SizedBox(width: 8.5),
-                      Text(
-                        S.of(context).onepointtwok,
-                        style: TextStyle(
-                            color: ApplicationColors.grey,
-                            fontSize: 12,
-                            letterSpacing: 1),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      FaIcon(
-                        Icons.repeat_rounded,
-                        color: ApplicationColors.grey,
-                        size: 18,
-                      ),
-                      SizedBox(width: 8.5),
-                      Text(
-                        '287',
-                        style: TextStyle(
-                            color: ApplicationColors.grey,
-                            fontSize: 12,
-                            letterSpacing: 0.5),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Icon(
+                  //       Icons.remove_red_eye,
+                  //       size: 18,
+                  //       color: ApplicationColors.grey,
+                  //     ),
+                  //     SizedBox(width: 8.5),
+                  //     Text(
+                  //       S.of(context).onepointtwok,
+                  //       style: TextStyle(
+                  //           color: ApplicationColors.grey,
+                  //           fontSize: 12,
+                  //           letterSpacing: 1),
+                  //     ),
+                  //   ],
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     FaIcon(
+                  //       Icons.repeat_rounded,
+                  //       color: ApplicationColors.grey,
+                  //       size: 18,
+                  //     ),
+                  //     SizedBox(width: 8.5),
+                  //     Text(
+                  //       '287',
+                  //       style: TextStyle(
+                  //           color: ApplicationColors.grey,
+                  //           fontSize: 12,
+                  //           letterSpacing: 0.5),
+                  //     ),
+                  //   ],
+                  // ),
                   Row(
                     children: [
                       Icon(
@@ -206,7 +211,7 @@ class ImagePostWidget extends StatelessWidget {
                       ),
                       SizedBox(width: 8.5),
                       Text(
-                        '287',
+                        post.commentCount.toString(),
                         style: TextStyle(
                             color: ApplicationColors.grey,
                             fontSize: 12,
@@ -216,14 +221,30 @@ class ImagePostWidget extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Icon(
-                        Icons.favorite_border,
-                        color: ApplicationColors.grey,
-                        size: 18,
-                      ),
+                      post.myReactions!.isNotEmpty
+                          ? GestureDetector(
+                              onTap: () {
+                                post.react().removeReaction('like');
+                              },
+                              child: Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                                size: 18,
+                              ),
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                post.react().addReaction('like');
+                              },
+                              child: Icon(
+                                Icons.favorite_border,
+                                color: ApplicationColors.grey,
+                                size: 18,
+                              ),
+                            ),
                       SizedBox(width: 8.5),
                       Text(
-                        S.of(context).eightpointtwok,
+                        post.reactionCount.toString(),
                         style: TextStyle(
                             color: ApplicationColors.grey,
                             fontSize: 12,
