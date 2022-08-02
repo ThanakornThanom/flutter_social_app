@@ -83,11 +83,11 @@ class ImagePostWidget extends StatelessWidget {
   Widget postWidgets() {
     List<Widget> widgets = [];
     if (post.data != null) {
-     widgets.add(AmityPostWidget([post],false,false));
+      widgets.add(AmityPostWidget([post], false, false));
     }
     final childrenPosts = post.children;
     if (childrenPosts != null && childrenPosts.isNotEmpty) {
-      widgets.add(AmityPostWidget(childrenPosts,true,true));
+      widgets.add(AmityPostWidget(childrenPosts, true, true));
     }
     return Column(
       children: widgets,
@@ -98,141 +98,155 @@ class ImagePostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            ListTile(
-              contentPadding: EdgeInsets.all(0),
-              leading: FadeAnimation(
-                child: GestureDetector(
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => CommentScreen(
+                  amityPost: post,
+                )));
+      },
+      child: Card(
+        elevation: 0,
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              ListTile(
+                contentPadding: EdgeInsets.all(0),
+                leading: FadeAnimation(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => UserProfileScreen()));
+                    },
+                    child: (post.postedUser?.avatarUrl != null)
+                        ? CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            backgroundImage: (NetworkImage(
+                                post.postedUser?.avatarUrl ?? "")))
+                        : CircleAvatar(
+                            backgroundImage: AssetImage(
+                                "assets/images/user_placeholder.png")),
+                  ),
+                ),
+                title: GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => UserProfileScreen()));
                   },
-                  child: (post.postedUser?.avatarUrl != null)
-                      ? CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          backgroundImage:
-                              (NetworkImage(post.postedUser?.avatarUrl ?? "")))
-                      : CircleAvatar(
-                          backgroundImage:
-                              AssetImage("assets/images/user_placeholder.png")),
+                  child: Text(
+                    post.postedUser?.displayName ?? "Display name",
+                    style: theme.textTheme.bodyText1!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                subtitle: Text(
+                  " ${post.createdAt?.toLocal().day}-${post.createdAt?.toLocal().month}-${post.createdAt?.toLocal().year}",
+                  style: theme.textTheme.bodyText1!.copyWith(
+                      color: ApplicationColors.textGrey, fontSize: 11),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Image.asset(
+                      'assets/Icons/ic_share.png',
+                      scale: 3,
+                    ),
+                    SizedBox(width: 20),
+                    Icon(
+                      Icons.bookmark_border,
+                      size: 18,
+                      color: ApplicationColors.grey,
+                    ),
+                    SizedBox(width: 20),
+                    Icon(
+                      Icons.more_vert,
+                      size: 18,
+                      color: ApplicationColors.grey,
+                    ),
+                  ],
                 ),
               ),
-              title: Text(
-                post.postedUser?.displayName ?? "Display name",
-                style: theme.textTheme.bodyText1!
-                    .copyWith(fontWeight: FontWeight.bold),
+              postWidgets(),
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.remove_red_eye,
+                          size: 18,
+                          color: ApplicationColors.grey,
+                        ),
+                        SizedBox(width: 8.5),
+                        Text(
+                          S.of(context).onepointtwok,
+                          style: TextStyle(
+                              color: ApplicationColors.grey,
+                              fontSize: 12,
+                              letterSpacing: 1),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        FaIcon(
+                          Icons.repeat_rounded,
+                          color: ApplicationColors.grey,
+                          size: 18,
+                        ),
+                        SizedBox(width: 8.5),
+                        Text(
+                          '287',
+                          style: TextStyle(
+                              color: ApplicationColors.grey,
+                              fontSize: 12,
+                              letterSpacing: 0.5),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          color: ApplicationColors.grey,
+                          size: 18,
+                        ),
+                        SizedBox(width: 8.5),
+                        Text(
+                          '287',
+                          style: TextStyle(
+                              color: ApplicationColors.grey,
+                              fontSize: 12,
+                              letterSpacing: 0.5),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.favorite_border,
+                          color: ApplicationColors.grey,
+                          size: 18,
+                        ),
+                        SizedBox(width: 8.5),
+                        Text(
+                          S.of(context).eightpointtwok,
+                          style: TextStyle(
+                              color: ApplicationColors.grey,
+                              fontSize: 12,
+                              letterSpacing: 1),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              subtitle: Text(
-                " ${post.createdAt?.toLocal().day}-${post.createdAt?.toLocal().month}-${post.createdAt?.toLocal().year}",
-                style: theme.textTheme.bodyText1!
-                    .copyWith(color: ApplicationColors.textGrey, fontSize: 11),
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Image.asset(
-                    'assets/Icons/ic_share.png',
-                    scale: 3,
-                  ),
-                  SizedBox(width: 20),
-                  Icon(
-                    Icons.bookmark_border,
-                    size: 18,
-                    color: ApplicationColors.grey,
-                  ),
-                  SizedBox(width: 20),
-                  Icon(
-                    Icons.more_vert,
-                    size: 18,
-                    color: ApplicationColors.grey,
-                  ),
-                ],
-              ),
-            ),
-            postWidgets(),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.remove_red_eye,
-                        size: 18,
-                        color: ApplicationColors.grey,
-                      ),
-                      SizedBox(width: 8.5),
-                      Text(
-                        S.of(context).onepointtwok,
-                        style: TextStyle(
-                            color: ApplicationColors.grey,
-                            fontSize: 12,
-                            letterSpacing: 1),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      FaIcon(
-                        Icons.repeat_rounded,
-                        color: ApplicationColors.grey,
-                        size: 18,
-                      ),
-                      SizedBox(width: 8.5),
-                      Text(
-                        '287',
-                        style: TextStyle(
-                            color: ApplicationColors.grey,
-                            fontSize: 12,
-                            letterSpacing: 0.5),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.chat_bubble_outline,
-                        color: ApplicationColors.grey,
-                        size: 18,
-                      ),
-                      SizedBox(width: 8.5),
-                      Text(
-                        '287',
-                        style: TextStyle(
-                            color: ApplicationColors.grey,
-                            fontSize: 12,
-                            letterSpacing: 0.5),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.favorite_border,
-                        color: ApplicationColors.grey,
-                        size: 18,
-                      ),
-                      SizedBox(width: 8.5),
-                      Text(
-                        S.of(context).eightpointtwok,
-                        style: TextStyle(
-                            color: ApplicationColors.grey,
-                            fontSize: 12,
-                            letterSpacing: 1),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
