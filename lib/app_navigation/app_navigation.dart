@@ -1,3 +1,4 @@
+import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,6 +12,7 @@ import 'package:verbose_share_world/app_navigation/story/story_page.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 
 import '../provider/ViewModel/feed_viewmodel.dart';
+import 'home/community_feed.dart';
 
 class AppNavigation extends StatefulWidget {
   @override
@@ -23,6 +25,7 @@ class _AppNavigationState extends State<AppNavigation> {
 
   final List<Widget> _children = [
     HomePage(),
+    CommunityScreen(community: AmityCommunity(),),
     StoryPage(),
     NotificationPage(),
     ChatsPage(),
