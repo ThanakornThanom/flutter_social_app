@@ -83,11 +83,11 @@ class ImagePostWidget extends StatelessWidget {
   Widget postWidgets() {
     List<Widget> widgets = [];
     if (post.data != null) {
-     widgets.add(AmityPostWidget([post],false));
+     widgets.add(AmityPostWidget([post],false,false));
     }
     final childrenPosts = post.children;
     if (childrenPosts != null && childrenPosts.isNotEmpty) {
-      widgets.add(AmityPostWidget(childrenPosts,true));
+      widgets.add(AmityPostWidget(childrenPosts,true,true));
     }
     return Column(
       children: widgets,
@@ -156,8 +156,6 @@ class ImagePostWidget extends StatelessWidget {
               ),
             ),
             postWidgets(),
-            // AmityPostWidget(post),
-            // AmityPostWidget(post),
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Row(

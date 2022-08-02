@@ -3,6 +3,7 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:verbose_share_world/app_navigation/home/post_content_widget.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
@@ -27,13 +28,14 @@ class Comments {
 class _CommentScreenState extends State<CommentScreen> {
   ScrollController _controller = ScrollController();
   final _commentTextEditController = TextEditingController();
+  AmityPost post = AmityPost(postId: "");
   @override
   void initState() {
     // TODO: implement initState
 
     //query comment here
-    Provider.of<PostVM>(context, listen: false)
-        .listenForComments(widget.amityPost.postId!);
+    post = widget.amityPost;
+    Provider.of<PostVM>(context, listen: false).listenForComments(post.postId!);
 
     super.initState();
   }
@@ -46,9 +48,17 @@ class _CommentScreenState extends State<CommentScreen> {
     }
   }
 
+  Widget mediaPostWidgets() {
+    final childrenPosts = post.children;
+    if (childrenPosts != null && childrenPosts.isNotEmpty) {
+      return AmityPostWidget(childrenPosts, true,false);
+    }
+    return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var postData = widget.amityPost.data as TextData;
+    var postData = post.data as TextData;
     final theme = Theme.of(context);
     final mediaQuery = MediaQuery.of(context);
     final bHeight = mediaQuery.size.height - mediaQuery.padding.top;
@@ -58,22 +68,27 @@ class _CommentScreenState extends State<CommentScreen> {
           child: Container(
             child: Column(
               children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon:
+                        Icon(Icons.chevron_left, color: Colors.black, size: 35),
+                  ),
+                ),
                 Stack(
                   children: [
                     Container(
-                      width: double.infinity,
-                      height: (bHeight - 60) * 0.4,
-                      child: Image.asset(
-                        'assets/images/Layer709.png',
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: Icon(Icons.chevron_left),
-                    ),
+                        width: double.infinity,
+                        height: (bHeight - 60) * 0.4,
+                        child: mediaPostWidgets()
+                        // Image.asset(
+                        //   'assets/images/Layer709.png',
+                        //   fit: BoxFit.fitWidth,
+                        // ),
+                        ),
                   ],
                 ),
                 Expanded(
@@ -117,10 +132,8 @@ class _CommentScreenState extends State<CommentScreen> {
                                             children: [
                                               CircleAvatar(
                                                 radius: 25,
-                                                backgroundImage: getAvatarImage(widget
-                                                    .amityPost
-                                                    .postedUser!
-                                                    .avatarUrl),
+                                                backgroundImage: getAvatarImage(
+                                                    post.postedUser!.avatarUrl),
                                                 backgroundColor:
                                                     Colors.grey[400],
                                               ),
@@ -290,10 +303,8 @@ class _CommentScreenState extends State<CommentScreen> {
                         height: 60,
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: getAvatarImage(
-                                  widget.amityPost.postedUser!.avatarUrl)
-                                
-                          ),
+                              backgroundImage:
+                                  getAvatarImage(post.postedUser!.avatarUrl)),
                           title: TextField(
                             controller: _commentTextEditController,
                             decoration: InputDecoration(
@@ -306,7 +317,7 @@ class _CommentScreenState extends State<CommentScreen> {
                               onTap: () async {
                                 await Provider.of<PostVM>(context,
                                         listen: false)
-                                    .createComment(widget.amityPost.postId!,
+                                    .createComment(post.postId!,
                                         _commentTextEditController.text);
 
                                 _commentTextEditController.clear();

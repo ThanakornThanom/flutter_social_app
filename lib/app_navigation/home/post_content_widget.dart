@@ -15,7 +15,9 @@ import 'image_viewer.dart';
 class AmityPostWidget extends StatefulWidget {
   final List<AmityPost> posts;
   final bool isChildrenPost;
-  const AmityPostWidget(this.posts, this.isChildrenPost);
+  final bool isCornerRadiusEnabled;
+  const AmityPostWidget(
+      this.posts, this.isChildrenPost, this.isCornerRadiusEnabled);
   @override
   _AmityPostWidgetState createState() => _AmityPostWidgetState();
 }
@@ -23,6 +25,7 @@ class AmityPostWidget extends StatefulWidget {
 class _AmityPostWidgetState extends State<AmityPostWidget> {
   List<AmityPost> posts = [];
   bool isChildrenPost = false;
+  bool isCornerRadiusEnabled = false;
   List<String> imageURLs = [];
   String videoUrl = "";
   bool isLoading = true;
@@ -30,6 +33,7 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   void initState() {
     posts = widget.posts;
     isChildrenPost = widget.isChildrenPost;
+    isCornerRadiusEnabled = widget.isCornerRadiusEnabled;
     super.initState();
     if (!isChildrenPost) {
       setState(() {
@@ -84,11 +88,15 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
       switch (posts[0].type) {
         case AmityDataType.IMAGE:
           return ImagePost(
-            posts: posts,
-            imageURLs: imageURLs,
-          );
+              posts: posts,
+              imageURLs: imageURLs,
+              isCornerRadiusEnabled:
+                  isCornerRadiusEnabled || imageURLs.length > 1 ? true : false);
         case AmityDataType.VIDEO:
-          return VideoPost(post: posts[0], videoURL: videoUrl);
+          return VideoPost(
+              post: posts[0],
+              videoURL: videoUrl,
+              isCornerRadiusEnabled: isCornerRadiusEnabled);
         default:
           return Container();
       }
@@ -118,8 +126,10 @@ class TextPost extends StatelessWidget {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) => CommentScreen(amityPost: post,)));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => CommentScreen(
+                                  amityPost: post,
+                                )));
                       },
                       child: post.type == AmityDataType.TEXT
                           ? Padding(
@@ -128,19 +138,24 @@ class TextPost extends StatelessWidget {
                             )
                           : Container()),
                 ],
-              ),)
-            ],
-          ),
-        ],
-      );
-    
+              ),
+            )
+          ],
+        ),
+      ],
+    );
   }
 }
 
 class ImagePost extends StatelessWidget {
   final List<AmityPost> posts;
   final List<String> imageURLs;
-  const ImagePost({Key? key, required this.posts, required this.imageURLs})
+  final bool isCornerRadiusEnabled;
+  const ImagePost(
+      {Key? key,
+      required this.posts,
+      required this.imageURLs,
+      required this.isCornerRadiusEnabled})
       : super(key: key);
 
   @override
@@ -165,7 +180,7 @@ class ImagePost extends StatelessWidget {
                     horizontal: imageURLs.length > 1 ? 5.0 : 0.0),
                 decoration: BoxDecoration(color: Colors.transparent),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(isCornerRadiusEnabled ? 10 : 0),
                   child: OptimizedCacheImage(
                     imageUrl: url,
                     fit: BoxFit.fill,
@@ -207,7 +222,12 @@ class ImagePost extends StatelessWidget {
 class VideoPost extends StatefulWidget {
   final AmityPost post;
   final String videoURL;
-  const VideoPost({Key? key, required this.post, required this.videoURL})
+  final bool isCornerRadiusEnabled;
+  const VideoPost(
+      {Key? key,
+      required this.post,
+      required this.videoURL,
+      required this.isCornerRadiusEnabled})
       : super(key: key);
   @override
   VideoPostState createState() => VideoPostState();
@@ -216,6 +236,7 @@ class VideoPost extends StatefulWidget {
 class VideoPostState extends State<VideoPost> {
   AmityPost post = AmityPost(postId: "");
   String videoURL = "";
+  bool isCornerRadiusEnabled = true;
   late VideoPlayerController videoPlayerController;
   ChewieController? chewieController;
 
@@ -223,6 +244,7 @@ class VideoPostState extends State<VideoPost> {
   void initState() {
     post = widget.post;
     videoURL = widget.videoURL;
+    isCornerRadiusEnabled = widget.isCornerRadiusEnabled;
     initializePlayer();
   }
 
@@ -253,7 +275,7 @@ class VideoPostState extends State<VideoPost> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(isCornerRadiusEnabled ? 10 : 0),
       child: Container(
         height: 250,
         color: Colors.black,
