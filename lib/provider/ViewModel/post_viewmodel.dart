@@ -60,11 +60,29 @@ class PostVM extends ChangeNotifier {
         .text(text)
         .send();
     _controller.addAtIndex(0, _comment);
+  }
 
-    AmitySocialClient.newPostRepository().getPost("asdasd").then((value) {
-      print("getpost : ${value}");
-    }).onError((error, stackTrace) {
-      print(error);
-    });
+  void addCommentReaction(AmityComment comment) {
+    comment.react().addReaction('like').then((value) => {
+          //success
+        });
+  }
+
+  void addPostReaction(AmityPost post) {
+    post.react().addReaction('like').then((value) => {
+          //success
+        });
+  }
+
+  void removePostReaction(AmityPost post) {
+    post.react().removeReaction('like').then((value) => {
+          //success
+        });
+  }
+
+  void removeCommentReaction(AmityComment comment) {
+    comment.react().removeReaction('like').then((value) => {
+          //success
+        });
   }
 }
