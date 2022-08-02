@@ -38,6 +38,14 @@ class _CommentScreenState extends State<CommentScreen> {
     super.initState();
   }
 
+  getAvatarImage(String? url) {
+    if (url != null) {
+      return NetworkImage(url);
+    } else {
+      return AssetImage("assets/images/user_placeholder.png");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var postData = widget.amityPost.data as TextData;
@@ -109,10 +117,12 @@ class _CommentScreenState extends State<CommentScreen> {
                                             children: [
                                               CircleAvatar(
                                                 radius: 25,
-                                                backgroundImage: NetworkImage(
-                                                    widget.amityPost.postedUser!
-                                                            .avatarUrl ??
-                                                        ""),
+                                                backgroundImage: getAvatarImage(widget
+                                                    .amityPost
+                                                    .postedUser!
+                                                    .avatarUrl),
+                                                backgroundColor:
+                                                    Colors.grey[400],
                                               ),
                                               SizedBox(width: 10),
                                               Expanded(
@@ -213,11 +223,12 @@ class _CommentScreenState extends State<CommentScreen> {
                                           color: Colors.white,
                                           child: ListTile(
                                             leading: CircleAvatar(
-                                                backgroundImage: NetworkImage(
+                                                backgroundImage: getAvatarImage(
                                                     _comments[index]
-                                                            .user!
-                                                            .avatarUrl ??
-                                                        "")),
+                                                        .user!
+                                                        .avatarUrl),
+                                                backgroundColor:
+                                                    Colors.grey[300]),
                                             title: RichText(
                                               text: TextSpan(
                                                 style: theme

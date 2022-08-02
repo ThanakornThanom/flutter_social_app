@@ -11,7 +11,7 @@ class AmityVM extends ChangeNotifier {
         .submit()
         .then((value) async {
       log("success");
-      await getUserByID("autest");
+      await getUserByID(userID);
     }).catchError((error, stackTrace) {
       throw error.toString();
     });

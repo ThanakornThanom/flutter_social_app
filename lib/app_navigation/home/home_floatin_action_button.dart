@@ -29,7 +29,6 @@ class _CustomHomeFloatingActionButtonState
       heroTag: null,
       onPressed: () {
         setState(() {
-          Provider.of<AmityVM>(context, listen: false).getUserByID("autest");
           _isSheetOpen = !_isSheetOpen;
         });
         if (_isSheetOpen) {
