@@ -101,7 +101,7 @@ class _CommunityListState extends State<CommunityList> {
         AppBar().preferredSize.height;
 
     final theme = Theme.of(context);
-    return Consumer<FeedVM>(builder: (context, vm, _) {
+    return Consumer<CommunityVM>(builder: (context, vm, _) {
       return Column(
         children: [
           Expanded(
@@ -144,15 +144,13 @@ class CommunityWidget extends StatelessWidget {
   final AmityCommunity community;
   final ThemeData theme;
 
- 
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => CommunityScreen(
-                 community: community,
+                  community: community,
                 )));
       },
       child: Card(
@@ -162,37 +160,48 @@ class CommunityWidget extends StatelessWidget {
           child: Column(
             children: [
               ListTile(
-                contentPadding: EdgeInsets.all(0),
-                leading: FadeAnimation(
-                  child: (community.avatarImage?.fileUrl != null)
+                  contentPadding: EdgeInsets.all(0),
+                  leading: FadeAnimation(
+                    child: (community.avatarImage?.fileUrl != null)
                         ? CircleAvatar(
                             backgroundColor: Colors.transparent,
-                            backgroundImage: (NetworkImage(
-                                community.avatarImage!.fileUrl)))
+                            backgroundImage:
+                                (NetworkImage(community.avatarImage!.fileUrl)))
                         : CircleAvatar(
                             backgroundImage: AssetImage(
                                 "assets/images/user_placeholder.png")),
-                  
-                ),
-                title:  Text(
+                  ),
+                  title: Text(
                     community.displayName ?? "Community",
                     style: theme.textTheme.bodyText1!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
-                
-                subtitle: Text(
-                  " ${community.membersCount} members",
-                  style: theme.textTheme.bodyText1!.copyWith(
-                      color: ApplicationColors.textGrey, fontSize: 11),
-                ),
-                trailing: ElevatedButton(
+                  subtitle: Text(
+                    " ${community.membersCount} members",
+                    style: theme.textTheme.bodyText1!.copyWith(
+                        color: ApplicationColors.textGrey, fontSize: 11),
+                  ),
+                  trailing: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
                             theme.primaryColor)),
-                    onPressed: () {},
-                    child: Text(community.isJoined != null ? (community.isJoined! ? "Leave" : "Join") : "Join"),
-                  )
-              ),
+                    onPressed: () {
+                      if(community.isJoined != null){
+                        if(community.isJoined!){
+                            Provider.of<CommunityVM>(context, listen: false)
+                              .leaveCommunity(community.communityId ?? "");
+                        }
+                        else{
+                            Provider.of<CommunityVM>(context, listen: false)
+                              .joinCommunity(community.communityId ?? "");
+                        }
+                      }
+                    
+                    },
+                    child: Text(community.isJoined != null
+                        ? (community.isJoined! ? "Leave" : "Join")
+                        : "Join"),
+                  )),
             ],
           ),
         ),

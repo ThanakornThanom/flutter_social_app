@@ -74,8 +74,8 @@ class _AppNavigationState extends State<AppNavigation> {
   @override
   Widget build(BuildContext context) {
     final List<String> _titles = [
-      AppConfig.appName,
-      S.of(context).stories,
+      "",
+      "Explore",
       S.of(context).notifications,
       S.of(context).chats,
     ];
