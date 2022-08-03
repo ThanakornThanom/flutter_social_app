@@ -153,9 +153,13 @@ class _CommunityScreenState extends State<CommunityScreen> {
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: vm.getCommunityPosts().length,
                           itemBuilder: (context, index) {
-                            return ImagePostWidget(
-                                post: vm.getCommunityPosts()[index],
-                                theme: theme);
+                            return StreamBuilder<AmityPost>(
+                                stream: vm.getCommunityPosts()[index].listen,
+                                initialData: vm.getCommunityPosts()[index],
+                                builder: (context, snapshot) {
+                                  return ImagePostWidget(
+                                      post: snapshot.data!, theme: theme);
+                                });
                           },
                         ),
                         beginOffset: Offset(0, 0.3),

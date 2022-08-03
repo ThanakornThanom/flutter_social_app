@@ -26,7 +26,7 @@ class _AppNavigationState extends State<AppNavigation> {
 
   final List<Widget> _children = [
     HomePage(),
-    // CommunityScreen(community: AmityCommunity(),),
+    CommunityScreen(community: AmityCommunity(),),
     StoryPage(),
     NotificationPage(),
     ChatsPage(),
