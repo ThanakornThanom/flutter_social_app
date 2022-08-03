@@ -7,8 +7,10 @@ import 'package:verbose_share_world/app_navigation/comments.dart';
 import 'package:verbose_share_world/app_navigation/home/post_content_widget.dart';
 import 'package:verbose_share_world/profile/user_profile.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
-import 'package:verbose_share_world/generated/l10n.dart';
+
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
+
+import '../../generated/l10n.dart';
 
 class FollowingItems {
   String image;
@@ -54,8 +56,13 @@ class _HomeFollowingTabScreenState extends State<HomeFollowingTabScreen> {
                   physics: BouncingScrollPhysics(),
                   itemCount: vm.getAmityPosts().length,
                   itemBuilder: (context, index) {
-                    return ImagePostWidget(
-                        post: vm.getAmityPosts()[index], theme: theme);
+                    return StreamBuilder<AmityPost>(
+                        stream: vm.getAmityPosts()[index].listen,
+                        initialData: vm.getAmityPosts()[index],
+                        builder: (context, snapshot) {
+                          return ImagePostWidget(
+                              post: snapshot.data!, theme: theme);
+                        });
                   },
                 ),
                 beginOffset: Offset(0, 0.3),
@@ -117,7 +124,9 @@ class ImagePostWidget extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => UserProfileScreen()));
+                          builder: (_) => UserProfileScreen(
+                                amityUser: post.postedUser!,
+                              )));
                     },
                     child: (post.postedUser?.avatarUrl != null)
                         ? CircleAvatar(
@@ -131,8 +140,10 @@ class ImagePostWidget extends StatelessWidget {
                 ),
                 title: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => UserProfileScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => UserProfileScreen(
+                              amityUser: post.postedUser!,
+                            )));
                   },
                   child: Text(
                     post.postedUser?.displayName ?? "Display name",
@@ -174,16 +185,66 @@ class ImagePostWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    // Row(
+                    //   children: [
+                    //     Icon(
+                    //       Icons.remove_red_eye,
+                    //       size: 18,
+                    //       color: ApplicationColors.grey,
+                    //     ),
+                    //     SizedBox(width: 8.5),
+                    //     Text(
+                    //       S.of(context).onepointtwok,
+                    //       style: TextStyle(
+                    //           color: ApplicationColors.grey,
+                    //           fontSize: 12,
+                    //           letterSpacing: 1),
+                    //     ),
+                    //   ],
+                    // ),
+                    // Row(
+                    //   children: [
+                    //     FaIcon(
+                    //       Icons.repeat_rounded,
+                    //       color: ApplicationColors.grey,
+                    //       size: 18,
+                    //     ),
+                    //     SizedBox(width: 8.5),
+                    //     Text(
+                    //       '287',
+                    //       style: TextStyle(
+                    //           color: ApplicationColors.grey,
+                    //           fontSize: 12,
+                    //           letterSpacing: 0.5),
+                    //     ),
+                    //   ],
+                    // ),
                     Row(
                       children: [
-                        Icon(
-                          Icons.remove_red_eye,
-                          size: 18,
-                          color: ApplicationColors.grey,
-                        ),
+                        post.myReactions!.isNotEmpty
+                            ? GestureDetector(
+                                onTap: () {
+                                  post.react().removeReaction('like');
+                                },
+                                child: Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                  size: 18,
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  post.react().addReaction('like');
+                                },
+                                child: Icon(
+                                  Icons.favorite_border,
+                                  color: ApplicationColors.grey,
+                                  size: 18,
+                                ),
+                              ),
                         SizedBox(width: 8.5),
                         Text(
-                          S.of(context).onepointtwok,
+                          post.reactionCount.toString(),
                           style: TextStyle(
                               color: ApplicationColors.grey,
                               fontSize: 12,
@@ -191,56 +252,30 @@ class ImagePostWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        FaIcon(
-                          Icons.repeat_rounded,
-                          color: ApplicationColors.grey,
-                          size: 18,
-                        ),
-                        SizedBox(width: 8.5),
-                        Text(
-                          '287',
-                          style: TextStyle(
-                              color: ApplicationColors.grey,
-                              fontSize: 12,
-                              letterSpacing: 0.5),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.chat_bubble_outline,
-                          color: ApplicationColors.grey,
-                          size: 18,
-                        ),
-                        SizedBox(width: 8.5),
-                        Text(
-                          '287',
-                          style: TextStyle(
-                              color: ApplicationColors.grey,
-                              fontSize: 12,
-                              letterSpacing: 0.5),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.favorite_border,
-                          color: ApplicationColors.grey,
-                          size: 18,
-                        ),
-                        SizedBox(width: 8.5),
-                        Text(
-                          S.of(context).eightpointtwok,
-                          style: TextStyle(
-                              color: ApplicationColors.grey,
-                              fontSize: 12,
-                              letterSpacing: 1),
-                        ),
-                      ],
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => CommentScreen(
+                                  amityPost: post,
+                                )));
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.chat_bubble_outline,
+                            color: ApplicationColors.grey,
+                            size: 18,
+                          ),
+                          SizedBox(width: 8.5),
+                          Text(
+                            post.commentCount.toString(),
+                            style: TextStyle(
+                                color: ApplicationColors.grey,
+                                fontSize: 12,
+                                letterSpacing: 0.5),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

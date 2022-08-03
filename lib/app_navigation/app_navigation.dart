@@ -11,6 +11,7 @@ import 'package:verbose_share_world/app_navigation/notification/notification_pag
 import 'package:verbose_share_world/app_navigation/story/story_page.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 
+import '../components/custom_user_avatar.dart';
 import '../provider/ViewModel/feed_viewmodel.dart';
 import 'home/community_feed.dart';
 
@@ -25,7 +26,7 @@ class _AppNavigationState extends State<AppNavigation> {
 
   final List<Widget> _children = [
     HomePage(),
-    CommunityScreen(community: AmityCommunity(),),
+    // CommunityScreen(community: AmityCommunity(),),
     StoryPage(),
     NotificationPage(),
     ChatsPage(),
@@ -94,7 +95,8 @@ class _AppNavigationState extends State<AppNavigation> {
               },
               child: FadedScaleAnimation(
                 child: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/Layer1677.png'),
+                  backgroundImage: getAvatarImage(
+                      AmityCoreClient.getCurrentUser().avatarUrl),
                 ),
               ),
             ),

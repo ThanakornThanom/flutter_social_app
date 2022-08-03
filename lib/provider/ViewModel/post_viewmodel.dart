@@ -4,6 +4,7 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 
 class PostVM extends ChangeNotifier {
+  late AmityPost amityPost;
   late PagingController<AmityComment> _controller;
   final amityComments = <AmityComment>[];
 
@@ -13,6 +14,17 @@ class PostVM extends ChangeNotifier {
   AmityComment? _replyToComment;
 
   AmityCommentSortOption _sortOption = AmityCommentSortOption.LAST_CREATED;
+
+  void getPost(String postId, AmityPost initialPostData) {
+    amityPost = initialPostData;
+    AmitySocialClient.newPostRepository()
+        .getPost(postId)
+        .then((AmityPost post) {
+      amityPost = post;
+    }).onError<AmityException>((error, stackTrace) {
+      log(error.toString());
+    });
+  }
 
   void listenForComments(String postID) {
     _controller = PagingController(
@@ -24,10 +36,10 @@ class PostVM extends ChangeNotifier {
       pageSize: 20,
     )..addListener(
         () {
-          print("listenForComments...");
           if (_controller.error == null) {
             amityComments.clear();
             amityComments.addAll(_controller.loadedItems);
+
             notifyListeners();
           } else {
             //Error on pagination controller
@@ -58,14 +70,18 @@ class PostVM extends ChangeNotifier {
         .post(postId)
         .create()
         .text(text)
-        .send();
-    _controller.addAtIndex(0, _comment);
+        .send()
+        .then((_comment) {
+      _controller.addAtIndex(0, _comment);
+      amityComments.clear();
+      amityComments.addAll(_controller.loadedItems);
+    }).onError((error, stackTrace) {
+      print(error.toString());
+    });
   }
 
   void addCommentReaction(AmityComment comment) {
-    comment.react().addReaction('like').then((value) => {
-          //success
-        });
+    comment.react().addReaction('like').then((value) {});
   }
 
   void addPostReaction(AmityPost post) {
@@ -84,5 +100,9 @@ class PostVM extends ChangeNotifier {
     comment.react().removeReaction('like').then((value) => {
           //success
         });
+  }
+
+  bool isliked(AmityComment comment) {
+    return comment.myReactions?.isNotEmpty ?? false;
   }
 }
