@@ -1,8 +1,10 @@
+import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:verbose_share_world/app_config/app_config.dart';
+import 'package:verbose_share_world/components/custom_user_avatar.dart';
 import 'package:verbose_share_world/locale/language_cubit.dart';
 import 'package:verbose_share_world/profile/my_profile_screen.dart';
 import 'package:verbose_share_world/profile/edit_profile.dart';
@@ -45,8 +47,8 @@ class MyDrawer extends StatelessWidget {
                         child: Container(
                           child: CircleAvatar(
                             radius: 35,
-                            backgroundImage:
-                                AssetImage('assets/images/Layer1677.png'),
+                            backgroundImage: getAvatarImage(
+                                AmityCoreClient.getCurrentUser().avatarUrl),
                           ),
                         ),
                       ),

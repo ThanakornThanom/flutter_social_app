@@ -1,3 +1,4 @@
+import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,6 +11,7 @@ import 'package:verbose_share_world/app_navigation/notification/notification_pag
 import 'package:verbose_share_world/app_navigation/story/story_page.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 
+import '../components/custom_user_avatar.dart';
 import '../provider/ViewModel/feed_viewmodel.dart';
 
 class AppNavigation extends StatefulWidget {
@@ -91,7 +93,8 @@ class _AppNavigationState extends State<AppNavigation> {
               },
               child: FadedScaleAnimation(
                 child: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/Layer1677.png'),
+                  backgroundImage: getAvatarImage(
+                      AmityCoreClient.getCurrentUser().avatarUrl),
                 ),
               ),
             ),

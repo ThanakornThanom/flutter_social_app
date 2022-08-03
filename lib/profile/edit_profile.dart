@@ -1,8 +1,11 @@
+import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
+
+import '../components/custom_user_avatar.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -61,8 +64,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       FadedScaleAnimation(
                         child: CircleAvatar(
                           radius: 60,
-                          backgroundImage:
-                              AssetImage('assets/images/Layer1677.png'),
+                          backgroundImage: getAvatarImage(
+                              AmityCoreClient.getCurrentUser().avatarUrl),
                         ),
                       ),
                       Positioned(

@@ -1,8 +1,11 @@
+import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
+
+import '../../components/custom_user_avatar.dart';
 
 class TextPostScreen extends StatefulWidget {
   @override
@@ -44,8 +47,8 @@ class _TextPostScreenState extends State<TextPostScreen> {
                 children: [
                   FadedScaleAnimation(
                     child: CircleAvatar(
-                      backgroundImage:
-                          AssetImage('assets/images/Layer1677.png'),
+                      backgroundImage: getAvatarImage(
+                          AmityCoreClient.getCurrentUser().avatarUrl),
                     ),
                   ),
                   SizedBox(width: 15),

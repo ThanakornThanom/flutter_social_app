@@ -1,13 +1,12 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/comments.dart';
 import 'package:verbose_share_world/app_navigation/home/post_content_widget.dart';
 import 'package:verbose_share_world/profile/user_profile.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
-import 'package:verbose_share_world/generated/l10n.dart';
+
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 
 class FollowingItems {
@@ -114,8 +113,10 @@ class ImagePostWidget extends StatelessWidget {
               leading: FadeAnimation(
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => UserProfileScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => UserProfileScreen(
+                              amityUser: post.postedUser!,
+                            )));
                   },
                   child: (post.postedUser?.avatarUrl != null)
                       ? CircleAvatar(
