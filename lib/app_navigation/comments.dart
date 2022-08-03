@@ -427,8 +427,8 @@ class _CommentScreenState extends State<CommentScreen> {
                           height: 60,
                           child: ListTile(
                             leading: CircleAvatar(
-                              backgroundImage:
-                                  AssetImage('assets/images/Layer1677.png'),
+                              backgroundImage: getAvatarImage(
+                                  vm.amityPost.postedUser!.avatarUrl),
                             ),
                             title: TextField(
                               controller: _commentTextEditController,

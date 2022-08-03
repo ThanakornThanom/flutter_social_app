@@ -202,22 +202,30 @@ class ImagePostWidget extends StatelessWidget {
                   //     ),
                   //   ],
                   // ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.chat_bubble_outline,
-                        color: ApplicationColors.grey,
-                        size: 18,
-                      ),
-                      SizedBox(width: 8.5),
-                      Text(
-                        post.commentCount.toString(),
-                        style: TextStyle(
-                            color: ApplicationColors.grey,
-                            fontSize: 12,
-                            letterSpacing: 0.5),
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => CommentScreen(
+                                amityPost: post,
+                              )));
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          color: ApplicationColors.grey,
+                          size: 18,
+                        ),
+                        SizedBox(width: 8.5),
+                        Text(
+                          post.commentCount.toString(),
+                          style: TextStyle(
+                              color: ApplicationColors.grey,
+                              fontSize: 12,
+                              letterSpacing: 0.5),
+                        ),
+                      ],
+                    ),
                   ),
                   Row(
                     children: [
