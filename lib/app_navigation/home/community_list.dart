@@ -65,7 +65,7 @@ class _CommunityListState extends State<CommunityList> {
 
       case CommunityListType.trending:
         return Provider.of<CommunityVM>(context, listen: false)
-            .getAmityMyCommunities();
+            .getAmityTrendingCommunities();
 
       default:
         return [];
@@ -86,7 +86,7 @@ class _CommunityListState extends State<CommunityList> {
 
       case CommunityListType.trending:
         return Provider.of<CommunityVM>(context, listen: false)
-            .getAmityMyCommunities()
+            .getAmityTrendingCommunities()
             .length;
       default:
         return 0;
@@ -109,11 +109,11 @@ class _CommunityListState extends State<CommunityList> {
               height: bHeight,
               color: ApplicationColors.lightGrey,
               child: FadedSlideAnimation(
-                child: ListView.builder(
+                child: getLength() < 1 ? Center(child: CircularProgressIndicator(color: theme.primaryColor),) : ListView.builder(
                   physics: BouncingScrollPhysics(),
                   itemCount: getLength(),
                   itemBuilder: (context, index) {
-                    return StreamBuilder<AmityCommunity>(
+                    return  StreamBuilder<AmityCommunity>(
                         stream: getList()[index].listen,
                         initialData: getList()[index],
                         builder: (context, snapshot) {
