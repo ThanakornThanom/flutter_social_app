@@ -61,7 +61,9 @@ class _HomeFollowingTabScreenState extends State<HomeFollowingTabScreen> {
                         initialData: vm.getAmityPosts()[index],
                         builder: (context, snapshot) {
                           return ImagePostWidget(
-                              post: snapshot.data!, theme: theme);
+                              key: UniqueKey(),
+                              post: snapshot.data!,
+                              theme: theme);
                         });
                   },
                 ),

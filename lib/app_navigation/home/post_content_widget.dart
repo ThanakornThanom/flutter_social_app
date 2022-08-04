@@ -180,7 +180,8 @@ class ImagePost extends StatelessWidget {
                     horizontal: imageURLs.length > 1 ? 5.0 : 0.0),
                 decoration: BoxDecoration(color: Colors.transparent),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(isCornerRadiusEnabled ? 10 : 0),
+                  borderRadius:
+                      BorderRadius.circular(isCornerRadiusEnabled ? 10 : 0),
                   child: OptimizedCacheImage(
                     imageUrl: url,
                     fit: BoxFit.fill,

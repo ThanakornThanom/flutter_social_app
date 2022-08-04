@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class UserFeedVM extends ChangeNotifier {
   late AmityUser amityUser;
-
+  late AmityUserFollowInfo amityMyFollowInfo = AmityUserFollowInfo();
   late PagingController<AmityPost> _controller;
   final amityPosts = <AmityPost>[];
 
@@ -19,6 +19,10 @@ class UserFeedVM extends ChangeNotifier {
     } else {
       amityUser = user;
     }
+
+    amityUser.relationship().getFollowInfo().then((value) {
+      amityMyFollowInfo = value;
+    });
   }
 
   void listenForUserFeed(String userId) {
@@ -54,6 +58,35 @@ class UserFeedVM extends ChangeNotifier {
             scrollcontroller.position.maxScrollExtent) &&
         _controller.hasMoreItems) {
       _controller.fetchNextPage();
+    }
+  }
+
+  Future<void> editCurrentUserInfo(
+      {String? displayName, String? description, String? avatarFileID}) async {
+    if (displayName != null) {
+      await AmityCoreClient.getCurrentUser()
+          .update()
+          .displayName(displayName)
+          .update()
+          .then((value) => {print("update displayname success")})
+          .onError((error, stackTrace) => {print("update displayname fail")});
+    }
+    if (description != null) {
+      await AmityCoreClient.getCurrentUser()
+          .update()
+          .description(description)
+          .update()
+          .then((value) => {print("update description success")})
+          .onError((error, stackTrace) => {print("update description fail")});
+    }
+    if (avatarFileID != null) {
+      await AmityCoreClient.getCurrentUser()
+          .update()
+          .avatarFileId(avatarFileID)
+          .update()
+          .then((value) => {print("update avatarFileID success")})
+          .onError(
+              (error, stackTrace) => {print("avatarFileID displayname fail")});
     }
   }
 }

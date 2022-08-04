@@ -23,12 +23,9 @@ Future<void> main() async {
 
   await AmityCoreClient.setup(
       option: AmityCoreClientOption(
-        apiKey: 
-        // 'b0eeee5c33dea2364f628d1e540a1688845884e4bd32692c',
-        'b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f',
-        httpEndpoint: 
-        AmityRegionalHttpEndpoint.SG
-        // AmityRegionalHttpEndpoint.US,
+        apiKey: 'b0eeee5c33dea2364f628d1e540a1688845884e4bd32692c',
+        //'b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f',
+        httpEndpoint: AmityRegionalHttpEndpoint.US,
       ),
       sycInitialization: true);
 
