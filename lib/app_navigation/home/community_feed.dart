@@ -3,9 +3,11 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:provider/provider.dart';
+import 'package:verbose_share_world/app_navigation/home/edit_community.dart';
 import 'package:verbose_share_world/app_navigation/home/home_following_screen.dart';
 
 import '../../app_theme/application_colors.dart';
+import '../../provider/ViewModel/community_viewmodel.dart';
 import '../../provider/ViewModel/feed_viewmodel.dart';
 
 class CommunityScreen extends StatefulWidget {
@@ -54,6 +56,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 
+  void onCommunityOptionTap(CommunityFeedMenuOption option) {
+    switch (option) {
+      case CommunityFeedMenuOption.edit:
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => EditCommunityScreen(community)));
+        break;
+      case CommunityFeedMenuOption.members:
+        break;
+      default:
+    }
+  }
+
   Widget communityInfo() {
     final theme = Theme.of(context);
     return Column(
@@ -67,7 +81,44 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
             Spacer(),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Wrap(
+                          children: [
+                            ListTile(
+                              leading: Icon(Icons.edit),
+                              title: Text('Edit Community'),
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                onCommunityOptionTap(
+                                    CommunityFeedMenuOption.edit);
+                              },
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.people_alt_rounded),
+                              title: Text('Members'),
+                              onTap: () {
+                                onCommunityOptionTap(
+                                    CommunityFeedMenuOption.members);
+                              },
+                            ),
+                            ListTile(
+                              title: Text(''),
+                            ),
+                          ],
+                        );
+                        // return SizedBox(
+                        //   height: 200,
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     children: const <Widget>[],
+                        //   ),
+                        // );
+                      });
+                },
                 icon: Icon(Icons.more_horiz_rounded, color: Colors.black)),
           ],
         ),
