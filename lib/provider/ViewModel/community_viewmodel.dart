@@ -25,6 +25,12 @@ class CommunityVM extends ChangeNotifier {
 
   void initAmityTrendingCommunityList() async {
     log("initAmityTrendingCommunityList");
+
+    if (_amityTrendingCommunities.isNotEmpty) {
+      _amityTrendingCommunities.clear();
+      notifyListeners();
+    }
+
     AmitySocialClient.newCommunityRepository()
         .getTrendingCommunities()
         .then((List<AmityCommunity> trendingCommunites) =>
@@ -36,6 +42,11 @@ class CommunityVM extends ChangeNotifier {
 
   void initAmityRecommendCommunityList() async {
     log("initAmityRecommendCommunityList");
+    if (_amityRecommendCommunities.isNotEmpty) {
+      _amityRecommendCommunities.clear();
+      notifyListeners();
+    }
+
     AmitySocialClient.newCommunityRepository()
         .getRecommendedCommunities()
         .then((List<AmityCommunity> recommendCommunites) => {
@@ -47,30 +58,50 @@ class CommunityVM extends ChangeNotifier {
             });
   }
 
-  void joinCommunity(String communityId) async {
+  void joinCommunity(String communityId, CommunityListType type) async {
     AmitySocialClient.newCommunityRepository()
         .joinCommunity(communityId)
-        .then((value) => {
-              notifyListeners()
-            })
-        .onError((error, stackTrace) => {
-              
-            });
+        .then((value) {
+      refreshCommunity(type);
+      notifyListeners();
+    }).onError((error, stackTrace) {});
   }
 
-  void leaveCommunity(String communityId) async {
+  void leaveCommunity(String communityId, CommunityListType type) async {
     AmitySocialClient.newCommunityRepository()
         .leaveCommunity(communityId)
-        .then((value) => {
-              notifyListeners()
-            })
-        .onError((error, stackTrace) => {
-              //handle error
-            });
+        .then((value) {
+      refreshCommunity(type);
+      notifyListeners();
+    }).onError((error, stackTrace) {
+      //handle error
+    });
+  }
+
+  void refreshCommunity(CommunityListType type) {
+    print("refresh community");
+    switch (type) {
+      case CommunityListType.my:
+        initAmityMyCommunityList();
+        break;
+      case CommunityListType.recommend:
+        initAmityRecommendCommunityList();
+        break;
+      case CommunityListType.trending:
+        initAmityTrendingCommunityList();
+        break;
+      default:
+        break;
+    }
   }
 
   void initAmityMyCommunityList() async {
     log("initAmityMyCommunityList");
+    if (_amityMyCommunities.isNotEmpty) {
+      _amityMyCommunities.clear();
+      notifyListeners();
+    }
+  
     AmitySocialClient.newCommunityRepository()
         .getCommunities()
         .filter(AmityCommunityFilter.MEMBER)

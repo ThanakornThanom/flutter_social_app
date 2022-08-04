@@ -109,19 +109,24 @@ class _CommunityListState extends State<CommunityList> {
               height: bHeight,
               color: ApplicationColors.lightGrey,
               child: FadedSlideAnimation(
-                child: getLength() < 1 ? Center(child: CircularProgressIndicator(color: theme.primaryColor),) : ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: getLength(),
-                  itemBuilder: (context, index) {
-                    return  StreamBuilder<AmityCommunity>(
-                        stream: getList()[index].listen,
-                        initialData: getList()[index],
-                        builder: (context, snapshot) {
-                          return CommunityWidget(
-                              community: snapshot.data!, theme: theme);
-                        });
-                  },
-                ),
+                child: getLength() < 1
+                    ? Center(
+                        child: CircularProgressIndicator(
+                            color: theme.primaryColor),
+                      )
+                    : ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: getLength(),
+                        itemBuilder: (context, index) {
+                          return StreamBuilder<AmityCommunity>(
+                              stream: getList()[index].listen,
+                              initialData: getList()[index],
+                              builder: (context, snapshot) {
+                                return CommunityWidget(
+                                    community: snapshot.data!, theme: theme,communityType: communityType,);
+                              });
+                        },
+                      ),
                 beginOffset: Offset(0, 0.3),
                 endOffset: Offset(0, 0),
                 slideCurve: Curves.linearToEaseOut,
@@ -135,14 +140,16 @@ class _CommunityListState extends State<CommunityList> {
 }
 
 class CommunityWidget extends StatelessWidget {
-  const CommunityWidget({
-    Key? key,
-    required this.community,
-    required this.theme,
-  }) : super(key: key);
+  const CommunityWidget(
+      {Key? key,
+      required this.community,
+      required this.theme,
+      required this.communityType})
+      : super(key: key);
 
   final AmityCommunity community;
   final ThemeData theme;
+  final CommunityListType communityType;
 
   @override
   Widget build(BuildContext context) {
@@ -186,17 +193,16 @@ class CommunityWidget extends StatelessWidget {
                         backgroundColor: MaterialStateProperty.all<Color>(
                             theme.primaryColor)),
                     onPressed: () {
-                      if(community.isJoined != null){
-                        if(community.isJoined!){
-                            Provider.of<CommunityVM>(context, listen: false)
-                              .leaveCommunity(community.communityId ?? "");
-                        }
-                        else{
-                            Provider.of<CommunityVM>(context, listen: false)
-                              .joinCommunity(community.communityId ?? "");
+                      if (community.isJoined != null) {
+                        if (community.isJoined!) {
+                          Provider.of<CommunityVM>(context, listen: false)
+                              .leaveCommunity(
+                                  community.communityId ?? "", communityType);
+                        } else {
+                          Provider.of<CommunityVM>(context, listen: false)
+                              .joinCommunity(community.communityId ?? "", communityType);
                         }
                       }
-                    
                     },
                     child: Text(community.isJoined != null
                         ? (community.isJoined! ? "Leave" : "Join")
