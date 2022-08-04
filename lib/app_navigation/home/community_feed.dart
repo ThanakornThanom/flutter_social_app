@@ -25,7 +25,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     community = widget.community;
     super.initState();
     Provider.of<FeedVM>(context, listen: false).initAmityCommunityFeed(
-        "a2399f0ba0834d11f681f5cfa569d33c"); //community.communityId!);
+        community.communityId ?? ""); //community.communityId!);
   }
 
   getAvatarImage(String? url) {
@@ -40,14 +40,16 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "About",
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-        ),
+        community.description == null
+            ? Container()
+            : Text(
+                "About",
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              ),
         SizedBox(
           height: 5.0,
         ),
-        Text("dmsipvmkdpsvmkdsmvpkdsmvkdsvsdv"),
+        Text(community.description ?? ""),
       ],
     );
   }
@@ -58,7 +60,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
       children: [
         Row(
           children: [
-            Text("Community",
+            Text(
+                community.displayName != null
+                    ? community.displayName!
+                    : "Community",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
             Spacer(),
             IconButton(
@@ -72,18 +77,22 @@ class _CommunityScreenState extends State<CommunityScreen> {
             SizedBox(
               width: 5,
             ),
-            Text("Public"),
+            Text(community.isPublic != null
+                ? (community.isPublic! ? "Public" : "Private")
+                : "N/A"),
             SizedBox(
               width: 20,
             ),
-            Text("2K members"),
+            Text("${community.membersCount} members"),
             Spacer(),
             ElevatedButton(
               style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all<Color>(theme.primaryColor)),
               onPressed: () {},
-              child: Text("Join"),
+              child: Text(community.isJoined != null
+                  ? (community.isJoined! ? "Leave" : "Join")
+                  : "N/A"),
             )
           ],
         )
@@ -95,16 +104,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       children: [
         OptimizedCacheImage(
-          imageUrl:
-              "https://f8n-ipfs-production.imgix.net/QmXydmx66BwUCLXsxa2q6Z9ATKht6fbXqdrxU8VFd6c4cD/nft.png?q=80&auto=format%2Ccompress&cs=srgb&max-w=1680&max-h=1680",
+          imageUrl: community.avatarImage?.fileUrl != null
+              ? community.avatarImage!.fileUrl + "?size=full"
+              : "https://f8n-ipfs-production.imgix.net/QmXydmx66BwUCLXsxa2q6Z9ATKht6fbXqdrxU8VFd6c4cD/nft.png?q=80&auto=format%2Ccompress&cs=srgb&max-w=1680&max-h=1680",
           fit: BoxFit.fill,
           placeholder: (context, url) => Container(
+            height: 250,
             color: Colors.grey,
           ),
           errorWidget: (context, url, error) => Icon(Icons.error),
         ),
         Container(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [communityInfo(), Divider(), communityDescription()],
@@ -127,16 +138,16 @@ class _CommunityScreenState extends State<CommunityScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // Align(
-                    //   alignment: Alignment.topLeft,
-                    //   child: IconButton(
-                    //     onPressed: () {
-                    //       Navigator.of(context).pop();
-                    //     },
-                    //     icon: Icon(Icons.chevron_left,
-                    //         color: Colors.black, size: 35),
-                    //   ),
-                    // ),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(Icons.chevron_left,
+                            color: Colors.black, size: 35),
+                      ),
+                    ),
                     Stack(
                       children: [
                         Container(
@@ -146,11 +157,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
                       ],
                     ),
                     Container(
-                      height: bHeight,
                       color: ApplicationColors.lightGrey,
                       child: FadedSlideAnimation(
                         child: ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
                           itemCount: vm.getCommunityPosts().length,
                           itemBuilder: (context, index) {
                             return StreamBuilder<AmityPost>(
