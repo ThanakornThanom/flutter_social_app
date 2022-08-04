@@ -6,10 +6,7 @@ import 'package:flutter/material.dart';
 class AmityVM extends ChangeNotifier {
   Future<void> login(String userID) async {
     log("login with $userID");
-    await AmityCoreClient.login(userID)
-        .displayName(userID)
-        .submit()
-        .then((value) async {
+    await AmityCoreClient.login(userID).submit().then((value) async {
       log("success");
       await getUserByID(userID);
     }).catchError((error, stackTrace) {
