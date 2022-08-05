@@ -10,6 +10,7 @@ import 'package:verbose_share_world/profile/my_profile_screen.dart';
 import 'package:verbose_share_world/profile/edit_profile.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
+import 'package:verbose_share_world/profile/user_profile.dart';
 
 class MyDrawer extends StatelessWidget {
   @override
@@ -74,7 +75,9 @@ class MyDrawer extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).pop();
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => MyProfileScreen()));
+                              builder: (context) => UserProfileScreen(
+                                  amityUser:
+                                      AmityCoreClient.getCurrentUser())));
                         },
                         child: Container(
                           width: double.infinity,

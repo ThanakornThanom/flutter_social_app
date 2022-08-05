@@ -34,7 +34,7 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
     posts = widget.posts;
     isChildrenPost = widget.isChildrenPost;
     isCornerRadiusEnabled = widget.isCornerRadiusEnabled;
-    super.initState();
+
     if (!isChildrenPost) {
       setState(() {
         isLoading = false;
@@ -42,6 +42,7 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
     } else {
       checkPostType();
     }
+    super.initState();
   }
 
   void checkPostType() {
@@ -61,10 +62,12 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
     final videoData = posts[0].data as VideoData;
 
     videoData.getVideo(AmityVideoQuality.HIGH).then((AmityVideo video) {
-      setState(() {
-        isLoading = false;
-        videoUrl = video.fileUrl;
-      });
+      if (this.mounted) {
+        setState(() {
+          isLoading = false;
+          videoUrl = video.fileUrl;
+        });
+      }
     });
   }
 
@@ -268,9 +271,11 @@ class VideoPostState extends State<VideoPost> {
       ],
       looping: true,
     );
-    setState(() {
-      chewieController = controller;
-    });
+    if (this.mounted) {
+      setState(() {
+        chewieController = controller;
+      });
+    }
   }
 
   @override

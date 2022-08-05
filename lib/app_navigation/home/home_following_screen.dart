@@ -79,7 +79,7 @@ class _HomeFollowingTabScreenState extends State<HomeFollowingTabScreen> {
   }
 }
 
-class ImagePostWidget extends StatelessWidget {
+class ImagePostWidget extends StatefulWidget {
   const ImagePostWidget({
     Key? key,
     required this.post,
@@ -89,12 +89,18 @@ class ImagePostWidget extends StatelessWidget {
   final AmityPost post;
   final ThemeData theme;
 
+  @override
+  State<ImagePostWidget> createState() => _ImagePostWidgetState();
+}
+
+class _ImagePostWidgetState extends State<ImagePostWidget>
+    with AutomaticKeepAliveClientMixin {
   Widget postWidgets() {
     List<Widget> widgets = [];
-    if (post.data != null) {
-      widgets.add(AmityPostWidget([post], false, false));
+    if (widget.post.data != null) {
+      widgets.add(AmityPostWidget([widget.post], false, false));
     }
-    final childrenPosts = post.children;
+    final childrenPosts = widget.post.children;
     if (childrenPosts != null && childrenPosts.isNotEmpty) {
       widgets.add(AmityPostWidget(childrenPosts, true, true));
     }
@@ -111,7 +117,7 @@ class ImagePostWidget extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => CommentScreen(
-                  amityPost: post,
+                  amityPost: widget.post,
                 )));
       },
       child: Card(
@@ -127,14 +133,14 @@ class ImagePostWidget extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => UserProfileScreen(
-                                amityUser: post.postedUser!,
+                                amityUser: widget.post.postedUser!,
                               )));
                     },
-                    child: (post.postedUser?.avatarUrl != null)
+                    child: (widget.post.postedUser?.avatarUrl != null)
                         ? CircleAvatar(
                             backgroundColor: Colors.transparent,
                             backgroundImage: (NetworkImage(
-                                post.postedUser?.avatarUrl ?? "")))
+                                widget.post.postedUser?.avatarUrl ?? "")))
                         : CircleAvatar(
                             backgroundImage: AssetImage(
                                 "assets/images/user_placeholder.png")),
@@ -144,18 +150,18 @@ class ImagePostWidget extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => UserProfileScreen(
-                              amityUser: post.postedUser!,
+                              amityUser: widget.post.postedUser!,
                             )));
                   },
                   child: Text(
-                    post.postedUser?.displayName ?? "Display name",
-                    style: theme.textTheme.bodyText1!
+                    widget.post.postedUser?.displayName ?? "Display name",
+                    style: widget.theme.textTheme.bodyText1!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 subtitle: Text(
-                  " ${post.createdAt?.toLocal().day}-${post.createdAt?.toLocal().month}-${post.createdAt?.toLocal().year}",
-                  style: theme.textTheme.bodyText1!.copyWith(
+                  " ${widget.post.createdAt?.toLocal().day}-${widget.post.createdAt?.toLocal().month}-${widget.post.createdAt?.toLocal().year}",
+                  style: widget.theme.textTheme.bodyText1!.copyWith(
                       color: ApplicationColors.textGrey, fontSize: 11),
                 ),
                 trailing: Row(
@@ -223,10 +229,10 @@ class ImagePostWidget extends StatelessWidget {
                     // ),
                     Row(
                       children: [
-                        post.myReactions!.isNotEmpty
+                        widget.post.myReactions!.isNotEmpty
                             ? GestureDetector(
                                 onTap: () {
-                                  post.react().removeReaction('like');
+                                  widget.post.react().removeReaction('like');
                                 },
                                 child: Icon(
                                   Icons.favorite,
@@ -236,7 +242,7 @@ class ImagePostWidget extends StatelessWidget {
                               )
                             : GestureDetector(
                                 onTap: () {
-                                  post.react().addReaction('like');
+                                  widget.post.react().addReaction('like');
                                 },
                                 child: Icon(
                                   Icons.favorite_border,
@@ -246,7 +252,7 @@ class ImagePostWidget extends StatelessWidget {
                               ),
                         SizedBox(width: 8.5),
                         Text(
-                          post.reactionCount.toString(),
+                          widget.post.reactionCount.toString(),
                           style: TextStyle(
                               color: ApplicationColors.grey,
                               fontSize: 12,
@@ -258,7 +264,7 @@ class ImagePostWidget extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => CommentScreen(
-                                  amityPost: post,
+                                  amityPost: widget.post,
                                 )));
                       },
                       child: Row(
@@ -270,7 +276,7 @@ class ImagePostWidget extends StatelessWidget {
                           ),
                           SizedBox(width: 8.5),
                           Text(
-                            post.commentCount.toString(),
+                            widget.post.commentCount.toString(),
                             style: TextStyle(
                                 color: ApplicationColors.grey,
                                 fontSize: 12,
@@ -288,4 +294,8 @@ class ImagePostWidget extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
