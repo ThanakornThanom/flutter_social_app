@@ -6,6 +6,7 @@ import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
+import 'package:verbose_share_world/utils/custom_image_picker.dart';
 
 import '../components/custom_user_avatar.dart';
 import '../provider/ViewModel/user_feed_viewmodel.dart';
@@ -49,10 +50,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         TextButton(
           onPressed: () async {
             //edit profile
-            await Provider.of<UserFeedVM>(context, listen: false)
-                .editCurrentUserInfo(
-                    displayName: _displayNameController.text,
-                    description: _descriptionController.text);
+            if (Provider.of<ImagePickerVM>(context, listen: false).amityImage !=
+                null) {
+              await Provider.of<UserFeedVM>(context, listen: false)
+                  .editCurrentUserInfo(
+                      displayName: _displayNameController.text,
+                      description: _descriptionController.text,
+                      avatarFileID:
+                          Provider.of<ImagePickerVM>(context, listen: false)
+                              .amityImage!
+                              .fileId);
+            } else {
+              await Provider.of<UserFeedVM>(context, listen: false)
+                  .editCurrentUserInfo(
+                displayName: _displayNameController.text,
+                description: _descriptionController.text,
+              );
+            }
           },
           child: Text(
             S.of(context).edit,
@@ -82,10 +96,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Stack(
                       children: [
                         FadedScaleAnimation(
-                          child: CircleAvatar(
-                            radius: 60,
-                            backgroundImage: getAvatarImage(
-                                AmityCoreClient.getCurrentUser().avatarUrl),
+                          child: GestureDetector(
+                            onTap: () {
+                              Provider.of<ImagePickerVM>(context, listen: false)
+                                  .showBottomSheet(context);
+                            },
+                            child: CircleAvatar(
+                              radius: 60,
+                              backgroundImage: Provider.of<ImagePickerVM>(
+                                              context,
+                                              listen: true)
+                                          .amityImage !=
+                                      null
+                                  ? NetworkImage(Provider.of<ImagePickerVM>(
+                                          context,
+                                          listen: false)
+                                      .amityImage!
+                                      .fileUrl)
+                                  : getAvatarImage(
+                                      AmityCoreClient.getCurrentUser()
+                                          .avatarUrl),
+                            ),
                           ),
                         ),
                         Positioned(

@@ -33,6 +33,7 @@ dependencies:
   extended_image: ^6.2.1
   intl: ^0.17.0
   image_picker: ^0.8.5+3
+  camera: ^0.10.0
   
 
 

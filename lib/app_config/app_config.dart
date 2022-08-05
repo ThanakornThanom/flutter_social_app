@@ -1,5 +1,5 @@
 class AppConfig {
-  static final String appName = 'ShareWorld';
+  static final String appName = 'ASC Flutter';
   static final String packageName = '<package_name>';
   static final String languageDefault = "en";
   static final Map<String, String> languagesSupported = {

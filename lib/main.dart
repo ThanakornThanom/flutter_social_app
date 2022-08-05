@@ -15,6 +15,7 @@ import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/user_feed_viewmodel.dart';
 import 'package:verbose_share_world/routes/routes.dart';
+import 'package:verbose_share_world/utils/custom_image_picker.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +42,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<FeedVM>(create: ((context) => FeedVM())),
         ChangeNotifierProvider<PostVM>(create: ((context) => PostVM())),
         ChangeNotifierProvider<UserFeedVM>(create: ((context) => UserFeedVM())),
+        ChangeNotifierProvider<ImagePickerVM>(
+            create: ((context) => ImagePickerVM())),
       ],
       child: BlocProvider<LanguageCubit>(
         create: (context) => LanguageCubit()..getCurrentLanguage(),
