@@ -14,6 +14,7 @@ import 'package:verbose_share_world/generated/l10n.dart';
 import '../components/custom_user_avatar.dart';
 import '../provider/ViewModel/feed_viewmodel.dart';
 import 'home/community_feed.dart';
+import 'home/community_tabbar.dart';
 
 class AppNavigation extends StatefulWidget {
   @override
@@ -26,7 +27,8 @@ class _AppNavigationState extends State<AppNavigation> {
 
   final List<Widget> _children = [
     HomePage(),
-    CommunityScreen(community: AmityCommunity(),),
+    CommunityTabbar(),
+    // CommunityScreen(community: AmityCommunity(),),
     StoryPage(),
     NotificationPage(),
     ChatsPage(),
@@ -72,8 +74,8 @@ class _AppNavigationState extends State<AppNavigation> {
   @override
   Widget build(BuildContext context) {
     final List<String> _titles = [
-      AppConfig.appName,
-      S.of(context).stories,
+      "",
+      "Explore",
       S.of(context).notifications,
       S.of(context).chats,
     ];

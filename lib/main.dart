@@ -11,6 +11,7 @@ import 'package:verbose_share_world/auth/login_navigator.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/locale/language_cubit.dart';
 import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
+import 'package:verbose_share_world/provider/ViewModel/community_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/user_feed_viewmodel.dart';
@@ -24,10 +25,12 @@ Future<void> main() async {
 
   await AmityCoreClient.setup(
       option: AmityCoreClientOption(
-        apiKey: 'b0eeee5c33dea2364f628d1e540a1688845884e4bd32692c',
-        //'b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f',
-        httpEndpoint: AmityRegionalHttpEndpoint.US,
-      ),
+          apiKey:
+              // 'b0eeee5c33dea2364f628d1e540a1688845884e4bd32692c',
+              'b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f',
+          httpEndpoint: AmityRegionalHttpEndpoint.SG
+          // AmityRegionalHttpEndpoint.US,
+          ),
       sycInitialization: true);
 
   runApp(Phoenix(child: MyApp()));
@@ -40,6 +43,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AmityVM>(create: ((context) => AmityVM())),
         ChangeNotifierProvider<FeedVM>(create: ((context) => FeedVM())),
+        ChangeNotifierProvider<CommunityVM>(
+            create: ((context) => CommunityVM())),
         ChangeNotifierProvider<PostVM>(create: ((context) => PostVM())),
         ChangeNotifierProvider<UserFeedVM>(create: ((context) => UserFeedVM())),
         ChangeNotifierProvider<ImagePickerVM>(

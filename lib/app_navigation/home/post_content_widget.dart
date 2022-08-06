@@ -271,11 +271,9 @@ class VideoPostState extends State<VideoPost> {
       ],
       looping: true,
     );
-    if (this.mounted) {
-      setState(() {
-        chewieController = controller;
-      });
-    }
+    setState(() {
+      chewieController = controller;
+    });
   }
 
   @override
