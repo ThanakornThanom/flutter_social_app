@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 class FeedVM extends ChangeNotifier {
   var _amityGlobalFeedPosts = <AmityPost>[];
   var _amityCommunityFeedPosts = <AmityPost>[];
-  var _amityImagePosts = <AmityPost>[];
+
   late PagingController<AmityPost> _controller;
+  final scrollcontroller = ScrollController();
 
   List<AmityPost> getAmityPosts() {
     return _amityGlobalFeedPosts;
@@ -35,6 +36,32 @@ class FeedVM extends ChangeNotifier {
 
   void initAmityGlobalfeed() async {
     log("initAmityGlobalfeed");
+    _controller = PagingController(
+      pageFuture: (token) => AmitySocialClient.newFeedRepository()
+          .getGlobalFeed()
+          .getPagingData(token: token, limit: 20),
+      pageSize: 20,
+    )..addListener(
+        () {
+          if (_controller.error == null) {
+            _amityGlobalFeedPosts.clear();
+            _amityGlobalFeedPosts.addAll(_controller.loadedItems);
+
+            notifyListeners();
+          } else {
+            //Error on pagination controller
+
+            print("error");
+          }
+        },
+      );
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _controller.fetchNextPage();
+    });
+
+    scrollcontroller.addListener(loadnextpage);
+
     //inititate the PagingController
     await AmitySocialClient.newFeedRepository()
         .getGlobalFeed()
@@ -43,5 +70,13 @@ class FeedVM extends ChangeNotifier {
       _amityGlobalFeedPosts = value.data;
     });
     notifyListeners();
+  }
+
+  void loadnextpage() {
+    if ((scrollcontroller.position.pixels ==
+            scrollcontroller.position.maxScrollExtent) &&
+        _controller.hasMoreItems) {
+      _controller.fetchNextPage();
+    }
   }
 }

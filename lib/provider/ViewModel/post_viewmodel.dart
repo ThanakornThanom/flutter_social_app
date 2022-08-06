@@ -9,7 +9,6 @@ class PostVM extends ChangeNotifier {
   final amityComments = <AmityComment>[];
 
   final scrollcontroller = ScrollController();
-  bool loading = false;
 
   AmityComment? _replyToComment;
 

@@ -63,6 +63,7 @@ class UserFeedVM extends ChangeNotifier {
 
   Future<void> editCurrentUserInfo(
       {String? displayName, String? description, String? avatarFileID}) async {
+    print(avatarFileID);
     if (displayName != null) {
       await AmityCoreClient.getCurrentUser()
           .update()

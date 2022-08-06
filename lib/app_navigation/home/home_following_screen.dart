@@ -55,6 +55,7 @@ class _HomeFollowingTabScreenState extends State<HomeFollowingTabScreen> {
                 child: ListView.builder(
                   physics: BouncingScrollPhysics(),
                   itemCount: vm.getAmityPosts().length,
+                  controller: vm.scrollcontroller,
                   itemBuilder: (context, index) {
                     return StreamBuilder<AmityPost>(
                         stream: vm.getAmityPosts()[index].listen,
