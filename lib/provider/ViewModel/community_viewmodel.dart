@@ -4,6 +4,7 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 
 enum CommunityListType { my, recommend, trending }
+enum CommunityFeedMenuOption {edit,members}
 
 class CommunityVM extends ChangeNotifier {
   var _amityTrendingCommunities = <AmityCommunity>[];
