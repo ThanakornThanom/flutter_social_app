@@ -90,11 +90,8 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
                     child: Stack(
                       children: [
                         FadedScaleAnimation(
-                          child: CircleAvatar(
-                            radius: 60,
-                            backgroundImage: getAvatarImage(
-                                AmityCoreClient.getCurrentUser().avatarUrl),
-                          ),
+                          child: getAvatarImage(
+                              AmityCoreClient.getCurrentUser().avatarUrl!),
                         ),
                         Positioned(
                           right: 0,

@@ -11,6 +11,8 @@ import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
 
+import '../components/custom_user_avatar.dart';
+
 class CommentScreen extends StatefulWidget {
   final AmityPost amityPost;
 
@@ -40,14 +42,6 @@ class _CommentScreenState extends State<CommentScreen> {
         .getPost(widget.amityPost.postId!, widget.amityPost);
 
     super.initState();
-  }
-
-  getAvatarImage(String? url) {
-    if (url != null) {
-      return NetworkImage(url);
-    } else {
-      return AssetImage("assets/images/user_placeholder.png");
-    }
   }
 
   bool isMediaPosts() {
@@ -153,17 +147,12 @@ class _CommentScreenState extends State<CommentScreen> {
                                                         MainAxisAlignment
                                                             .spaceEvenly,
                                                     children: [
-                                                      CircleAvatar(
-                                                        radius: 25,
-                                                        backgroundImage:
-                                                            getAvatarImage(
-                                                                widget
-                                                                    .amityPost
-                                                                    .postedUser!
-                                                                    .avatarUrl),
-                                                        backgroundColor:
-                                                            Colors.grey[400],
-                                                      ),
+                                                      getAvatarImage(
+                                                          widget
+                                                              .amityPost
+                                                              .postedUser!
+                                                              .avatarUrl!,
+                                                          radius: 25),
                                                       SizedBox(width: 10),
                                                       Expanded(
                                                         flex: 12,
@@ -354,14 +343,11 @@ class _CommentScreenState extends State<CommentScreen> {
                                                   return Container(
                                                     color: Colors.white,
                                                     child: ListTile(
-                                                      leading: CircleAvatar(
-                                                          backgroundImage:
-                                                              getAvatarImage(
-                                                                  _comments
-                                                                      .user!
-                                                                      .avatarUrl),
-                                                          backgroundColor:
-                                                              Colors.grey[300]),
+                                                      leading: getAvatarImage(
+                                                          widget
+                                                              .amityPost
+                                                              .postedUser!
+                                                              .avatarUrl!),
                                                       title: RichText(
                                                         text: TextSpan(
                                                           style: theme.textTheme
@@ -449,10 +435,8 @@ class _CommentScreenState extends State<CommentScreen> {
                               ]),
                           height: 60,
                           child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: getAvatarImage(
-                                  vm.amityPost.postedUser!.avatarUrl),
-                            ),
+                            leading: getAvatarImage(
+                                widget.amityPost.postedUser!.avatarUrl!),
                             title: TextField(
                               controller: _commentTextEditController,
                               decoration: InputDecoration(
@@ -472,7 +456,6 @@ class _CommentScreenState extends State<CommentScreen> {
                                   await vm.scrollcontroller.animateTo(0,
                                       curve: Curves.linear,
                                       duration: Duration(milliseconds: 500));
-                                  setState(() {});
                                 },
                                 child: Icon(Icons.send,
                                     color: theme.primaryColor)),
