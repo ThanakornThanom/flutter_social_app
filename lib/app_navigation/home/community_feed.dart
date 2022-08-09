@@ -59,8 +59,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
   void onCommunityOptionTap(CommunityFeedMenuOption option) {
     switch (option) {
       case CommunityFeedMenuOption.edit:
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => EditCommunityScreen(community)));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => EditCommunityScreen(community)));
         break;
       case CommunityFeedMenuOption.members:
         break;
@@ -219,7 +219,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                 stream: vm.getCommunityPosts()[index].listen,
                                 initialData: vm.getCommunityPosts()[index],
                                 builder: (context, snapshot) {
-                                  return ImagePostWidget(
+                                  return PostWidget(
                                       post: snapshot.data!, theme: theme);
                                 });
                           },

@@ -3,11 +3,13 @@ import 'dart:developer';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 
+enum Feedtype { GLOBAL, COOMU }
+
 class FeedVM extends ChangeNotifier {
   var _amityGlobalFeedPosts = <AmityPost>[];
   var _amityCommunityFeedPosts = <AmityPost>[];
 
-  late PagingController<AmityPost> _controller;
+  late PagingController<AmityPost> _controllerGlobal;
   final scrollcontroller = ScrollController();
 
   List<AmityPost> getAmityPosts() {
@@ -16,6 +18,16 @@ class FeedVM extends ChangeNotifier {
 
   List<AmityPost> getCommunityPosts() {
     return _amityCommunityFeedPosts;
+  }
+
+  void addPostToFeed(AmityPost post, Feedtype feedtype) {
+    if (feedtype == Feedtype.GLOBAL) {
+      _controllerGlobal.addAtIndex(0, post);
+      notifyListeners();
+    } else if (feedtype == Feedtype.COOMU) {
+      ///Coommu controller add posts
+      notifyListeners();
+    }
   }
 
   void initAmityCommunityFeed(String communityId) async {
@@ -34,18 +46,18 @@ class FeedVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  void initAmityGlobalfeed() async {
-    log("initAmityGlobalfeed");
-    _controller = PagingController(
+  Future<void> initAmityGlobalfeed() async {
+    _controllerGlobal = PagingController(
       pageFuture: (token) => AmitySocialClient.newFeedRepository()
           .getGlobalFeed()
           .getPagingData(token: token, limit: 20),
       pageSize: 20,
     )..addListener(
         () {
-          if (_controller.error == null) {
+          log("initAmityGlobalfeed");
+          if (_controllerGlobal.error == null) {
             _amityGlobalFeedPosts.clear();
-            _amityGlobalFeedPosts.addAll(_controller.loadedItems);
+            _amityGlobalFeedPosts.addAll(_controllerGlobal.loadedItems);
 
             notifyListeners();
           } else {
@@ -57,7 +69,7 @@ class FeedVM extends ChangeNotifier {
       );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _controller.fetchNextPage();
+      _controllerGlobal.fetchNextPage();
     });
 
     scrollcontroller.addListener(loadnextpage);
@@ -75,8 +87,8 @@ class FeedVM extends ChangeNotifier {
   void loadnextpage() {
     if ((scrollcontroller.position.pixels ==
             scrollcontroller.position.maxScrollExtent) &&
-        _controller.hasMoreItems) {
-      _controller.fetchNextPage();
+        _controllerGlobal.hasMoreItems) {
+      _controllerGlobal.fetchNextPage();
     }
   }
 }

@@ -43,7 +43,7 @@ class ImageViewer extends StatelessWidget {
                             } else if (state.extendedImageLoadState ==
                                 LoadState.completed) {
                               return ExtendedRawImage(
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fitWidth,
                                 image: state.extendedImageInfo?.image,
                                 width: state.extendedImageInfo?.image.width
                                     .toDouble(),

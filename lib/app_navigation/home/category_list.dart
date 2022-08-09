@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/comments.dart';
 import 'package:verbose_share_world/app_navigation/home/community_feed.dart';
 import 'package:verbose_share_world/app_navigation/home/post_content_widget.dart';
+import 'package:verbose_share_world/components/custom_user_avatar.dart';
 import 'package:verbose_share_world/profile/user_profile.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 
@@ -148,14 +149,10 @@ class CategoryWidget extends StatelessWidget {
           child: ListTile(
             contentPadding: EdgeInsets.all(0),
             leading: FadeAnimation(
-              child: (category.avatar?.fileUrl != null)
-                  ? CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      backgroundImage: (NetworkImage(category.avatar!.fileUrl)))
-                  : CircleAvatar(
-                      backgroundImage:
-                          AssetImage("assets/images/user_placeholder.png")),
-            ),
+                child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    backgroundImage:
+                        (getAvatarImage(category.avatar!.fileUrl)))),
             title: Text(
               category.name ?? "Category",
               style: theme.textTheme.bodyText1!

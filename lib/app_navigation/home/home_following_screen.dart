@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/comments.dart';
 import 'package:verbose_share_world/app_navigation/home/post_content_widget.dart';
+import 'package:verbose_share_world/components/custom_user_avatar.dart';
 import 'package:verbose_share_world/profile/user_profile.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 
@@ -12,19 +13,12 @@ import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 
 import '../../generated/l10n.dart';
 
-class FollowingItems {
-  String image;
-  String name;
-
-  FollowingItems(this.image, this.name);
-}
-
-class HomeFollowingTabScreen extends StatefulWidget {
+class GlobalFeedTabScreen extends StatefulWidget {
   @override
-  _HomeFollowingTabScreenState createState() => _HomeFollowingTabScreenState();
+  _GlobalFeedTabScreenState createState() => _GlobalFeedTabScreenState();
 }
 
-class _HomeFollowingTabScreenState extends State<HomeFollowingTabScreen> {
+class _GlobalFeedTabScreenState extends State<GlobalFeedTabScreen> {
   @override
   void dispose() {
     super.dispose();
@@ -58,13 +52,11 @@ class _HomeFollowingTabScreenState extends State<HomeFollowingTabScreen> {
                   controller: vm.scrollcontroller,
                   itemBuilder: (context, index) {
                     return StreamBuilder<AmityPost>(
+                        key: UniqueKey(),
                         stream: vm.getAmityPosts()[index].listen,
                         initialData: vm.getAmityPosts()[index],
                         builder: (context, snapshot) {
-                          return ImagePostWidget(
-                              key: UniqueKey(),
-                              post: snapshot.data!,
-                              theme: theme);
+                          return PostWidget(post: snapshot.data!, theme: theme);
                         });
                   },
                 ),
@@ -80,8 +72,8 @@ class _HomeFollowingTabScreenState extends State<HomeFollowingTabScreen> {
   }
 }
 
-class ImagePostWidget extends StatefulWidget {
-  const ImagePostWidget({
+class PostWidget extends StatelessWidget {
+  const PostWidget({
     Key? key,
     required this.post,
     required this.theme,
@@ -90,18 +82,12 @@ class ImagePostWidget extends StatefulWidget {
   final AmityPost post;
   final ThemeData theme;
 
-  @override
-  State<ImagePostWidget> createState() => _ImagePostWidgetState();
-}
-
-class _ImagePostWidgetState extends State<ImagePostWidget>
-    with AutomaticKeepAliveClientMixin {
   Widget postWidgets() {
     List<Widget> widgets = [];
-    if (widget.post.data != null) {
-      widgets.add(AmityPostWidget([widget.post], false, false));
+    if (post.data != null) {
+      widgets.add(AmityPostWidget([post], false, false));
     }
-    final childrenPosts = widget.post.children;
+    final childrenPosts = post.children;
     if (childrenPosts != null && childrenPosts.isNotEmpty) {
       widgets.add(AmityPostWidget(childrenPosts, true, true));
     }
@@ -118,7 +104,7 @@ class _ImagePostWidgetState extends State<ImagePostWidget>
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => CommentScreen(
-                  amityPost: widget.post,
+                  amityPost: post,
                 )));
       },
       child: Card(
@@ -129,40 +115,30 @@ class _ImagePostWidgetState extends State<ImagePostWidget>
             children: [
               ListTile(
                 contentPadding: EdgeInsets.all(0),
-                leading: FadeAnimation(
-                  child: GestureDetector(
+                leading: GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => UserProfileScreen(
-                                amityUser: widget.post.postedUser!,
+                                amityUser: post.postedUser!,
                               )));
                     },
-                    child: (widget.post.postedUser?.avatarUrl != null)
-                        ? CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            backgroundImage: (NetworkImage(
-                                widget.post.postedUser?.avatarUrl ?? "")))
-                        : CircleAvatar(
-                            backgroundImage: AssetImage(
-                                "assets/images/user_placeholder.png")),
-                  ),
-                ),
+                    child: getAvatarImage(post.postedUser!.avatarUrl)),
                 title: GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => UserProfileScreen(
-                              amityUser: widget.post.postedUser!,
+                              amityUser: post.postedUser!,
                             )));
                   },
                   child: Text(
-                    widget.post.postedUser?.displayName ?? "Display name",
-                    style: widget.theme.textTheme.bodyText1!
+                    post.postedUser?.displayName ?? "Display name",
+                    style: theme.textTheme.bodyText1!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 subtitle: Text(
-                  " ${widget.post.createdAt?.toLocal().day}-${widget.post.createdAt?.toLocal().month}-${widget.post.createdAt?.toLocal().year}",
-                  style: widget.theme.textTheme.bodyText1!.copyWith(
+                  " ${post.createdAt?.toLocal().day}-${post.createdAt?.toLocal().month}-${post.createdAt?.toLocal().year}",
+                  style: theme.textTheme.bodyText1!.copyWith(
                       color: ApplicationColors.textGrey, fontSize: 11),
                 ),
                 trailing: Row(
@@ -230,10 +206,10 @@ class _ImagePostWidgetState extends State<ImagePostWidget>
                     // ),
                     Row(
                       children: [
-                        widget.post.myReactions!.isNotEmpty
+                        post.myReactions!.isNotEmpty
                             ? GestureDetector(
                                 onTap: () {
-                                  widget.post.react().removeReaction('like');
+                                  post.react().removeReaction('like');
                                 },
                                 child: Icon(
                                   Icons.favorite,
@@ -243,7 +219,7 @@ class _ImagePostWidgetState extends State<ImagePostWidget>
                               )
                             : GestureDetector(
                                 onTap: () {
-                                  widget.post.react().addReaction('like');
+                                  post.react().addReaction('like');
                                 },
                                 child: Icon(
                                   Icons.favorite_border,
@@ -253,7 +229,7 @@ class _ImagePostWidgetState extends State<ImagePostWidget>
                               ),
                         SizedBox(width: 8.5),
                         Text(
-                          widget.post.reactionCount.toString(),
+                          post.reactionCount.toString(),
                           style: TextStyle(
                               color: ApplicationColors.grey,
                               fontSize: 12,
@@ -265,7 +241,7 @@ class _ImagePostWidgetState extends State<ImagePostWidget>
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => CommentScreen(
-                                  amityPost: widget.post,
+                                  amityPost: post,
                                 )));
                       },
                       child: Row(
@@ -277,7 +253,7 @@ class _ImagePostWidgetState extends State<ImagePostWidget>
                           ),
                           SizedBox(width: 8.5),
                           Text(
-                            widget.post.commentCount.toString(),
+                            post.commentCount.toString(),
                             style: TextStyle(
                                 color: ApplicationColors.grey,
                                 fontSize: 12,

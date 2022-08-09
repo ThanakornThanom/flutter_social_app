@@ -114,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           listen: false)
                                       .amityImage!
                                       .fileUrl)
-                                  : getAvatarImage(
+                                  : getImageProvider(
                                       AmityCoreClient.getCurrentUser()
                                           .avatarUrl),
                             ),

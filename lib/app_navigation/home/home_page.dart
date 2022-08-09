@@ -31,11 +31,11 @@ class HomePage extends StatelessWidget {
         body: TabBarView(
           physics: BouncingScrollPhysics(),
           children: [
-            HomeFollowingTabScreen(),
-            HomeFollowingTabScreen(),
-            HomeFollowingTabScreen(),
-            HomeFollowingTabScreen(),
-            HomeFollowingTabScreen(),
+            GlobalFeedTabScreen(),
+            GlobalFeedTabScreen(),
+            GlobalFeedTabScreen(),
+            GlobalFeedTabScreen(),
+            GlobalFeedTabScreen(),
           ],
         ),
         // floatingActionButton: CustomHomeFloatingActionButton(),
