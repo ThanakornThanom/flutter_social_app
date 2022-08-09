@@ -101,10 +101,10 @@ class UploadScreenState extends State<UploadScreen>
                     ],
                   ),
                 ),
-                Container(
-                  height: mediaQuery.orientation == Orientation.portrait
-                      ? bHeight * 0.93
-                      : bHeight * 0.85,
+                Expanded(
+                  // height: mediaQuery.orientation == Orientation.portrait
+                  //     ? bHeight * 0.93
+                  //     : bHeight * 0.85,
                   child: TabBarView(
                     controller: _tabController,
                     children: [

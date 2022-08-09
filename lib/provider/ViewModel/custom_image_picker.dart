@@ -7,6 +7,11 @@ import 'package:image_picker/image_picker.dart';
 class ImagePickerVM extends ChangeNotifier {
   final ImagePicker _picker = ImagePicker();
   AmityFileInfo? amityImage;
+
+  void init() {
+    amityImage = null;
+  }
+
   void showBottomSheet(BuildContext context) {
     showModalBottomSheet(
         context: context,

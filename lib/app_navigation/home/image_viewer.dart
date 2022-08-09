@@ -34,14 +34,16 @@ class ImageViewer extends StatelessWidget {
                         child: ExtendedImage.network(
                           url,
                           cache: true,
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                           enableLoadState: true,
                           loadStateChanged: (ExtendedImageState state) {
-                           
-                            if (state.extendedImageLoadState == LoadState.loading) {
+                            if (state.extendedImageLoadState ==
+                                LoadState.loading) {
                               return Center(child: CircularProgressIndicator());
-                            } else if (state.extendedImageLoadState == LoadState.completed) {
+                            } else if (state.extendedImageLoadState ==
+                                LoadState.completed) {
                               return ExtendedRawImage(
+                                fit: BoxFit.cover,
                                 image: state.extendedImageInfo?.image,
                                 width: state.extendedImageInfo?.image.width
                                     .toDouble(),

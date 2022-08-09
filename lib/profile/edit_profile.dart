@@ -6,7 +6,7 @@ import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
-import 'package:verbose_share_world/utils/custom_image_picker.dart';
+import 'package:verbose_share_world/provider/ViewModel/custom_image_picker.dart';
 
 import '../components/custom_user_avatar.dart';
 import '../provider/ViewModel/user_feed_viewmodel.dart';
@@ -22,6 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController _descriptionController = TextEditingController();
   @override
   void initState() {
+    Provider.of<ImagePickerVM>(context, listen: false).init();
     Provider.of<UserFeedVM>(context, listen: false)
         .getUser(AmityCoreClient.getCurrentUser());
     print("displayname ${AmityCoreClient.getCurrentUser().displayName}");

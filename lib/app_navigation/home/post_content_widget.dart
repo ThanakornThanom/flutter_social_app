@@ -187,7 +187,7 @@ class ImagePost extends StatelessWidget {
                       BorderRadius.circular(isCornerRadiusEnabled ? 10 : 0),
                   child: OptimizedCacheImage(
                     imageUrl: url,
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
                       color: Colors.grey,
                     ),
