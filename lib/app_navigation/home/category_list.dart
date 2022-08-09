@@ -24,7 +24,28 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
-  AmityCommunity community = AmityCommunity();
+  // AmityCommunity community = AmityCommunity();
+
+  // void buildCategoryIds() {
+  //   for (var category
+  //       in Provider.of<CategoryVM>(context, listen: false).getCategories()) {
+  //     Provider.of<CategoryVM>(context, listen: false)
+  //         .addCategoryId(category.categoryId!);
+  //   }
+
+  //   if (community.categoryIds != null) {
+  //     Provider.of<CategoryVM>(context, listen: false)
+  //         .setSelectedCategory(community.categoryIds![0]);
+  //     // print("checking community category ids ${community.categoryIds}");
+  //     // for (var id in community.categoryIds!) {
+  //     //   if (categoryIds.contains(id)) {
+  //     //     print("category id has a match ${id}");
+  //     //     selectedCategoryIds.add(id);
+  //     //   }
+  //     // }
+  //   }
+  // }
+
   @override
   void dispose() {
     super.dispose();
@@ -33,8 +54,15 @@ class _CategoryListState extends State<CategoryList> {
   @override
   void initState() {
     super.initState();
-    community = widget.community;
-    Provider.of<CategoryVM>(context, listen: false).initCategoryList();
+    // community = widget.community;
+    Future.delayed(Duration.zero, () {
+      Provider.of<CategoryVM>(context, listen: false)
+          .setCommunity(widget.community);
+      Provider.of<CategoryVM>(context, listen: false).initCategoryList(
+          Provider.of<CategoryVM>(context, listen: false)
+              .getCommunity()
+              .categoryIds!);
+    });
   }
 
   int getLength() {
@@ -52,39 +80,65 @@ class _CategoryListState extends State<CategoryList> {
 
     final theme = Theme.of(context);
     return Consumer<CategoryVM>(builder: (context, vm, _) {
-      return Column(
-        children: [
-          Expanded(
-            child: Container(
-              height: bHeight,
-              color: ApplicationColors.lightGrey,
-              child: FadedSlideAnimation(
-                child: getLength() < 1
-                    ? Center(
-                        child: CircularProgressIndicator(
-                            color: theme.primaryColor),
-                      )
-                    : ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        itemCount: getLength(),
-                        itemBuilder: (context, index) {
-                          return CategoryWidget(
-                            category:
-                                Provider.of<CategoryVM>(context, listen: false)
-                                    .getCategories()[index],
-                            theme: theme,
-                            community: community,
-                            index: index,
-                          );
-                        },
-                      ),
-                beginOffset: Offset(0, 0.3),
-                endOffset: Offset(0, 0),
-                slideCurve: Curves.linearToEaseOut,
+      return Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  height: bHeight,
+                  color: ApplicationColors.lightGrey,
+                  child: FadedSlideAnimation(
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Container(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Icon(Icons.chevron_left,
+                                  color: Colors.black, size: 35),
+                            ),
+                          ),
+                        ),
+                        getLength() < 1
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                    color: theme.primaryColor),
+                              )
+                            : Expanded(
+                                child: ListView.builder(
+                                  physics: BouncingScrollPhysics(),
+                                  // shrinkWrap: true,
+                                  itemCount: getLength(),
+                                  itemBuilder: (context, index) {
+                                    return CategoryWidget(
+                                      category: Provider.of<CategoryVM>(context,
+                                              listen: false)
+                                          .getCategories()[index],
+                                      theme: theme,
+                                      community: Provider.of<CategoryVM>(
+                                              context,
+                                              listen: false)
+                                          .getCommunity(),
+                                      index: index,
+                                    );
+                                  },
+                                ),
+                              ),
+                      ],
+                    ),
+                    beginOffset: Offset(0, 0.3),
+                    endOffset: Offset(0, 0),
+                    slideCurve: Curves.linearToEaseOut,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       );
     });
   }
@@ -103,74 +157,44 @@ class CategoryWidget extends StatelessWidget {
   final ThemeData theme;
   final AmityCommunity community;
   final int index;
-  List<String> selectedCategoryIds = [];
-
-  void buildSelectedCategoryIds(BuildContext context) {
-    List<String> categoryIds = [];
-
-    for (var category
-        in Provider.of<CategoryVM>(context, listen: false).getCategories()) {
-      categoryIds.add(category.categoryId!);
-    }
-    print(
-        "check category ids ${categoryIds} === ${community.categoryIds != null}");
-    if (community.categoryIds != null) {
-      print("checking community category ids ${community.categoryIds}");
-      for (var id in community.categoryIds!) {
-        if (categoryIds.contains(id)) {
-          print("category id has a match ${id}");
-          selectedCategoryIds.add(id);
-        }
-      }
-    }
-  }
-
-  bool checkIfSelected(String id) {
-    print("selected category id ${selectedCategoryIds}");
-    print("checking current id ${id}");
-    return selectedCategoryIds.contains(id);
-  }
 
   @override
   Widget build(BuildContext context) {
-    buildSelectedCategoryIds(context);
-    return GestureDetector(
-      onTap: () {
-        // Navigator.of(context).push(MaterialPageRoute(
-        //     builder: (context) => CommunityScreen(
-        //           community: community,
-        //         )));
-      },
-      child: Card(
-        elevation: 0,
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: ListTile(
-            contentPadding: EdgeInsets.all(0),
-            leading: FadeAnimation(
-              child: (category.avatar?.fileUrl != null)
-                  ? CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      backgroundImage: (NetworkImage(category.avatar!.fileUrl)))
-                  : CircleAvatar(
-                      backgroundImage:
-                          AssetImage("assets/images/user_placeholder.png")),
-            ),
-            title: Text(
-              category.name ?? "Category",
-              style: theme.textTheme.bodyText1!
-                  .copyWith(fontWeight: FontWeight.bold),
-            ),
-            trailing: checkIfSelected(
-                    Provider.of<CategoryVM>(context, listen: false)
-                        .getCategories()[index]
-                        .categoryId!)
-                ? Icon(
-                    Icons.check_rounded,
-                    color: theme.primaryColor,
-                  )
-                : null,
+    return Card(
+      elevation: 0,
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: ListTile(
+          contentPadding: EdgeInsets.all(0),
+          onTap: () {
+            Provider.of<CategoryVM>(context, listen: false).setSelectedCategory(
+                Provider.of<CategoryVM>(context, listen: false)
+                    .getCategoryIds()[index]);
+          },
+          leading: FadeAnimation(
+            child: (category.avatar?.fileUrl != null)
+                ? CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: (NetworkImage(category.avatar!.fileUrl)))
+                : CircleAvatar(
+                    backgroundImage:
+                        AssetImage("assets/images/user_placeholder.png")),
           ),
+          title: Text(
+            category.name ?? "Category",
+            style: theme.textTheme.bodyText1!
+                .copyWith(fontWeight: FontWeight.bold),
+          ),
+          trailing: Provider.of<CategoryVM>(context, listen: true)
+                  .checkIfSelected(
+                      Provider.of<CategoryVM>(context, listen: false)
+                          .getCategories()[index]
+                          .categoryId!)
+              ? Icon(
+                  Icons.check_rounded,
+                  color: theme.primaryColor,
+                )
+              : null,
         ),
       ),
     );

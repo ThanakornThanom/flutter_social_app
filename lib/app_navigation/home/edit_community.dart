@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/home/category_list.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
+import 'package:verbose_share_world/provider/ViewModel/category_viewmodel.dart';
 
 import '../../components/custom_user_avatar.dart';
 import '../../provider/ViewModel/community_viewmodel.dart';
@@ -20,20 +21,24 @@ class EditCommunityScreen extends StatefulWidget {
 
 class _EditCommunityScreenState extends State<EditCommunityScreen> {
   AmityCommunity community = AmityCommunity();
+  CommunityType communityType = CommunityType.public;
   TextEditingController _displayNameController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _categoryController = TextEditingController();
+  AmityImage? communityAvatar;
   @override
   void initState() {
     // Provider.of<CommunityVM>(context, listen: false)
     //     .getUser(AmityCoreClient.getCurrentUser());
     community = widget.community;
-    print("displayname ${AmityCoreClient.getCurrentUser().displayName}");
+    communityAvatar = community.avatarImage as AmityImage;
     _displayNameController.text = community.displayName ?? "";
     _descriptionController.text = community.description ?? "";
     _categoryController.text = community.categories != null
         ? community.categories![0]!.name!
         : "No category";
+    communityType =
+        community.isPublic! ? CommunityType.public : CommunityType.private;
     super.initState();
   }
 
@@ -42,7 +47,7 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
     final mediaQuery = MediaQuery.of(context);
     final myAppBar = AppBar(
       title: Text(
-        S.of(context).my_Profile,
+        "Edit Community",
         style: theme.textTheme.headline6,
       ),
       backgroundColor: ApplicationColors.white,
@@ -50,12 +55,23 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
         onPressed: () {
           Navigator.of(context).pop();
         },
-        icon: Icon(Icons.chevron_left),
+        icon: Icon(Icons.chevron_left, color: Colors.black, size: 30),
       ),
       elevation: 0,
       actions: [
         TextButton(
           onPressed: () async {
+            print("enter update commu");
+            await Provider.of<CommunityVM>(context, listen: false)
+                .updateCommunity(
+                    community.communityId ?? "",
+                    communityAvatar!,
+                    _displayNameController.text,
+                    _descriptionController.text,
+                    Provider.of<CategoryVM>(context, listen: false)
+                        .getSelectedCategory(),
+                    communityType == CommunityType.public ? true : false);
+
             //edit profile
             // await Provider.of<CommunityVM>(context, listen: false)
             //     .editCurrentUserInfo(
@@ -63,7 +79,7 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
             //         description: _descriptionController.text);
           },
           child: Text(
-            S.of(context).edit,
+            "Save",
             style: theme.textTheme.button!.copyWith(
                 color: theme.primaryColor, fontWeight: FontWeight.bold),
           ),
@@ -196,6 +212,59 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
                       Divider(
                         color: ApplicationColors.lightGrey,
                         thickness: 3,
+                      ),
+                      Column(
+                        children: [
+                          ListTile(
+                            leading: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  shape: BoxShape.circle),
+                              child: Icon(Icons.public),
+                            ),
+                            title: const Text('Public'),
+                            subtitle: const Text(
+                                'Anyone can join, view and search this community'),
+                            trailing: Radio(
+                              value: CommunityType.public,
+                              activeColor: theme.primaryColor,
+                              groupValue: communityType,
+                              onChanged: (CommunityType? value) {
+                                setState(() {
+                                  communityType = value!;
+                                });
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          ListTile(
+                            leading: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  shape: BoxShape.circle),
+                              child: Icon(Icons.lock),
+                            ),
+                            title: const Text('Private'),
+                            subtitle: const Text(
+                                'Only members invited by the moderators can join, view and search this community'),
+                            trailing: Radio(
+                              value: CommunityType.private,
+                              activeColor: theme.primaryColor,
+                              groupValue: communityType,
+                              onChanged: (CommunityType? value) {
+                                setState(() {
+                                  communityType = value!;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

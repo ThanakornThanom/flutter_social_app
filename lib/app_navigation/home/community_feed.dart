@@ -26,8 +26,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
   void initState() {
     community = widget.community;
     super.initState();
-    Provider.of<FeedVM>(context, listen: false).initAmityCommunityFeed(
-        community.communityId ?? ""); //community.communityId!);
+    log("init commu feed state");
+    Future.delayed(Duration.zero, () {
+      Provider.of<FeedVM>(context, listen: false).initAmityCommunityFeed(
+          community.communityId ?? ""); //community.communityId!);
+    });
   }
 
   getAvatarImage(String? url) {
@@ -59,8 +62,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
   void onCommunityOptionTap(CommunityFeedMenuOption option) {
     switch (option) {
       case CommunityFeedMenuOption.edit:
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => EditCommunityScreen(community)));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => EditCommunityScreen(community)));
         break;
       case CommunityFeedMenuOption.members:
         break;
