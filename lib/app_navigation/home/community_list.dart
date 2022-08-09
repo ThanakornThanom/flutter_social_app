@@ -33,24 +33,26 @@ class _CommunityListState extends State<CommunityList> {
   void initState() {
     super.initState();
     communityType = widget.communityType;
-    switch (communityType) {
-      case CommunityListType.my:
-        Provider.of<CommunityVM>(context, listen: false)
-            .initAmityMyCommunityList();
-        break;
-      case CommunityListType.recommend:
-        Provider.of<CommunityVM>(context, listen: false)
-            .initAmityRecommendCommunityList();
-        break;
-      case CommunityListType.trending:
-        Provider.of<CommunityVM>(context, listen: false)
-            .initAmityTrendingCommunityList();
-        break;
-      default:
-        Provider.of<CommunityVM>(context, listen: false)
-            .initAmityMyCommunityList();
-        break;
-    }
+    Future.delayed(Duration.zero, () {
+      switch (communityType) {
+        case CommunityListType.my:
+          Provider.of<CommunityVM>(context, listen: false)
+              .initAmityMyCommunityList();
+          break;
+        case CommunityListType.recommend:
+          Provider.of<CommunityVM>(context, listen: false)
+              .initAmityRecommendCommunityList();
+          break;
+        case CommunityListType.trending:
+          Provider.of<CommunityVM>(context, listen: false)
+              .initAmityTrendingCommunityList();
+          break;
+        default:
+          Provider.of<CommunityVM>(context, listen: false)
+              .initAmityMyCommunityList();
+          break;
+      }
+    });
   }
 
   List<AmityCommunity> getList() {
@@ -123,7 +125,10 @@ class _CommunityListState extends State<CommunityList> {
                               initialData: getList()[index],
                               builder: (context, snapshot) {
                                 return CommunityWidget(
-                                    community: snapshot.data!, theme: theme,communityType: communityType,);
+                                  community: snapshot.data!,
+                                  theme: theme,
+                                  communityType: communityType,
+                                );
                               });
                         },
                       ),
@@ -200,7 +205,8 @@ class CommunityWidget extends StatelessWidget {
                                   community.communityId ?? "", communityType);
                         } else {
                           Provider.of<CommunityVM>(context, listen: false)
-                              .joinCommunity(community.communityId ?? "", communityType);
+                              .joinCommunity(
+                                  community.communityId ?? "", communityType);
                         }
                       }
                     },
