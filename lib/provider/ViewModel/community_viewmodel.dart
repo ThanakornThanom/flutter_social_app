@@ -4,12 +4,16 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 
 enum CommunityListType { my, recommend, trending }
-enum CommunityFeedMenuOption {edit,members}
+
+enum CommunityFeedMenuOption { edit, members }
+
+enum CommunityType { public, private }
 
 class CommunityVM extends ChangeNotifier {
   var _amityTrendingCommunities = <AmityCommunity>[];
   var _amityRecommendCommunities = <AmityCommunity>[];
   var _amityMyCommunities = <AmityCommunity>[];
+
   late PagingController<AmityCommunity> _controller;
 
   List<AmityCommunity> getAmityTrendingCommunities() {
@@ -39,6 +43,39 @@ class CommunityVM extends ChangeNotifier {
         .onError((error, stackTrace) => {
               //handle error
             });
+  }
+
+  Future<void> updateCommunity(
+      String communityId,
+      AmityImage? avatar,
+      String displayName,
+      String description,
+      List<String> categoryIds,
+      bool isPublic) async {
+    if (avatar != null) {
+      AmitySocialClient.newCommunityRepository()
+          .updateCommunity(communityId)
+          .avatar(avatar)
+          .displayName(displayName)
+          .description(description)
+          .categoryIds(categoryIds)
+          .isPublic(isPublic)
+          .update()
+          .then((value) =>
+              {print("success update commu + avatar"), notifyListeners()})
+          .onError((error, stackTrace) => {});
+    } else {
+      AmitySocialClient.newCommunityRepository()
+          .updateCommunity(communityId)
+          .displayName(displayName)
+          .description(description)
+          .categoryIds(categoryIds)
+          .isPublic(isPublic)
+          .update()
+          .then((value) =>
+              {print("enter update commu no avatar"), notifyListeners()})
+          .onError((error, stackTrace) => {});
+    }
   }
 
   void initAmityRecommendCommunityList() async {
@@ -102,7 +139,7 @@ class CommunityVM extends ChangeNotifier {
       _amityMyCommunities.clear();
       notifyListeners();
     }
-  
+
     AmitySocialClient.newCommunityRepository()
         .getCommunities()
         .filter(AmityCommunityFilter.MEMBER)
