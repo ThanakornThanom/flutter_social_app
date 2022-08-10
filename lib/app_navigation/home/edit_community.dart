@@ -20,25 +20,24 @@ class EditCommunityScreen extends StatefulWidget {
 }
 
 class _EditCommunityScreenState extends State<EditCommunityScreen> {
-  AmityCommunity community = AmityCommunity();
   CommunityType communityType = CommunityType.public;
   TextEditingController _displayNameController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _categoryController = TextEditingController();
-  AmityImage? communityAvatar;
+
   @override
   void initState() {
     // Provider.of<CommunityVM>(context, listen: false)
     //     .getUser(AmityCoreClient.getCurrentUser());
-    community = widget.community;
-    communityAvatar = community.avatarImage as AmityImage;
-    _displayNameController.text = community.displayName ?? "";
-    _descriptionController.text = community.description ?? "";
-    _categoryController.text = community.categories != null
-        ? community.categories![0]!.name!
+
+    _displayNameController.text = widget.community.displayName ?? "";
+    _descriptionController.text = widget.community.description ?? "";
+    _categoryController.text = widget.community.categories != null
+        ? widget.community.categories![0]!.name!
         : "No category";
-    communityType =
-        community.isPublic! ? CommunityType.public : CommunityType.private;
+    communityType = widget.community.isPublic!
+        ? CommunityType.public
+        : CommunityType.private;
     super.initState();
   }
 
@@ -63,8 +62,8 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
           onPressed: () async {
             await Provider.of<CommunityVM>(context, listen: false)
                 .updateCommunity(
-                    community.communityId ?? "",
-                    communityAvatar!,
+                    widget.community.communityId ?? "",
+                    widget.community.avatarImage,
                     _displayNameController.text,
                     _descriptionController.text,
                     Provider.of<CategoryVM>(context, listen: false)
@@ -108,7 +107,7 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
                             child: CircleAvatar(
                           radius: 50,
                           backgroundImage: getImageProvider(
-                              widget.community.avatarImage!.fileUrl),
+                              widget.community.avatarImage?.fileUrl),
                         )),
                         Positioned(
                           right: 0,
@@ -197,7 +196,8 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
                           readOnly: true,
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => CategoryList(community)));
+                                builder: (context) =>
+                                    CategoryList(widget.community)));
                           },
                           decoration: InputDecoration(
                             labelText: "Category",

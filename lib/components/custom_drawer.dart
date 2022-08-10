@@ -61,7 +61,7 @@ class MyDrawer extends StatelessWidget {
                       ),
                       Container(
                         child: Text(
-                          S.of(context).samanthaSmith,
+                          AmityCoreClient.getCurrentUser().displayName ?? "",
                           style: theme.textTheme.subtitle2!.copyWith(
                             color: theme.hintColor,
                           ),

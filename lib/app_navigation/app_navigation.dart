@@ -97,15 +97,22 @@ class _AppNavigationState extends State<AppNavigation> {
           style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 24),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: GestureDetector(
-              onTap: () {
-                _scaffoldKey.currentState!.openEndDrawer();
-              },
-              child: FadedScaleAnimation(
-                child:
-                    getAvatarImage(AmityCoreClient.getCurrentUser().avatarUrl),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: GestureDetector(
+                onTap: () {
+                  _scaffoldKey.currentState!.openEndDrawer();
+                },
+                child: Container(
+                  child: FadedScaleAnimation(
+                    child: CircleAvatar(
+                      backgroundImage: getImageProvider(
+                        AmityCoreClient.getCurrentUser().avatarUrl,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
