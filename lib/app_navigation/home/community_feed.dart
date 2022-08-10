@@ -222,7 +222,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                 stream: vm.getCommunityPosts()[index].listen,
                                 initialData: vm.getCommunityPosts()[index],
                                 builder: (context, snapshot) {
-                                  return ImagePostWidget(
+                                  return PostWidget(
                                       post: snapshot.data!, theme: theme);
                                 });
                           },

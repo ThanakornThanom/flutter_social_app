@@ -56,9 +56,8 @@ class _TextPostScreenState extends State<TextPostScreen> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: FadedScaleAnimation(
-                      child: CircleAvatar(
-                        backgroundImage: getAvatarImage(
-                            AmityCoreClient.getCurrentUser().avatarUrl),
+                      child: getAvatarImage(
+                        AmityCoreClient.getCurrentUser().avatarUrl!,
                       ),
                     ),
                   ),
@@ -70,6 +69,7 @@ class _TextPostScreenState extends State<TextPostScreen> {
                       child: Column(
                         children: [
                           TextField(
+                            controller: vm.textEditingController,
                             scrollPhysics: NeverScrollableScrollPhysics(),
                             maxLines: null,
                             decoration: InputDecoration(
@@ -95,9 +95,24 @@ class _TextPostScreenState extends State<TextPostScreen> {
                             itemCount: vm.amityImages.length,
                             itemBuilder: (_, i) {
                               return Container(
-                                  child: Image.network(
-                                vm.amityImages[i].fileUrl,
-                                fit: BoxFit.cover,
+                                  child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  Image.network(
+                                    vm.amityImages[i].fileUrl,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Align(
+                                      alignment: Alignment.topRight,
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            vm.deleteImageAt(index: i);
+                                          },
+                                          child: Icon(
+                                            Icons.cancel,
+                                            color: Colors.grey.shade100,
+                                          ))),
+                                ],
                               ));
                             },
                           )
@@ -171,8 +186,8 @@ class _TextPostScreenState extends State<TextPostScreen> {
                     ],
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
+                    onTap: () async {
+                      await vm.createPostToUserFeed(context);
                       Navigator.of(context).pop();
                     },
                     child: Container(

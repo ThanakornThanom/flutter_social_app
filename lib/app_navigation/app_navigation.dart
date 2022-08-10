@@ -74,7 +74,7 @@ class _AppNavigationState extends State<AppNavigation> {
   @override
   Widget build(BuildContext context) {
     final List<String> _titles = [
-      "",
+      AppConfig.appName,
       "Explore",
       S.of(context).notifications,
       S.of(context).chats,
@@ -96,10 +96,8 @@ class _AppNavigationState extends State<AppNavigation> {
                 _scaffoldKey.currentState!.openEndDrawer();
               },
               child: FadedScaleAnimation(
-                child: CircleAvatar(
-                  backgroundImage: getAvatarImage(
-                      AmityCoreClient.getCurrentUser().avatarUrl),
-                ),
+                child:
+                    getAvatarImage(AmityCoreClient.getCurrentUser().avatarUrl!),
               ),
             ),
           ),
