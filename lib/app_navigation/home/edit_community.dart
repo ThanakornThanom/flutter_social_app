@@ -202,8 +202,8 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
                           readOnly: true,
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    CategoryList(widget.community)));
+                                builder: (context) => CategoryList(
+                                    widget.community, _categoryController)));
                           },
                           decoration: InputDecoration(
                             labelText: "Category",

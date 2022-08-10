@@ -98,10 +98,10 @@ class CommunityVM extends ChangeNotifier {
     AmitySocialClient.newCommunityRepository()
         .joinCommunity(communityId)
         .then((value) {
-          if(type != null){
+      if (type != null) {
         refreshCommunity(type);
-          }
-     
+      }
+
       notifyListeners();
     }).onError((error, stackTrace) {});
   }
@@ -110,7 +110,7 @@ class CommunityVM extends ChangeNotifier {
     AmitySocialClient.newCommunityRepository()
         .leaveCommunity(communityId)
         .then((value) {
-     if (type != null) {
+      if (type != null) {
         refreshCommunity(type);
       }
       notifyListeners();
