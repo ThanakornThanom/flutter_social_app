@@ -17,8 +17,9 @@ import '../../provider/ViewModel/community_viewmodel.dart';
 
 class CategoryList extends StatefulWidget {
   AmityCommunity community;
+  TextEditingController categoryTextController;
 
-  CategoryList(this.community);
+  CategoryList(this.community, this.categoryTextController);
   @override
   _CategoryListState createState() => _CategoryListState();
 }
@@ -119,6 +120,8 @@ class _CategoryListState extends State<CategoryList> {
                                               listen: false)
                                           .getCategories()[index],
                                       theme: theme,
+                                      textController:
+                                          widget.categoryTextController,
                                       community: Provider.of<CategoryVM>(
                                               context,
                                               listen: false)
@@ -147,6 +150,7 @@ class _CategoryListState extends State<CategoryList> {
 class CategoryWidget extends StatelessWidget {
   CategoryWidget(
       {Key? key,
+      required this.textController,
       required this.category,
       required this.theme,
       required this.community,
@@ -157,6 +161,7 @@ class CategoryWidget extends StatelessWidget {
   final ThemeData theme;
   final AmityCommunity community;
   final int index;
+  final TextEditingController textController;
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +175,11 @@ class CategoryWidget extends StatelessWidget {
             Provider.of<CategoryVM>(context, listen: false).setSelectedCategory(
                 Provider.of<CategoryVM>(context, listen: false)
                     .getCategoryIds()[index]);
+            textController.text =
+                Provider.of<CategoryVM>(context, listen: false)
+                    .getSelectedCommunityName(
+                        Provider.of<CategoryVM>(context, listen: false)
+                            .getCategoryIds()[index]);
           },
           leading: FadeAnimation(
             child: (category.avatar?.fileUrl != null)

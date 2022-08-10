@@ -11,6 +11,7 @@ import 'package:verbose_share_world/provider/ViewModel/category_viewmodel.dart';
 
 import '../../components/custom_user_avatar.dart';
 import '../../provider/ViewModel/community_viewmodel.dart';
+import '../../provider/ViewModel/custom_image_picker.dart';
 
 class EditCommunityScreen extends StatefulWidget {
   AmityCommunity community;
@@ -103,7 +104,12 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
                     alignment: Alignment.center,
                     child: Stack(
                       children: [
-                        FadedScaleAnimation(
+                        GestureDetector(
+                          onTap: () {
+                            Provider.of<ImagePickerVM>(context, listen: false)
+                                .showBottomSheet(context);
+                          },
+                          child: FadedScaleAnimation(
                             child: CircleAvatar(
                           radius: 50,
                           backgroundImage: getImageProvider(

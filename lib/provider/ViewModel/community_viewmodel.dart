@@ -94,20 +94,25 @@ class CommunityVM extends ChangeNotifier {
             });
   }
 
-  void joinCommunity(String communityId, CommunityListType type) async {
+  void joinCommunity(String communityId, {CommunityListType? type}) async {
     AmitySocialClient.newCommunityRepository()
         .joinCommunity(communityId)
         .then((value) {
-      refreshCommunity(type);
+          if(type != null){
+        refreshCommunity(type);
+          }
+     
       notifyListeners();
     }).onError((error, stackTrace) {});
   }
 
-  void leaveCommunity(String communityId, CommunityListType type) async {
+  void leaveCommunity(String communityId, {CommunityListType? type}) async {
     AmitySocialClient.newCommunityRepository()
         .leaveCommunity(communityId)
         .then((value) {
-      refreshCommunity(type);
+     if (type != null) {
+        refreshCommunity(type);
+      }
       notifyListeners();
     }).onError((error, stackTrace) {
       //handle error
