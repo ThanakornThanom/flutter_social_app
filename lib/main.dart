@@ -12,6 +12,7 @@ import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/locale/language_cubit.dart';
 import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/category_viewmodel.dart';
+import 'package:verbose_share_world/provider/ViewModel/community_Feed_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/community_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/create_post_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-         ChangeNotifierProvider<CategoryVM>(create: ((context) => CategoryVM())),
+        ChangeNotifierProvider<CategoryVM>(create: ((context) => CategoryVM())),
         ChangeNotifierProvider<AmityVM>(create: ((context) => AmityVM())),
         ChangeNotifierProvider<FeedVM>(create: ((context) => FeedVM())),
         ChangeNotifierProvider<CommunityVM>(

@@ -90,7 +90,6 @@ class _ChatCreateGroupAddMemberScreenState
                                     S.of(context).iamaronsmith + '$index');
                               }
                             });
-                            print(_selectedMember);
                           },
                           key: ValueKey('$index'),
                           activeColor: theme.primaryColor,

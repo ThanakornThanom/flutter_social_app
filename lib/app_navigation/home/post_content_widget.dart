@@ -38,23 +38,23 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
     super.initState();
   }
 
-  void checkPostType() {
+  Future<void> checkPostType() async {
     switch (widget.posts[0].type) {
       case AmityDataType.IMAGE:
-        getImagePost();
+        await getImagePost();
         break;
       case AmityDataType.VIDEO:
-        getVideoPost();
+        await getVideoPost();
         break;
       default:
         break;
     }
   }
 
-  void getVideoPost() {
+  Future<void> getVideoPost() async {
     final videoData = widget.posts[0].data as VideoData;
 
-    videoData.getVideo(AmityVideoQuality.HIGH).then((AmityVideo video) {
+    await videoData.getVideo(AmityVideoQuality.HIGH).then((AmityVideo video) {
       if (this.mounted) {
         setState(() {
           isLoading = false;
@@ -64,11 +64,13 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
     });
   }
 
-  void getImagePost() {
+  Future<void> getImagePost() async {
     List<String> imageUrlList = [];
+
     for (var post in widget.posts) {
       final imageData = post.data as ImageData;
-      final largeImageUrl = imageData.getUrl(AmityImageSize.LARGE);
+      final largeImageUrl = await imageData.getUrl(AmityImageSize.MEDIUM);
+
       imageUrlList.add(largeImageUrl);
     }
     setState(() {
@@ -232,7 +234,8 @@ class VideoPost extends StatefulWidget {
   VideoPostState createState() => VideoPostState();
 }
 
-class VideoPostState extends State<VideoPost> {
+class VideoPostState extends State<VideoPost>
+    with AutomaticKeepAliveClientMixin {
   AmityPost post = AmityPost(postId: "");
   String videoURL = "";
   bool isCornerRadiusEnabled = true;
@@ -245,6 +248,7 @@ class VideoPostState extends State<VideoPost> {
     videoURL = widget.videoURL;
     isCornerRadiusEnabled = widget.isCornerRadiusEnabled;
     initializePlayer();
+    super.initState();
   }
 
   @override
@@ -258,7 +262,7 @@ class VideoPostState extends State<VideoPost> {
     videoPlayerController = VideoPlayerController.network(videoURL);
     await videoPlayerController.initialize();
     ChewieController controller = ChewieController(
-      showControls: false,
+      showControlsOnInitialize: true,
       videoPlayerController: videoPlayerController,
       autoPlay: true,
       deviceOrientationsAfterFullScreen: [
@@ -267,6 +271,9 @@ class VideoPostState extends State<VideoPost> {
       ],
       looping: true,
     );
+
+    controller.setVolume(0.0);
+
     setState(() {
       chewieController = controller;
     });
@@ -299,4 +306,8 @@ class VideoPostState extends State<VideoPost> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

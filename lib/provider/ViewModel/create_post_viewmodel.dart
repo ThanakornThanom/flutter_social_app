@@ -46,7 +46,6 @@ class CreatePostVM extends ChangeNotifier {
               .upload()
               .then((value) {
             var fileInfo = value as AmityUploadComplete;
-            print("upload image success: ${fileInfo.getFile.fileUrl}");
 
             amityImages.add(fileInfo.getFile);
             notifyListeners();
@@ -67,7 +66,6 @@ class CreatePostVM extends ChangeNotifier {
             .upload()
             .then((value) {
           var fileInfo = value as AmityUploadComplete;
-          print("upload image success: ${fileInfo.getFile.fileUrl}");
 
           amityImages.add(fileInfo.getFile);
           notifyListeners();
@@ -88,7 +86,6 @@ class CreatePostVM extends ChangeNotifier {
             .upload()
             .then((value) {
           var fileInfo = value as AmityUploadComplete;
-          print("upload image success: ${fileInfo.getFile.fileUrl}");
 
           amityVideo = fileInfo.getFile;
           notifyListeners();

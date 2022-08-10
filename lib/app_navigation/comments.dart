@@ -151,7 +151,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                                           widget
                                                               .amityPost
                                                               .postedUser!
-                                                              .avatarUrl!,
+                                                              .avatarUrl,
                                                           radius: 25),
                                                       SizedBox(width: 10),
                                                       Expanded(
@@ -244,9 +244,6 @@ class _CommentScreenState extends State<CommentScreen> {
                                                               .isNotEmpty
                                                           ? GestureDetector(
                                                               onTap: () {
-                                                                print(
-                                                                    "remove reaction");
-
                                                                 Provider.of<PostVM>(
                                                                         context,
                                                                         listen:
@@ -347,7 +344,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                                           widget
                                                               .amityPost
                                                               .postedUser!
-                                                              .avatarUrl!),
+                                                              .avatarUrl),
                                                       title: RichText(
                                                         text: TextSpan(
                                                           style: theme.textTheme
@@ -436,7 +433,7 @@ class _CommentScreenState extends State<CommentScreen> {
                           height: 60,
                           child: ListTile(
                             leading: getAvatarImage(
-                                widget.amityPost.postedUser!.avatarUrl!),
+                                widget.amityPost.postedUser!.avatarUrl),
                             title: TextField(
                               controller: _commentTextEditController,
                               decoration: InputDecoration(

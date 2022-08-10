@@ -41,8 +41,6 @@ class ImagePickerVM extends ChangeNotifier {
                           .upload()
                           .then((value) {
                         var fileInfo = value as AmityUploadComplete;
-                        print(
-                            "upload image success: ${fileInfo.getFile.fileUrl}");
 
                         amityImage = fileInfo.getFile;
                         notifyListeners();
@@ -65,8 +63,7 @@ class ImagePickerVM extends ChangeNotifier {
                         .upload()
                         .then((value) {
                       var fileInfo = value as AmityUploadComplete;
-                      print(
-                          "upload image success: ${fileInfo.getFile.fileUrl}");
+
                       amityImage = fileInfo.getFile;
                       notifyListeners();
                       Navigator.pop(context);

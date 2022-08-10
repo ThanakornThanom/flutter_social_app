@@ -61,8 +61,7 @@ class CommunityVM extends ChangeNotifier {
           .categoryIds(categoryIds)
           .isPublic(isPublic)
           .update()
-          .then((value) =>
-              {print("success update commu + avatar"), notifyListeners()})
+          .then((value) => notifyListeners())
           .onError((error, stackTrace) => {});
     } else {
       AmitySocialClient.newCommunityRepository()
@@ -72,8 +71,7 @@ class CommunityVM extends ChangeNotifier {
           .categoryIds(categoryIds)
           .isPublic(isPublic)
           .update()
-          .then((value) =>
-              {print("enter update commu no avatar"), notifyListeners()})
+          .then((value) => notifyListeners())
           .onError((error, stackTrace) => {});
     }
   }
@@ -117,7 +115,6 @@ class CommunityVM extends ChangeNotifier {
   }
 
   void refreshCommunity(CommunityListType type) {
-    print("refresh community");
     switch (type) {
       case CommunityListType.my:
         initAmityMyCommunityList();

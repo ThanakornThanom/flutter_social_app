@@ -36,7 +36,7 @@ class CategoryVM extends ChangeNotifier {
   void setSelectedCategory(String id) {
     _selectedCategories.clear();
     _selectedCategories.add(id);
-    print("check selected cat id ${id}");
+
     notifyListeners();
   }
 

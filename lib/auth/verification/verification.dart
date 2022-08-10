@@ -67,15 +67,11 @@ class _VerificationUiState extends State<VerificationUi> {
                       borderWidth: 1),
                   animationDuration: Duration(milliseconds: 300),
                   enableActiveFill: true,
-                  onCompleted: (v) {
-                    print("Completed");
-                  },
+                  onCompleted: (v) {},
                   onChanged: (value) {
-                    print(value);
                     setState(() {});
                   },
                   beforeTextPaste: (text) {
-                    print("Allowing to paste $text");
                     return true;
                   },
                   appContext: context,

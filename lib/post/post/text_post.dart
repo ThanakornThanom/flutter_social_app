@@ -19,6 +19,7 @@ class _TextPostScreenState extends State<TextPostScreen> {
   void initState() {
     // TODO: implement initState
     Provider.of<CreatePostVM>(context, listen: false).inits();
+    super.initState();
   }
 
   @override
@@ -56,10 +57,10 @@ class _TextPostScreenState extends State<TextPostScreen> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: FadedScaleAnimation(
-                      child: getAvatarImage(
-                        AmityCoreClient.getCurrentUser().avatarUrl!,
-                      ),
-                    ),
+                        child: CircleAvatar(
+                      backgroundImage: getImageProvider(
+                          AmityCoreClient.getCurrentUser().avatarUrl),
+                    )),
                   ),
                   SizedBox(
                     height: 10,

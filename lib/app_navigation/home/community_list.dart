@@ -12,6 +12,7 @@ import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 
 import '../../generated/l10n.dart';
+import '../../provider/ViewModel/community_Feed_viewmodel.dart';
 import '../../provider/ViewModel/community_viewmodel.dart';
 
 class CommunityList extends StatefulWidget {
@@ -31,7 +32,6 @@ class _CommunityListState extends State<CommunityList> {
 
   @override
   void initState() {
-    super.initState();
     communityType = widget.communityType;
     Future.delayed(Duration.zero, () {
       switch (communityType) {
@@ -53,6 +53,7 @@ class _CommunityListState extends State<CommunityList> {
           break;
       }
     });
+    super.initState();
   }
 
   List<AmityCommunity> getList() {
@@ -161,8 +162,11 @@ class CommunityWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => CommunityScreen(
-                  community: community,
+            builder: (context) => ChangeNotifierProvider(
+                  create: (context) => CommuFeedVM(),
+                  child: CommunityScreen(
+                    community: community,
+                  ),
                 )));
       },
       child: Card(

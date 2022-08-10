@@ -91,7 +91,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                 ],
                               ),
                               FadedScaleAnimation(
-                                  child: getAvatarImage(vm.amityUser.avatarUrl!,
+                                  child: getAvatarImage(vm.amityUser.avatarUrl,
                                       radius: 40)),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,

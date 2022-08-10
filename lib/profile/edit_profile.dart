@@ -25,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Provider.of<ImagePickerVM>(context, listen: false).init();
     Provider.of<UserFeedVM>(context, listen: false)
         .getUser(AmityCoreClient.getCurrentUser());
-    print("displayname ${AmityCoreClient.getCurrentUser().displayName}");
+
     _displayNameController.text = AmityCoreClient.getCurrentUser().displayName!;
     _descriptionController.text = AmityCoreClient.getCurrentUser().description!;
     super.initState();

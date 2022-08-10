@@ -61,7 +61,6 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
       actions: [
         TextButton(
           onPressed: () async {
-            print("enter update commu");
             await Provider.of<CommunityVM>(context, listen: false)
                 .updateCommunity(
                     community.communityId ?? "",

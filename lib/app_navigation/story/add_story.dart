@@ -50,9 +50,7 @@ class StoryAddScreen extends StatelessWidget {
                     ),
                     SizedBox(width: 40),
                     RawMaterialButton(
-                      onPressed: () {
-                        print('pic clicked.......');
-                      },
+                      onPressed: () {},
                       fillColor: theme.primaryColor,
                       shape: CircleBorder(),
                       padding: EdgeInsets.all(15),

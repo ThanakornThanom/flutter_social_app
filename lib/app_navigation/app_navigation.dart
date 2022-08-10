@@ -47,6 +47,13 @@ class _AppNavigationState extends State<AppNavigation> {
     ),
     BottomNavigationBarItem(
       icon: FaIcon(
+        FontAwesomeIcons.bars,
+        size: 20,
+      ),
+      label: 'Explore',
+    ),
+    BottomNavigationBarItem(
+      icon: FaIcon(
         FontAwesomeIcons.video,
         size: 20,
       ),
@@ -76,6 +83,7 @@ class _AppNavigationState extends State<AppNavigation> {
     final List<String> _titles = [
       AppConfig.appName,
       "Explore",
+      S.of(context).video,
       S.of(context).notifications,
       S.of(context).chats,
     ];

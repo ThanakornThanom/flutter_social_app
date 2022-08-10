@@ -5,6 +5,7 @@ import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/home/edit_community.dart';
 import 'package:verbose_share_world/app_navigation/home/home_following_screen.dart';
+import 'package:verbose_share_world/provider/ViewModel/community_Feed_viewmodel.dart';
 
 import '../../app_theme/application_colors.dart';
 import '../../provider/ViewModel/community_viewmodel.dart';
@@ -20,16 +21,16 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
-  ScrollController _controller = ScrollController();
-  AmityCommunity community = AmityCommunity();
   @override
   void initState() {
-    community = widget.community;
+    Provider.of<CommuFeedVM>(context, listen: false)
+        .initAmityCommunityFeed(widget.community.communityId!);
     super.initState();
-    Future.delayed(Duration.zero, () {
-      Provider.of<FeedVM>(context, listen: false).initAmityCommunityFeed(
-          community.communityId ?? "", _controller); //community.communityId!);
-    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   getAvatarImage(String? url) {
@@ -44,7 +45,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        community.description == null
+        widget.community.description == null
             ? Container()
             : Text(
                 "About",
@@ -53,7 +54,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
         SizedBox(
           height: 5.0,
         ),
-        Text(community.description ?? ""),
+        Text(widget.community.description ?? ""),
       ],
     );
   }
@@ -62,7 +63,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
     switch (option) {
       case CommunityFeedMenuOption.edit:
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => EditCommunityScreen(community)));
+            builder: (context) => EditCommunityScreen(widget.community)));
         break;
       case CommunityFeedMenuOption.members:
         break;
@@ -77,8 +78,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
         Row(
           children: [
             Text(
-                community.displayName != null
-                    ? community.displayName!
+                widget.community.displayName != null
+                    ? widget.community.displayName!
                     : "Community",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
             Spacer(),
@@ -130,21 +131,21 @@ class _CommunityScreenState extends State<CommunityScreen> {
             SizedBox(
               width: 5,
             ),
-            Text(community.isPublic != null
-                ? (community.isPublic! ? "Public" : "Private")
+            Text(widget.community.isPublic != null
+                ? (widget.community.isPublic! ? "Public" : "Private")
                 : "N/A"),
             SizedBox(
               width: 20,
             ),
-            Text("${community.membersCount} members"),
+            Text("${widget.community.membersCount} members"),
             Spacer(),
             ElevatedButton(
               style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all<Color>(theme.primaryColor)),
               onPressed: () {},
-              child: Text(community.isJoined != null
-                  ? (community.isJoined! ? "Leave" : "Join")
+              child: Text(widget.community.isJoined != null
+                  ? (widget.community.isJoined! ? "Leave" : "Join")
                   : "N/A"),
             )
           ],
@@ -157,8 +158,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Column(
       children: [
         OptimizedCacheImage(
-          imageUrl: community.avatarImage?.fileUrl != null
-              ? community.avatarImage!.fileUrl + "?size=full"
+          imageUrl: widget.community.avatarImage?.fileUrl != null
+              ? widget.community.avatarImage!.fileUrl + "?size=full"
               : "https://f8n-ipfs-production.imgix.net/QmXydmx66BwUCLXsxa2q6Z9ATKht6fbXqdrxU8VFd6c4cD/nft.png?q=80&auto=format%2Ccompress&cs=srgb&max-w=1680&max-h=1680",
           fit: BoxFit.fill,
           placeholder: (context, url) => Container(
@@ -183,64 +184,63 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final theme = Theme.of(context);
     final mediaQuery = MediaQuery.of(context);
     final bHeight = mediaQuery.size.height - mediaQuery.padding.top;
-    return Consumer<FeedVM>(builder: (context, vm, _) {
-      return Scaffold(
-        body: FadedSlideAnimation(
-          child: SafeArea(
-            child: Container(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: Icon(Icons.chevron_left,
-                            color: Colors.black, size: 35),
-                      ),
-                    ),
-                    Stack(
-                      children: [
-                        Container(
-                            width: double.infinity,
-                            // height: (bHeight - 120) * 0.4,
-                            child: communityDetailSection()),
-                      ],
-                    ),
-                    Container(
-                      color: ApplicationColors.lightGrey,
-                      child: FadedSlideAnimation(
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: vm.getCommunityPosts().length,
-                          itemBuilder: (context, index) {
-                            return StreamBuilder<AmityPost>(
-                                stream: vm.getCommunityPosts()[index].listen,
-                                initialData: vm.getCommunityPosts()[index],
-                                builder: (context, snapshot) {
-                                  return PostWidget(
-                                      post: snapshot.data!, theme: theme);
-                                });
-                          },
-                        ),
-                        beginOffset: Offset(0, 0.3),
-                        endOffset: Offset(0, 0),
-                        slideCurve: Curves.linearToEaseOut,
-                      ),
-                    ),
-                  ],
+
+    return Scaffold(
+      backgroundColor: ApplicationColors.lightGrey,
+      body: FadedSlideAnimation(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            controller: Provider.of<CommuFeedVM>(context).scrollcontroller,
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon:
+                        Icon(Icons.chevron_left, color: Colors.black, size: 35),
+                  ),
                 ),
-              ),
+                Container(
+                    width: double.infinity,
+                    // height: (bHeight - 120) * 0.4,
+                    child: communityDetailSection()),
+                Container(
+                  child: FadedSlideAnimation(
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: Provider.of<CommuFeedVM>(context)
+                          .getCommunityPosts()
+                          .length,
+                      itemBuilder: (context, index) {
+                        return StreamBuilder<AmityPost>(
+                            stream: Provider.of<CommuFeedVM>(context)
+                                .getCommunityPosts()[index]
+                                .listen,
+                            initialData: Provider.of<CommuFeedVM>(context)
+                                .getCommunityPosts()[index],
+                            builder: (context, snapshot) {
+                              return PostWidget(
+                                  post: snapshot.data!, theme: theme);
+                            });
+                      },
+                    ),
+                    beginOffset: Offset(0, 0.3),
+                    endOffset: Offset(0, 0),
+                    slideCurve: Curves.linearToEaseOut,
+                  ),
+                ),
+              ],
             ),
           ),
-          beginOffset: Offset(0, 0.3),
-          endOffset: Offset(0, 0),
-          slideCurve: Curves.linearToEaseOut,
         ),
-      );
-    });
+        beginOffset: Offset(0, 0.3),
+        endOffset: Offset(0, 0),
+        slideCurve: Curves.linearToEaseOut,
+      ),
+    );
   }
 }

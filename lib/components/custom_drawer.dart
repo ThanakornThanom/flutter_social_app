@@ -47,7 +47,7 @@ class MyDrawer extends StatelessWidget {
                       FadedScaleAnimation(
                         child: Container(
                           child: getAvatarImage(
-                              AmityCoreClient.getCurrentUser().avatarUrl!),
+                              AmityCoreClient.getCurrentUser().avatarUrl),
                         ),
                       ),
                       SizedBox(height: 20),

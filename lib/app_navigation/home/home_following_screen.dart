@@ -71,7 +71,7 @@ class _GlobalFeedTabScreenState extends State<GlobalFeedTabScreen> {
   }
 }
 
-class PostWidget extends StatefulWidget {
+class PostWidget extends StatelessWidget {
   const PostWidget({
     Key? key,
     required this.post,
@@ -81,18 +81,12 @@ class PostWidget extends StatefulWidget {
   final AmityPost post;
   final ThemeData theme;
 
-  @override
-  State<PostWidget> createState() => _PostWidgetState();
-}
-
-class _PostWidgetState extends State<PostWidget>
-    with AutomaticKeepAliveClientMixin {
   Widget postWidgets() {
     List<Widget> widgets = [];
-    if (widget.post.data != null) {
-      widgets.add(AmityPostWidget([widget.post], false, false));
+    if (post.data != null) {
+      widgets.add(AmityPostWidget([post], false, false));
     }
-    final childrenPosts = widget.post.children;
+    final childrenPosts = post.children;
     if (childrenPosts != null && childrenPosts.isNotEmpty) {
       widgets.add(AmityPostWidget(childrenPosts, true, true));
     }
@@ -103,8 +97,8 @@ class _PostWidgetState extends State<PostWidget>
     );
   }
 
-  @override
-  bool get wantKeepAlive => true;
+  // @override
+  // bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +106,7 @@ class _PostWidgetState extends State<PostWidget>
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => CommentScreen(
-                  amityPost: widget.post,
+                  amityPost: post,
                 )));
       },
       child: Card(
@@ -128,27 +122,30 @@ class _PostWidgetState extends State<PostWidget>
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (_) => UserProfileScreen(
-                                  amityUser: widget.post.postedUser!,
+                                  amityUser: post.postedUser!,
                                 )));
                       },
-                      child: getAvatarImage(widget.post.postedUser!.avatarUrl)),
+                      child: CircleAvatar(
+                        backgroundImage:
+                            getImageProvider(post.postedUser?.avatarUrl),
+                      )),
                 ),
                 title: GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => UserProfileScreen(
-                              amityUser: widget.post.postedUser!,
+                              amityUser: post.postedUser!,
                             )));
                   },
                   child: Text(
-                    widget.post.postedUser?.displayName ?? "Display name",
-                    style: widget.theme.textTheme.bodyText1!
+                    post.postedUser?.displayName ?? "Display name",
+                    style: theme.textTheme.bodyText1!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 subtitle: Text(
-                  " ${widget.post.createdAt?.toLocal().day}-${widget.post.createdAt?.toLocal().month}-${widget.post.createdAt?.toLocal().year}",
-                  style: widget.theme.textTheme.bodyText1!.copyWith(
+                  " ${post.createdAt?.toLocal().day}-${post.createdAt?.toLocal().month}-${post.createdAt?.toLocal().year}",
+                  style: theme.textTheme.bodyText1!.copyWith(
                       color: ApplicationColors.textGrey, fontSize: 11),
                 ),
                 trailing: Row(
@@ -216,10 +213,10 @@ class _PostWidgetState extends State<PostWidget>
                     // ),
                     Row(
                       children: [
-                        widget.post.myReactions!.isNotEmpty
+                        post.myReactions!.isNotEmpty
                             ? GestureDetector(
                                 onTap: () {
-                                  widget.post.react().removeReaction('like');
+                                  post.react().removeReaction('like');
                                 },
                                 child: Icon(
                                   Icons.favorite,
@@ -229,7 +226,7 @@ class _PostWidgetState extends State<PostWidget>
                               )
                             : GestureDetector(
                                 onTap: () {
-                                  widget.post.react().addReaction('like');
+                                  post.react().addReaction('like');
                                 },
                                 child: Icon(
                                   Icons.favorite_border,
@@ -239,7 +236,7 @@ class _PostWidgetState extends State<PostWidget>
                               ),
                         SizedBox(width: 8.5),
                         Text(
-                          widget.post.reactionCount.toString(),
+                          post.reactionCount.toString(),
                           style: TextStyle(
                               color: ApplicationColors.grey,
                               fontSize: 12,
@@ -251,7 +248,7 @@ class _PostWidgetState extends State<PostWidget>
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => CommentScreen(
-                                  amityPost: widget.post,
+                                  amityPost: post,
                                 )));
                       },
                       child: Row(
@@ -263,7 +260,7 @@ class _PostWidgetState extends State<PostWidget>
                           ),
                           SizedBox(width: 8.5),
                           Text(
-                            widget.post.commentCount.toString(),
+                            post.commentCount.toString(),
                             style: TextStyle(
                                 color: ApplicationColors.grey,
                                 fontSize: 12,
