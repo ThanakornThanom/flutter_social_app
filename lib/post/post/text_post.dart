@@ -188,6 +188,7 @@ class _TextPostScreenState extends State<TextPostScreen> {
                   GestureDetector(
                     onTap: () async {
                       await vm.createPostToUserFeed(context);
+
                       Navigator.of(context).pop();
                     },
                     child: Container(

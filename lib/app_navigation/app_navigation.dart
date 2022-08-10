@@ -97,7 +97,7 @@ class _AppNavigationState extends State<AppNavigation> {
               },
               child: FadedScaleAnimation(
                 child:
-                    getAvatarImage(AmityCoreClient.getCurrentUser().avatarUrl!),
+                    getAvatarImage(AmityCoreClient.getCurrentUser().avatarUrl),
               ),
             ),
           ),

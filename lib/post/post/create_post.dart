@@ -45,7 +45,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             children: [
               Row(
                 children: [
-                  getAvatarImage(AmityCoreClient.getCurrentUser().avatarUrl!),
+                  getAvatarImage(AmityCoreClient.getCurrentUser().avatarUrl),
                   SizedBox(width: 15),
                   SizedBox(
                     width: mediaQuery.size.width - 150,
