@@ -105,16 +105,16 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
                     child: Stack(
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            Provider.of<ImagePickerVM>(context, listen: false)
-                                .showBottomSheet(context);
-                          },
-                          child: FadedScaleAnimation(
-                            child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: getImageProvider(
-                              widget.community.avatarImage?.fileUrl),
-                        )),
+                            onTap: () {
+                              Provider.of<ImagePickerVM>(context, listen: false)
+                                  .showBottomSheet(context);
+                            },
+                            child: FadedScaleAnimation(
+                                child: CircleAvatar(
+                              radius: 50,
+                              backgroundImage: getImageProvider(
+                                  widget.community.avatarImage?.fileUrl),
+                            ))),
                         Positioned(
                           right: 0,
                           top: 7,
