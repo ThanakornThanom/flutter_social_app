@@ -11,6 +11,7 @@ import 'package:verbose_share_world/provider/ViewModel/category_viewmodel.dart';
 
 import '../../components/custom_user_avatar.dart';
 import '../../provider/ViewModel/community_viewmodel.dart';
+import '../../provider/ViewModel/custom_image_picker.dart';
 
 class EditCommunityScreen extends StatefulWidget {
   AmityCommunity community;
@@ -20,7 +21,7 @@ class EditCommunityScreen extends StatefulWidget {
 }
 
 class _EditCommunityScreenState extends State<EditCommunityScreen> {
-  AmityCommunity community = AmityCommunity();
+  // AmityCommunity community = AmityCommunity();
   CommunityType communityType = CommunityType.public;
   TextEditingController _displayNameController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
@@ -30,15 +31,24 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
   void initState() {
     // Provider.of<CommunityVM>(context, listen: false)
     //     .getUser(AmityCoreClient.getCurrentUser());
-    community = widget.community;
-    communityAvatar = community.avatarImage as AmityImage;
-    _displayNameController.text = community.displayName ?? "";
-    _descriptionController.text = community.description ?? "";
-    _categoryController.text = community.categories != null
-        ? community.categories![0]!.name!
-        : "No category";
-    communityType =
-        community.isPublic! ? CommunityType.public : CommunityType.private;
+    Provider.of<ImagePickerVM>(context, listen: false).init();
+    if (widget.community.avatarImage != null) {
+      communityAvatar = widget.community.avatarImage as AmityImage;
+    }
+    _displayNameController.text = widget.community.displayName ?? "";
+    _descriptionController.text = widget.community.description ?? "";
+    if (widget.community.categories != null) {
+      if (widget.community.categories!.isNotEmpty) {
+        _categoryController.text = widget.community.categories![0]!.name!;
+      } else {
+        _categoryController.text = "No category";
+      }
+    } else {
+      _categoryController.text = "No category";
+    }
+    communityType = widget.community.isPublic!
+        ? CommunityType.public
+        : CommunityType.private;
     super.initState();
   }
 
@@ -64,8 +74,13 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
             print("enter update commu");
             await Provider.of<CommunityVM>(context, listen: false)
                 .updateCommunity(
-                    community.communityId ?? "",
-                    communityAvatar!,
+                    widget.community.communityId ?? "",
+                    Provider.of<ImagePickerVM>(context, listen: false)
+                                .amityImage !=
+                            null
+                        ? Provider.of<ImagePickerVM>(context, listen: false)
+                            .amityImage! as AmityImage
+                        : communityAvatar,
                     _displayNameController.text,
                     _descriptionController.text,
                     Provider.of<CategoryVM>(context, listen: false)
@@ -105,12 +120,29 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
                     alignment: Alignment.center,
                     child: Stack(
                       children: [
-                        FadedScaleAnimation(
+                        GestureDetector(
+                          onTap: () {
+                            Provider.of<ImagePickerVM>(context, listen: false)
+                                .showBottomSheet(context);
+                          },
+                          child: FadedScaleAnimation(
                             child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: getImageProvider(
-                              widget.community.avatarImage!.fileUrl),
-                        )),
+                              radius: 60,
+                              backgroundImage: Provider.of<ImagePickerVM>(
+                                              context,
+                                              listen: true)
+                                          .amityImage !=
+                                      null
+                                  ? NetworkImage(Provider.of<ImagePickerVM>(
+                                          context,
+                                          listen: false)
+                                      .amityImage!
+                                      .fileUrl)
+                                  : getImageProvider(
+                                      widget.community.avatarImage?.fileUrl),
+                            ),
+                          ),
+                        ),
                         Positioned(
                           right: 0,
                           top: 7,
@@ -198,7 +230,8 @@ class _EditCommunityScreenState extends State<EditCommunityScreen> {
                           readOnly: true,
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => CategoryList(community)));
+                                builder: (context) =>
+                                    CategoryList(widget.community, _categoryController)));
                           },
                           decoration: InputDecoration(
                             labelText: "Category",
