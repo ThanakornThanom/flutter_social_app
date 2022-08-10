@@ -104,6 +104,9 @@ class _PostWidgetState extends State<PostWidget>
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -278,8 +281,4 @@ class _PostWidgetState extends State<PostWidget>
       ),
     );
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }

@@ -10,6 +10,7 @@ class FeedVM extends ChangeNotifier {
   var _amityCommunityFeedPosts = <AmityPost>[];
 
   late PagingController<AmityPost> _controllerGlobal;
+  late PagingController<AmityPost> _controllerCommu;
   final scrollcontroller = ScrollController();
 
   List<AmityPost> getAmityPosts() {
@@ -30,17 +31,45 @@ class FeedVM extends ChangeNotifier {
     }
   }
 
-  void initAmityCommunityFeed(String communityId) async {
-    log("initAmityCommunityFeed");
-    await AmitySocialClient.newPostRepository()
-        .getPosts()
-        .targetCommunity(communityId)
-        //feedType could be AmityFeedType.PUBLISHED, AmityFeedType.REVIEWING, AmityFeedType.DECLINED
-        .feedType(AmityFeedType.PUBLISHED)
-        .includeDeleted(false)
+  void initAmityCommunityFeed(
+      String communityId, ScrollController scrollControllerCommu) async {
+    //inititate the PagingController
+    _controllerCommu = PagingController(
+      pageFuture: (token) => AmitySocialClient.newFeedRepository()
+          .getCommunityFeed(communityId)
+          //feedType could be AmityFeedType.PUBLISHED, AmityFeedType.REVIEWING, AmityFeedType.DECLINED
+          .feedType(AmityFeedType.PUBLISHED)
+          .getPagingData(token: token, limit: 20),
+      pageSize: 20,
+    )..addListener(
+        () {
+          if (_controllerCommu.error == null) {
+            //handle results, we suggest to clear the previous items
+            //and add with the latest _controller.loadedItems
+            _amityCommunityFeedPosts.clear();
+            _amityCommunityFeedPosts.addAll(_controllerCommu.loadedItems);
+            //update widgets
+            notifyListeners();
+          } else {
+            //error on pagination controller
+            print("error");
+            //update widgets
+
+          }
+        },
+      );
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _controllerCommu.fetchNextPage();
+    });
+
+    scrollControllerCommu.addListener(loadnextpage);
+
+    //inititate the PagingController
+    await AmitySocialClient.newFeedRepository()
+        .getGlobalFeed()
         .getPagingData()
         .then((value) {
-      print("successfully query community feed");
       _amityCommunityFeedPosts = value.data;
     });
     notifyListeners();

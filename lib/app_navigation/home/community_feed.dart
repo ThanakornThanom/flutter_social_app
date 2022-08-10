@@ -28,9 +28,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
     super.initState();
     log("init commu feed state");
     Future.delayed(Duration.zero, () {
-      Provider.of<FeedVM>(context, listen: false).initAmityCommunityFeed(
-          community.communityId ?? ""); //community.communityId!);
-    });
+
+    Provider.of<FeedVM>(context, listen: false).initAmityCommunityFeed(
+        community.communityId ?? "", _controller); //community.communityId!);
+
+  });
   }
 
   getAvatarImage(String? url) {
