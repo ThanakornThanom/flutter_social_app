@@ -33,6 +33,15 @@ class CategoryVM extends ChangeNotifier {
     return _selectedCategories;
   }
 
+  String getSelectedCommunityName(String id) {
+    for (var category in _categories) {
+      if (category.categoryId! == id) {
+        return category.name!;
+      }
+    }
+    return "";
+  }
+
   void setSelectedCategory(String id) {
     _selectedCategories.clear();
     _selectedCategories.add(id);

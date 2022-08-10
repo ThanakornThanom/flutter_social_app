@@ -143,7 +143,19 @@ class _CommunityScreenState extends State<CommunityScreen> {
               style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all<Color>(theme.primaryColor)),
-              onPressed: () {},
+              onPressed: () {
+                if (community.isJoined != null) {
+                  if (community.isJoined!) {
+                    Provider.of<CommunityVM>(context, listen: false)
+                        .leaveCommunity(
+                            community.communityId ?? "");
+                  } else {
+                    Provider.of<CommunityVM>(context, listen: false)
+                        .joinCommunity(
+                            community.communityId ?? "");
+                  }
+                }
+              },
               child: Text(community.isJoined != null
                   ? (community.isJoined! ? "Leave" : "Join")
                   : "N/A"),

@@ -34,6 +34,7 @@ class ImagePickerVM extends ChangeNotifier {
                     leading: Icon(Icons.photo),
                     title: Text('Gallery'),
                     onTap: () async {
+                      Navigator.pop(context);
                       final XFile? image =
                           await _picker.pickImage(source: ImageSource.gallery);
                       await AmityCoreClient.newFileRepository()
@@ -46,7 +47,7 @@ class ImagePickerVM extends ChangeNotifier {
 
                         amityImage = fileInfo.getFile;
                         notifyListeners();
-                        Navigator.pop(context);
+                        
                       }).onError((error, stackTrace) {
                         print("error: ${error}");
                       });
@@ -58,6 +59,7 @@ class ImagePickerVM extends ChangeNotifier {
                   leading: new Icon(Icons.camera_alt),
                   title: new Text('Camera'),
                   onTap: () async {
+                    Navigator.pop(context);
                     final XFile? image =
                         await _picker.pickImage(source: ImageSource.gallery);
                     await AmityCoreClient.newFileRepository()
