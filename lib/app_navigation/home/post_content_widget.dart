@@ -23,19 +23,12 @@ class AmityPostWidget extends StatefulWidget {
 }
 
 class _AmityPostWidgetState extends State<AmityPostWidget> {
-  List<AmityPost> posts = [];
-  bool isChildrenPost = false;
-  bool isCornerRadiusEnabled = false;
   List<String> imageURLs = [];
   String videoUrl = "";
   bool isLoading = true;
   @override
   void initState() {
-    posts = widget.posts;
-    isChildrenPost = widget.isChildrenPost;
-    isCornerRadiusEnabled = widget.isCornerRadiusEnabled;
-
-    if (!isChildrenPost) {
+    if (!widget.isChildrenPost) {
       setState(() {
         isLoading = false;
       });
@@ -46,7 +39,7 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   }
 
   void checkPostType() {
-    switch (posts[0].type) {
+    switch (widget.posts[0].type) {
       case AmityDataType.IMAGE:
         getImagePost();
         break;
@@ -59,7 +52,7 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   }
 
   void getVideoPost() {
-    final videoData = posts[0].data as VideoData;
+    final videoData = widget.posts[0].data as VideoData;
 
     videoData.getVideo(AmityVideoQuality.HIGH).then((AmityVideo video) {
       if (this.mounted) {
@@ -73,7 +66,7 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
 
   void getImagePost() {
     List<String> imageUrlList = [];
-    for (var post in posts) {
+    for (var post in widget.posts) {
       final imageData = post.data as ImageData;
       final largeImageUrl = imageData.getUrl(AmityImageSize.LARGE);
       imageUrlList.add(largeImageUrl);
@@ -85,21 +78,23 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   }
 
   Widget postWidget() {
-    if (!isChildrenPost) {
-      return TextPost(post: posts[0]);
+    if (!widget.isChildrenPost) {
+      return TextPost(post: widget.posts[0]);
     } else {
-      switch (posts[0].type) {
+      switch (widget.posts[0].type) {
         case AmityDataType.IMAGE:
           return ImagePost(
-              posts: posts,
+              posts: widget.posts,
               imageURLs: imageURLs,
               isCornerRadiusEnabled:
-                  isCornerRadiusEnabled || imageURLs.length > 1 ? true : false);
+                  widget.isCornerRadiusEnabled || imageURLs.length > 1
+                      ? true
+                      : false);
         case AmityDataType.VIDEO:
           return VideoPost(
-              post: posts[0],
+              post: widget.posts[0],
               videoURL: videoUrl,
-              isCornerRadiusEnabled: isCornerRadiusEnabled);
+              isCornerRadiusEnabled: widget.isCornerRadiusEnabled);
         default:
           return Container();
       }
@@ -263,8 +258,9 @@ class VideoPostState extends State<VideoPost> {
     videoPlayerController = VideoPlayerController.network(videoURL);
     await videoPlayerController.initialize();
     ChewieController controller = ChewieController(
+      showControls: false,
       videoPlayerController: videoPlayerController,
-      autoPlay: false,
+      autoPlay: true,
       deviceOrientationsAfterFullScreen: [
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown
