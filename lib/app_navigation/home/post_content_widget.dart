@@ -52,30 +52,38 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   }
 
   Future<void> getVideoPost() async {
-    final videoData = widget.posts[0].data as VideoData;
+    Future.delayed(Duration.zero, () async {
+      final videoData = widget.posts[0].data as VideoData;
 
-    await videoData.getVideo(AmityVideoQuality.HIGH).then((AmityVideo video) {
-      if (this.mounted) {
-        setState(() {
-          isLoading = false;
-          videoUrl = video.fileUrl;
-        });
-      }
+      await videoData.getVideo(AmityVideoQuality.HIGH).then((AmityVideo video) {
+        if (this.mounted) {
+          setState(() {
+            isLoading = false;
+            videoUrl = video.fileUrl;
+          });
+        }
+      });
     });
   }
 
   Future<void> getImagePost() async {
-    List<String> imageUrlList = [];
-
-    for (var post in widget.posts) {
-      final imageData = post.data as ImageData;
-      final largeImageUrl = await imageData.getUrl(AmityImageSize.MEDIUM);
-
-      imageUrlList.add(largeImageUrl);
-    }
-    setState(() {
-      isLoading = false;
-      imageURLs = imageUrlList;
+    Future.delayed(Duration.zero, () async {
+      List<String> imageUrlList = [];
+      print("post.data ${widget.posts.isEmpty}");
+      for (int i = 0; i < widget.posts.length; i++) {
+        try {
+          final imageData = widget.posts[i].data as ImageData;
+          final largeImageUrl = await imageData.getUrl(AmityImageSize.MEDIUM);
+          imageUrlList.add(largeImageUrl);
+        } catch (error) {
+          continue;
+          // executed for errors of all types other than Exception
+        }
+      }
+      setState(() {
+        isLoading = false;
+        imageURLs = imageUrlList;
+      });
     });
   }
 
@@ -259,6 +267,7 @@ class VideoPostState extends State<VideoPost>
   }
 
   Future<void> initializePlayer() async {
+    print("check video URL ${videoURL}");
     videoPlayerController = VideoPlayerController.network(videoURL);
     await videoPlayerController.initialize();
     ChewieController controller = ChewieController(
