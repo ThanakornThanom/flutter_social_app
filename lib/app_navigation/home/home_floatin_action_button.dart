@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/story/add_story.dart';
 import 'package:verbose_share_world/post/post/create_post.dart';
-import 'package:verbose_share_world/post/post/text_post.dart';
+import 'package:verbose_share_world/post/post/create_post_screen.dart';
 import 'package:verbose_share_world/post/upload.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
@@ -72,7 +72,7 @@ class _CustomHomeFloatingActionButtonState
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => TextPostScreen()));
+                          builder: (context) => CreatePostScreen()));
                     },
                     child: Icon(Icons.text_format),
                   ),

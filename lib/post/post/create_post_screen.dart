@@ -1,20 +1,27 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/provider/ViewModel/create_post_viewmodel.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../components/custom_user_avatar.dart';
+import '../../components/video_player.dart';
 
-class TextPostScreen extends StatefulWidget {
+// ignore: must_be_immutable
+class CreatePostScreen2 extends StatefulWidget {
+  String? communityID;
+
+  CreatePostScreen2({Key? key, this.communityID}) : super(key: key);
   @override
-  _TextPostScreenState createState() => _TextPostScreenState();
+  _CreatePostScreen2State createState() => _CreatePostScreen2State();
 }
 
-class _TextPostScreenState extends State<TextPostScreen> {
+class _CreatePostScreen2State extends State<CreatePostScreen2> {
   @override
   void initState() {
     // TODO: implement initState
@@ -56,11 +63,10 @@ class _TextPostScreenState extends State<TextPostScreen> {
                 children: [
                   Align(
                     alignment: Alignment.topLeft,
-                    child: FadedScaleAnimation(
-                        child: CircleAvatar(
+                    child: CircleAvatar(
                       backgroundImage: getImageProvider(
                           AmityCoreClient.getCurrentUser().avatarUrl),
-                    )),
+                    ),
                   ),
                   SizedBox(
                     height: 10,
@@ -80,9 +86,11 @@ class _TextPostScreenState extends State<TextPostScreen> {
                             // style: t/1heme.textTheme.bodyText1.copyWith(color: Colors.grey),
                           ),
                           (vm.amityVideo != null)
-                              ? Container(
-                                  child: Text("video"),
-                                )
+                              ? (vm.amityVideo!.isComplete)
+                                  ? MyVideoPlayer(
+                                      file: vm.amityVideo!.file!,
+                                    )
+                                  : CircularProgressIndicator()
                               : Container(),
                           GridView.builder(
                             physics: NeverScrollableScrollPhysics(),
@@ -95,26 +103,36 @@ class _TextPostScreenState extends State<TextPostScreen> {
                                     mainAxisSpacing: 10),
                             itemCount: vm.amityImages.length,
                             itemBuilder: (_, i) {
-                              return Container(
-                                  child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  Image.network(
-                                    vm.amityImages[i].fileUrl,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Align(
-                                      alignment: Alignment.topRight,
-                                      child: GestureDetector(
-                                          onTap: () {
-                                            vm.deleteImageAt(index: i);
-                                          },
-                                          child: Icon(
-                                            Icons.cancel,
-                                            color: Colors.grey.shade100,
-                                          ))),
-                                ],
-                              ));
+                              return (vm.amityImages[i].isComplete)
+                                  ? FadeAnimation(
+                                      child: Container(
+                                          child: Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          Image.network(
+                                            vm.amityImages[i].fileInfo!.fileUrl,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          Align(
+                                              alignment: Alignment.topRight,
+                                              child: GestureDetector(
+                                                  onTap: () {
+                                                    vm.deleteImageAt(index: i);
+                                                  },
+                                                  child: Icon(
+                                                    Icons.cancel,
+                                                    color: Colors.grey.shade100,
+                                                  ))),
+                                        ],
+                                      )),
+                                    )
+                                  : FadeAnimation(
+                                      child: Container(
+                                        color: theme.highlightColor,
+                                        child: Center(
+                                            child: CircularProgressIndicator()),
+                                      ),
+                                    );
                             },
                           )
                         ],
@@ -188,7 +206,14 @@ class _TextPostScreenState extends State<TextPostScreen> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      await vm.createPostToUserFeed(context);
+                      if (widget.communityID == null) {
+                        //creat post in user Timeline
+                        await vm.createPost(context);
+                      } else {
+                        //create post in Community
+                        await vm.createPost(context,
+                            communityId: widget.communityID);
+                      }
 
                       Navigator.of(context).pop();
                     },

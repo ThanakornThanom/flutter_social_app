@@ -28,6 +28,7 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   bool isLoading = true;
   @override
   void initState() {
+    super.initState();
     if (!widget.isChildrenPost) {
       setState(() {
         isLoading = false;
@@ -35,7 +36,6 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
     } else {
       checkPostType();
     }
-    super.initState();
   }
 
   Future<void> checkPostType() async {
@@ -234,8 +234,7 @@ class VideoPost extends StatefulWidget {
   VideoPostState createState() => VideoPostState();
 }
 
-class VideoPostState extends State<VideoPost>
-    with AutomaticKeepAliveClientMixin {
+class VideoPostState extends State<VideoPost> {
   AmityPost post = AmityPost(postId: "");
   String videoURL = "";
   bool isCornerRadiusEnabled = true;
@@ -306,8 +305,4 @@ class VideoPostState extends State<VideoPost>
       ),
     );
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }

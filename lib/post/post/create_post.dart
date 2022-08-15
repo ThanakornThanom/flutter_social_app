@@ -3,7 +3,7 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
-import 'package:verbose_share_world/post/post/text_post.dart';
+import 'package:verbose_share_world/post/post/create_post_screen.dart';
 
 import '../../components/custom_user_avatar.dart';
 
@@ -71,7 +71,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => TextPostScreen()));
+                      builder: (context) => CreatePostScreen()));
                 },
                 child: Container(
                   margin: EdgeInsets.only(top: 20),

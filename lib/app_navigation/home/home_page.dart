@@ -4,7 +4,7 @@ import 'package:verbose_share_world/app_navigation/home/home_floatin_action_butt
 import 'package:verbose_share_world/app_navigation/home/home_following_screen.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 
-import '../../post/post/text_post.dart';
+import '../../post/post/create_post_screen.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -43,9 +43,9 @@ class HomePage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
             backgroundColor: theme.primaryColor,
             child: Icon(Icons.add),
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => TextPostScreen()));
+            onPressed: () async {
+              await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => CreatePostScreen2()));
             }),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
@@ -444,6 +445,7 @@ class _CommentScreenState extends State<CommentScreen> {
                             ),
                             trailing: GestureDetector(
                                 onTap: () async {
+                                  HapticFeedback.heavyImpact();
                                   await Provider.of<PostVM>(context,
                                           listen: false)
                                       .createComment(snapshot.data!.postId!,
