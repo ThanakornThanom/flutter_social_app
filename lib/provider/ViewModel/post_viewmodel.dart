@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class PostVM extends ChangeNotifier {
   late AmityPost amityPost;
@@ -80,22 +81,26 @@ class PostVM extends ChangeNotifier {
   }
 
   void addCommentReaction(AmityComment comment) {
+    HapticFeedback.heavyImpact();
     comment.react().addReaction('like').then((value) {});
   }
 
   void addPostReaction(AmityPost post) {
+    HapticFeedback.heavyImpact();
     post.react().addReaction('like').then((value) => {
           //success
         });
   }
 
   void removePostReaction(AmityPost post) {
+    HapticFeedback.heavyImpact();
     post.react().removeReaction('like').then((value) => {
           //success
         });
   }
 
   void removeCommentReaction(AmityComment comment) {
+    HapticFeedback.heavyImpact();
     comment.react().removeReaction('like').then((value) => {
           //success
         });

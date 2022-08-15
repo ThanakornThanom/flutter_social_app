@@ -1,6 +1,7 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/comments.dart';
@@ -163,10 +164,15 @@ class PostWidget extends StatelessWidget {
                       color: ApplicationColors.grey,
                     ),
                     SizedBox(width: 20),
-                    Icon(
-                      Icons.more_vert,
-                      size: 18,
-                      color: ApplicationColors.grey,
+                    GestureDetector(
+                      onTap: () {
+                        HapticFeedback.heavyImpact();
+                      },
+                      child: Icon(
+                        Icons.more_vert,
+                        size: 18,
+                        color: ApplicationColors.grey,
+                      ),
                     ),
                   ],
                 ),
@@ -216,6 +222,7 @@ class PostWidget extends StatelessWidget {
                         post.myReactions!.isNotEmpty
                             ? GestureDetector(
                                 onTap: () {
+                                  HapticFeedback.heavyImpact();
                                   post.react().removeReaction('like');
                                 },
                                 child: Icon(
@@ -226,6 +233,7 @@ class PostWidget extends StatelessWidget {
                               )
                             : GestureDetector(
                                 onTap: () {
+                                  HapticFeedback.heavyImpact();
                                   post.react().addReaction('like');
                                 },
                                 child: Icon(

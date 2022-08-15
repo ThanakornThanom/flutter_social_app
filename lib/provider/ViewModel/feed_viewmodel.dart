@@ -16,14 +16,9 @@ class FeedVM extends ChangeNotifier {
     return _amityGlobalFeedPosts;
   }
 
-  void addPostToFeed(AmityPost post, Feedtype feedtype) {
-    if (feedtype == Feedtype.GLOBAL) {
-      _controllerGlobal.addAtIndex(0, post);
-      notifyListeners();
-    } else if (feedtype == Feedtype.COOMU) {
-      ///Coommu controller add posts
-      notifyListeners();
-    }
+  Future<void> addPostToFeed(AmityPost post) async {
+    _controllerGlobal.addAtIndex(0, post);
+    notifyListeners();
   }
 
   Future<void> initAmityGlobalfeed() async {

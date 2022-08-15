@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/home/edit_community.dart';
 import 'package:verbose_share_world/app_navigation/home/home_following_screen.dart';
 import 'package:verbose_share_world/provider/ViewModel/community_Feed_viewmodel.dart';
+import 'package:verbose_share_world/provider/ViewModel/create_post_viewmodel.dart';
 
 import '../../app_theme/application_colors.dart';
+import '../../post/post/create_post_screen.dart';
 import '../../provider/ViewModel/community_viewmodel.dart';
 import '../../provider/ViewModel/feed_viewmodel.dart';
 
@@ -186,6 +188,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final bHeight = mediaQuery.size.height - mediaQuery.padding.top;
 
     return Scaffold(
+      floatingActionButton: (widget.community.isJoined!)
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => CreatePostScreen2(
+                          communityID: widget.community.communityId,
+                        )));
+              },
+              backgroundColor: theme.primaryColor,
+              child: Icon(Icons.add),
+            )
+          : null,
       backgroundColor: ApplicationColors.lightGrey,
       body: FadedSlideAnimation(
         child: SafeArea(
