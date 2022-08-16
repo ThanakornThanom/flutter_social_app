@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
+import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/user_feed_viewmodel.dart';
 
 import '../app_navigation/home/home_following_screen.dart';
@@ -70,7 +71,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Container(
-                          height: 70,
+                          height: 100,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -90,9 +91,17 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                   ),
                                 ],
                               ),
-                              FadedScaleAnimation(
-                                  child: getAvatarImage(vm.amityUser.avatarUrl,
-                                      radius: 40)),
+                              Container(
+                                child: FadedScaleAnimation(
+                                    child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: getImageProvider(
+                                    Provider.of<AmityVM>(
+                                      context,
+                                    ).currentamityUser?.avatarUrl,
+                                  ),
+                                )),
+                              ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

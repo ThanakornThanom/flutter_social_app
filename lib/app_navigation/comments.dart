@@ -337,9 +337,8 @@ class _CommentScreenState extends State<CommentScreen> {
                                                       .data!
                                                       .data as CommentTextData;
                                                   var isliked = _comments
-                                                      .myReactions
-                                                      ?.contains("like");
-                                                  print(_comments.myReactions);
+                                                      .myReactions?.isNotEmpty;
+
                                                   return Container(
                                                     color: Colors.white,
                                                     child: ListTile(
@@ -454,9 +453,9 @@ class _CommentScreenState extends State<CommentScreen> {
                                           _commentTextEditController.text);
 
                                   _commentTextEditController.clear();
-                                  await vm.scrollcontroller.animateTo(0,
-                                      curve: Curves.linear,
-                                      duration: Duration(milliseconds: 500));
+                                  vm.scrollcontroller.jumpTo(vm.scrollcontroller
+                                          .position.maxScrollExtent +
+                                      100);
                                 },
                                 child: Icon(Icons.send,
                                     color: theme.primaryColor)),

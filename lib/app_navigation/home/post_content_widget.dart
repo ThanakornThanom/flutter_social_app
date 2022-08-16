@@ -33,9 +33,11 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   void initState() {
     super.initState();
     if (!widget.isChildrenPost) {
-      setState(() {
-        isLoading = false;
-      });
+      if (this.mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } else {
       checkPostType();
     }
@@ -76,10 +78,12 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
 
       imageUrlList.add(largeImageUrl);
     }
-    setState(() {
-      isLoading = false;
-      imageURLs = imageUrlList;
-    });
+    if (this.mounted) {
+      setState(() {
+        isLoading = false;
+        imageURLs = imageUrlList;
+      });
+    }
   }
 
   Widget postWidget() {

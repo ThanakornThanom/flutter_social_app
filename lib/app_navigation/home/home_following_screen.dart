@@ -11,6 +11,7 @@ import 'package:verbose_share_world/profile/user_profile.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
+import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
 
 import '../../generated/l10n.dart';
 
@@ -53,13 +54,11 @@ class _GlobalFeedTabScreenState extends State<GlobalFeedTabScreen> {
                   controller: vm.scrollcontroller,
                   itemBuilder: (context, index) {
                     return StreamBuilder<AmityPost>(
+                        key: Key(vm.getAmityPosts()[index].postId!),
                         stream: vm.getAmityPosts()[index].listen,
                         initialData: vm.getAmityPosts()[index],
                         builder: (context, snapshot) {
-                          return PostWidget(
-                              key: Key(snapshot.data!.postId!),
-                              post: snapshot.data!,
-                              theme: theme);
+                          return PostWidget(post: snapshot.data!, theme: theme);
                         });
                   },
                 ),
@@ -230,7 +229,8 @@ class _PostWidgetState extends State<PostWidget>
                             ? GestureDetector(
                                 onTap: () {
                                   HapticFeedback.heavyImpact();
-                                  widget.post.react().removeReaction('like');
+                                  Provider.of<PostVM>(context, listen: false)
+                                      .removePostReaction(widget.post);
                                 },
                                 child: Icon(
                                   Icons.favorite,
@@ -241,7 +241,8 @@ class _PostWidgetState extends State<PostWidget>
                             : GestureDetector(
                                 onTap: () {
                                   HapticFeedback.heavyImpact();
-                                  widget.post.react().addReaction('like');
+                                  Provider.of<PostVM>(context, listen: false)
+                                      .addPostReaction(widget.post);
                                 },
                                 child: Icon(
                                   Icons.favorite_border,
@@ -295,7 +296,6 @@ class _PostWidgetState extends State<PostWidget>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive {
     final childrenPosts = widget.post.children;
     if (childrenPosts != null && childrenPosts.isNotEmpty) {

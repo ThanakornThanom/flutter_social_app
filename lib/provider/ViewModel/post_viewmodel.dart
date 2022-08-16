@@ -13,7 +13,7 @@ class PostVM extends ChangeNotifier {
 
   AmityComment? _replyToComment;
 
-  AmityCommentSortOption _sortOption = AmityCommentSortOption.LAST_CREATED;
+  AmityCommentSortOption _sortOption = AmityCommentSortOption.FIRST_CREATED;
 
   void getPost(String postId, AmityPost initialPostData) {
     amityPost = initialPostData;
@@ -72,7 +72,7 @@ class PostVM extends ChangeNotifier {
         .text(text)
         .send()
         .then((_comment) {
-      _controller.addAtIndex(0, _comment);
+      _controller.add(_comment);
       amityComments.clear();
       amityComments.addAll(_controller.loadedItems);
     }).onError((error, stackTrace) {
