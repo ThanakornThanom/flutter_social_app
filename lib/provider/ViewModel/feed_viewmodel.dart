@@ -56,7 +56,7 @@ class FeedVM extends ChangeNotifier {
         .then((value) {
       _amityGlobalFeedPosts = value.data;
     });
-    notifyListeners();
+    // notifyListeners();
   }
 
   void loadnextpage() {
