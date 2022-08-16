@@ -80,3 +80,78 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
     );
   }
 }
+
+class MyVideoPlayer2 extends StatefulWidget {
+  final String url;
+  final VideoPlayerController videoPlayerController;
+  const MyVideoPlayer2(
+      {Key? key, required this.url, required this.videoPlayerController})
+      : super(key: key);
+
+  @override
+  State<MyVideoPlayer2> createState() => _MyVideoPlayer2State();
+}
+
+class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
+  ChewieController? chewieController;
+
+  void initState() {
+    super.initState();
+    initializePlayer();
+  }
+
+  @override
+  void dispose() {
+    widget.videoPlayerController.dispose();
+    chewieController?.dispose();
+    super.dispose();
+  }
+
+  Future<void> initializePlayer() async {
+    //videoPlayerController = await VideoPlayerController.network(widget.url);
+    await widget.videoPlayerController.initialize();
+    ChewieController controller = ChewieController(
+      showControlsOnInitialize: true,
+      videoPlayerController: widget.videoPlayerController,
+      autoPlay: true,
+      deviceOrientationsAfterFullScreen: [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown
+      ],
+      looping: true,
+    );
+
+    controller.setVolume(0.0);
+
+    setState(() {
+      chewieController = controller;
+    });
+  }
+
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(true ? 10 : 0),
+      child: Container(
+        height: 250,
+        color: Color.fromRGBO(0, 0, 0, 1),
+        child: Center(
+          child: chewieController != null &&
+                  chewieController!.videoPlayerController.value.isInitialized
+              ? Chewie(
+                  controller: chewieController!,
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 20),
+                    Text('Loading',
+                        style: TextStyle(fontWeight: FontWeight.w500)),
+                    // SizedBox(height: 20),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+}

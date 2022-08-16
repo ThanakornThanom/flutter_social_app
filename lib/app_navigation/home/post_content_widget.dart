@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../components/video_player.dart';
 import '../comments.dart';
 import 'image_viewer.dart';
 
@@ -23,6 +24,7 @@ class AmityPostWidget extends StatefulWidget {
 }
 
 class _AmityPostWidgetState extends State<AmityPostWidget> {
+  VideoPlayerController? videoPlayerController;
   List<String> imageURLs = [];
   String videoUrl = "";
   bool isLoading = true;
@@ -93,10 +95,11 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
                       ? true
                       : false);
         case AmityDataType.VIDEO:
-          return VideoPost(
-              post: widget.posts[0],
-              videoURL: videoUrl,
-              isCornerRadiusEnabled: widget.isCornerRadiusEnabled);
+          return MyVideoPlayer2(
+            url: videoUrl,
+            videoPlayerController: videoPlayerController =
+                VideoPlayerController.network(videoUrl),
+          );
         default:
           return Container();
       }
