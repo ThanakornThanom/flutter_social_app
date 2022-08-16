@@ -205,12 +205,12 @@ class CommunityWidget extends StatelessWidget {
                       if (community.isJoined != null) {
                         if (community.isJoined!) {
                           Provider.of<CommunityVM>(context, listen: false)
-                              .leaveCommunity(
-                                  community.communityId ?? "", type: communityType);
+                              .leaveCommunity(community.communityId ?? "",
+                                  type: communityType);
                         } else {
                           Provider.of<CommunityVM>(context, listen: false)
-                              .joinCommunity(
-                                  community.communityId ?? "", type: communityType);
+                              .joinCommunity(community.communityId ?? "",
+                                  type: communityType);
                         }
                       }
                     },

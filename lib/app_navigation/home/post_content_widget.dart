@@ -17,6 +17,7 @@ class AmityPostWidget extends StatefulWidget {
   final List<AmityPost> posts;
   final bool isChildrenPost;
   final bool isCornerRadiusEnabled;
+
   const AmityPostWidget(
       this.posts, this.isChildrenPost, this.isCornerRadiusEnabled);
   @override
@@ -96,10 +97,11 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
                       : false);
         case AmityDataType.VIDEO:
           return MyVideoPlayer2(
-            url: videoUrl,
-            videoPlayerController: videoPlayerController =
-                VideoPlayerController.network(videoUrl),
-          );
+              url: videoUrl,
+              videoPlayerController: videoPlayerController =
+                  VideoPlayerController.network(videoUrl),
+              isCornerRadiusEnabled: widget.isCornerRadiusEnabled,
+              isEnableVideoTools: false);
         default:
           return Container();
       }

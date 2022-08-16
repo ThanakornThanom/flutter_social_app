@@ -56,7 +56,10 @@ class _GlobalFeedTabScreenState extends State<GlobalFeedTabScreen> {
                         stream: vm.getAmityPosts()[index].listen,
                         initialData: vm.getAmityPosts()[index],
                         builder: (context, snapshot) {
-                          return PostWidget(post: snapshot.data!, theme: theme);
+                          return PostWidget(
+                              key: Key(snapshot.data!.postId!),
+                              post: snapshot.data!,
+                              theme: theme);
                         });
                   },
                 ),
@@ -72,7 +75,7 @@ class _GlobalFeedTabScreenState extends State<GlobalFeedTabScreen> {
   }
 }
 
-class PostWidget extends StatelessWidget {
+class PostWidget extends StatefulWidget {
   const PostWidget({
     Key? key,
     required this.post,
@@ -82,12 +85,18 @@ class PostWidget extends StatelessWidget {
   final AmityPost post;
   final ThemeData theme;
 
+  @override
+  State<PostWidget> createState() => _PostWidgetState();
+}
+
+class _PostWidgetState extends State<PostWidget>
+    with AutomaticKeepAliveClientMixin {
   Widget postWidgets() {
     List<Widget> widgets = [];
-    if (post.data != null) {
-      widgets.add(AmityPostWidget([post], false, false));
+    if (widget.post.data != null) {
+      widgets.add(AmityPostWidget([widget.post], false, false));
     }
-    final childrenPosts = post.children;
+    final childrenPosts = widget.post.children;
     if (childrenPosts != null && childrenPosts.isNotEmpty) {
       widgets.add(AmityPostWidget(childrenPosts, true, true));
     }
@@ -99,15 +108,13 @@ class PostWidget extends StatelessWidget {
   }
 
   // @override
-  // bool get wantKeepAlive => true;
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => CommentScreen(
-                  amityPost: post,
+                  amityPost: widget.post,
                 )));
       },
       child: Card(
@@ -123,30 +130,30 @@ class PostWidget extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (_) => UserProfileScreen(
-                                  amityUser: post.postedUser!,
+                                  amityUser: widget.post.postedUser!,
                                 )));
                       },
                       child: CircleAvatar(
                         backgroundImage:
-                            getImageProvider(post.postedUser?.avatarUrl),
+                            getImageProvider(widget.post.postedUser?.avatarUrl),
                       )),
                 ),
                 title: GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => UserProfileScreen(
-                              amityUser: post.postedUser!,
+                              amityUser: widget.post.postedUser!,
                             )));
                   },
                   child: Text(
-                    post.postedUser?.displayName ?? "Display name",
-                    style: theme.textTheme.bodyText1!
+                    widget.post.postedUser?.displayName ?? "Display name",
+                    style: widget.theme.textTheme.bodyText1!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 subtitle: Text(
-                  " ${post.createdAt?.toLocal().day}-${post.createdAt?.toLocal().month}-${post.createdAt?.toLocal().year}",
-                  style: theme.textTheme.bodyText1!.copyWith(
+                  " ${widget.post.createdAt?.toLocal().day}-${widget.post.createdAt?.toLocal().month}-${widget.post.createdAt?.toLocal().year}",
+                  style: widget.theme.textTheme.bodyText1!.copyWith(
                       color: ApplicationColors.textGrey, fontSize: 11),
                 ),
                 trailing: Row(
@@ -219,11 +226,11 @@ class PostWidget extends StatelessWidget {
                     // ),
                     Row(
                       children: [
-                        post.myReactions!.isNotEmpty
+                        widget.post.myReactions!.isNotEmpty
                             ? GestureDetector(
                                 onTap: () {
                                   HapticFeedback.heavyImpact();
-                                  post.react().removeReaction('like');
+                                  widget.post.react().removeReaction('like');
                                 },
                                 child: Icon(
                                   Icons.favorite,
@@ -234,7 +241,7 @@ class PostWidget extends StatelessWidget {
                             : GestureDetector(
                                 onTap: () {
                                   HapticFeedback.heavyImpact();
-                                  post.react().addReaction('like');
+                                  widget.post.react().addReaction('like');
                                 },
                                 child: Icon(
                                   Icons.favorite_border,
@@ -244,7 +251,7 @@ class PostWidget extends StatelessWidget {
                               ),
                         SizedBox(width: 8.5),
                         Text(
-                          post.reactionCount.toString(),
+                          widget.post.reactionCount.toString(),
                           style: TextStyle(
                               color: ApplicationColors.grey,
                               fontSize: 12,
@@ -256,7 +263,7 @@ class PostWidget extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => CommentScreen(
-                                  amityPost: post,
+                                  amityPost: widget.post,
                                 )));
                       },
                       child: Row(
@@ -268,7 +275,7 @@ class PostWidget extends StatelessWidget {
                           ),
                           SizedBox(width: 8.5),
                           Text(
-                            post.commentCount.toString(),
+                            widget.post.commentCount.toString(),
                             style: TextStyle(
                                 color: ApplicationColors.grey,
                                 fontSize: 12,
@@ -285,5 +292,21 @@ class PostWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive {
+    final childrenPosts = widget.post.children;
+    if (childrenPosts != null && childrenPosts.isNotEmpty) {
+      if (childrenPosts[0].data is VideoData) {
+        print("keep ${childrenPosts[0].parentPostId} alive");
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 }

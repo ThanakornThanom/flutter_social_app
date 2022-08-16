@@ -84,8 +84,14 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
 class MyVideoPlayer2 extends StatefulWidget {
   final String url;
   final VideoPlayerController videoPlayerController;
+  final bool isCornerRadiusEnabled;
+  final bool isEnableVideoTools;
   const MyVideoPlayer2(
-      {Key? key, required this.url, required this.videoPlayerController})
+      {Key? key,
+      required this.url,
+      required this.videoPlayerController,
+      required this.isCornerRadiusEnabled,
+      required this.isEnableVideoTools})
       : super(key: key);
 
   @override
@@ -111,9 +117,9 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
     //videoPlayerController = await VideoPlayerController.network(widget.url);
     await widget.videoPlayerController.initialize();
     ChewieController controller = ChewieController(
-      showControlsOnInitialize: true,
+      showControls: widget.isCornerRadiusEnabled ? false : true,
       videoPlayerController: widget.videoPlayerController,
-      autoPlay: true,
+      autoPlay: widget.isCornerRadiusEnabled ? false : true,
       deviceOrientationsAfterFullScreen: [
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown
@@ -129,29 +135,47 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
   }
 
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(true ? 10 : 0),
-      child: Container(
-        height: 250,
-        color: Color.fromRGBO(0, 0, 0, 1),
-        child: Center(
-          child: chewieController != null &&
-                  chewieController!.videoPlayerController.value.isInitialized
-              ? Chewie(
-                  controller: chewieController!,
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 20),
-                    Text('Loading',
-                        style: TextStyle(fontWeight: FontWeight.w500)),
-                    // SizedBox(height: 20),
-                  ],
-                ),
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      children: [
+        ClipRRect(
+          borderRadius:
+              BorderRadius.circular(widget.isCornerRadiusEnabled ? 10 : 0),
+          child: Container(
+            height: 250,
+            color: Color.fromRGBO(0, 0, 0, 1),
+            child: Center(
+              child: chewieController != null &&
+                      chewieController!
+                          .videoPlayerController.value.isInitialized
+                  ? Chewie(
+                      controller: chewieController!,
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        widget.isCornerRadiusEnabled
+                            ? Container()
+                            : CircularProgressIndicator(),
+                        SizedBox(height: 20),
+                        Text('Loading',
+                            style: TextStyle(fontWeight: FontWeight.w500)),
+                        // SizedBox(height: 20),
+                      ],
+                    ),
+            ),
+          ),
         ),
-      ),
+        widget.isCornerRadiusEnabled
+            ? CircleAvatar(
+                backgroundColor: Theme.of(context).highlightColor,
+                child: Icon(
+                  Icons.play_arrow,
+                  color: Theme.of(context).primaryColor,
+                ),
+              )
+            : Container()
+      ],
     );
   }
 }

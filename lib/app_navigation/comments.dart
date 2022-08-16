@@ -336,8 +336,10 @@ class _CommentScreenState extends State<CommentScreen> {
                                                   var _commentData = snapshot
                                                       .data!
                                                       .data as CommentTextData;
-                                                  var isliked =
-                                                      vm.isliked(_comments);
+                                                  var isliked = _comments
+                                                      .myReactions
+                                                      ?.contains("like");
+                                                  print(_comments.myReactions);
                                                   return Container(
                                                     color: Colors.white,
                                                     child: ListTile(
@@ -386,7 +388,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                                           fontSize: 12,
                                                         ),
                                                       ),
-                                                      trailing: isliked
+                                                      trailing: isliked ?? false
                                                           ? GestureDetector(
                                                               onTap: () {
                                                                 vm.removeCommentReaction(
