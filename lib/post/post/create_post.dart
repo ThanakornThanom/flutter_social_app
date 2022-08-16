@@ -8,6 +8,8 @@ import 'package:verbose_share_world/post/post/create_post_screen.dart';
 import '../../components/custom_user_avatar.dart';
 
 class CreatePostScreen extends StatefulWidget {
+  final AmityPost? post;
+  CreatePostScreen({this.post});
   @override
   _CreatePostScreenState createState() => _CreatePostScreenState();
 }

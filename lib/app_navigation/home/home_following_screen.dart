@@ -13,6 +13,7 @@ import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 
 import '../../generated/l10n.dart';
+import '../../post/post/create_post.dart';
 
 class GlobalFeedTabScreen extends StatefulWidget {
   @override
@@ -98,6 +99,70 @@ class PostWidget extends StatelessWidget {
     );
   }
 
+  Widget postOptions(AmityPost post, BuildContext context) {
+    bool isPostOwner =
+        post.postedUserId == AmityCoreClient.getCurrentUser().userId;
+    List<String> postOwnerMenu = ['Edit Post', 'Delete Post'];
+    final isFlaggedByMe = post.isFlaggedByMe ?? false;
+    return PopupMenuButton(
+      onSelected: (value) {
+        switch (value) {
+          case 'Report Post':
+          case 'Unreport Post':
+            if (isFlaggedByMe) {
+              post.report().unflag().then((value) {
+                //success
+              }).onError((error, stackTrace) {
+                //handle error
+              });
+            } else {
+              post.report().unflag().then((value) {
+                //success
+              }).onError((error, stackTrace) {
+                //handle error
+              });
+            }
+
+            break;
+          case 'Edit Post':
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => CreatePostScreen(
+                      post: post,
+                    )));
+            break;
+          case 'Delete Post':
+            AmitySocialClient.newPostRepository()
+                .deletePost(postId: post.postId ?? "")
+                .then((value) {})
+                .onError((error, stackTrace) {});
+            break;
+          default:
+        }
+      },
+      child: Icon(
+        Icons.more_horiz_rounded,
+        size: 24,
+        color: ApplicationColors.grey,
+      ),
+      itemBuilder: (context) {
+        return List.generate(isPostOwner ? 2 : 1, (index) {
+          return PopupMenuItem(
+            value: isPostOwner
+                ? postOwnerMenu[index]
+                : isFlaggedByMe
+                    ? 'Unreport Post'
+                    : 'Report Post',
+            child: Text(isPostOwner
+                ? postOwnerMenu[index]
+                : isFlaggedByMe
+                    ? 'Unreport Post'
+                    : 'Report Post'),
+          );
+        });
+      },
+    );
+  }
+
   // @override
   // bool get wantKeepAlive => true;
 
@@ -153,27 +218,18 @@ class PostWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Image.asset(
-                      'assets/Icons/ic_share.png',
-                      scale: 3,
-                    ),
-                    SizedBox(width: 20),
-                    Icon(
-                      Icons.bookmark_border,
-                      size: 18,
-                      color: ApplicationColors.grey,
-                    ),
-                    SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        HapticFeedback.heavyImpact();
-                      },
-                      child: Icon(
-                        Icons.more_vert,
-                        size: 18,
-                        color: ApplicationColors.grey,
-                      ),
-                    ),
+                    // Image.asset(
+                    //   'assets/Icons/ic_share.png',
+                    //   scale: 3,
+                    // ),
+                    // SizedBox(width: 20),
+                    // Icon(
+                    //   Icons.bookmark_border,
+                    //   size: 18,
+                    //   color: ApplicationColors.grey,
+                    // ),
+                    // SizedBox(width: 20),
+                    postOptions(post, context),
                   ],
                 ),
               ),
