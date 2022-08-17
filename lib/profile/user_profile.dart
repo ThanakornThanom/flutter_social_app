@@ -257,7 +257,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                         stream: vm.amityPosts[index].listen,
                         initialData: vm.amityPosts[index],
                         builder: (context, snapshot) {
-                          return PostWidget(post: snapshot.data!, theme: theme);
+                          return PostWidget(post: snapshot.data!, theme: theme,postIndex: index,);
                         });
                   },
                 )

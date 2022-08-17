@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/comments.dart';
+import 'package:verbose_share_world/app_navigation/home/community_feed.dart';
 import 'package:verbose_share_world/app_navigation/home/post_content_widget.dart';
 import 'package:verbose_share_world/components/custom_user_avatar.dart';
 import 'package:verbose_share_world/profile/user_profile.dart';
@@ -17,6 +18,7 @@ import '../../generated/l10n.dart';
 import '../../post/post/create_post.dart';
 import '../../post/post/create_post_screen.dart';
 import '../../post/post/edit_post_screen.dart';
+import '../../provider/ViewModel/community_Feed_viewmodel.dart';
 
 class GlobalFeedTabScreen extends StatefulWidget {
   @override
@@ -61,7 +63,12 @@ class _GlobalFeedTabScreenState extends State<GlobalFeedTabScreen> {
                         stream: vm.getAmityPosts()[index].listen,
                         initialData: vm.getAmityPosts()[index],
                         builder: (context, snapshot) {
-                          return PostWidget(post: snapshot.data!, theme: theme);
+                          return PostWidget(
+                            post: snapshot.data!,
+                            theme: theme,
+                            postIndex: index,
+                            isFromFeed: true,
+                          );
                         });
                   },
                 ),
@@ -78,14 +85,18 @@ class _GlobalFeedTabScreenState extends State<GlobalFeedTabScreen> {
 }
 
 class PostWidget extends StatefulWidget {
-  const PostWidget({
-    Key? key,
-    required this.post,
-    required this.theme,
-  }) : super(key: key);
+  const PostWidget(
+      {Key? key,
+      required this.post,
+      required this.theme,
+      required this.postIndex,
+      this.isFromFeed = false})
+      : super(key: key);
 
   final AmityPost post;
   final ThemeData theme;
+  final int postIndex;
+  final bool isFromFeed;
 
   @override
   State<PostWidget> createState() => _PostWidgetState();
@@ -122,21 +133,20 @@ class _PostWidgetState extends State<PostWidget>
           case 'Unreport Post':
             print("isflag by me ${isFlaggedByMe}");
             if (isFlaggedByMe) {
-              Provider.of<PostVM>(context, listen: false).unflagPost(widget.post);
+              Provider.of<PostVM>(context, listen: false)
+                  .unflagPost(widget.post);
             } else {
               Provider.of<PostVM>(context, listen: false).flagPost(widget.post);
             }
 
             break;
           case 'Edit Post':
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => EditPostScreen(post: widget.post)));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => EditPostScreen(post: widget.post)));
             break;
           case 'Delete Post':
-            AmitySocialClient.newPostRepository()
-                .deletePost(postId: widget.post.postId ?? "")
-                .then((value) {})
-                .onError((error, stackTrace) {});
+            Provider.of<FeedVM>(context, listen: false)
+                .deletePost(widget.post, widget.postIndex);
             break;
           default:
         }
@@ -154,18 +164,11 @@ class _PostWidgetState extends State<PostWidget>
                   : isFlaggedByMe
                       ? 'Unreport Post'
                       : 'Report Post',
-
-              // : isFlaggedByMe != null ? (isFlaggedByMe ? 'Unreport Post'
-              //     : 'Report Post') : '',
-
               child: Text(isPostOwner
                   ? postOwnerMenu[index]
                   : isFlaggedByMe
                       ? 'Unreport Post'
-                      : 'Report Post')
-              // : isFlaggedByMe != null ? (isFlaggedByMe ? 'Unreport Post'
-              //     : 'Report Post') : '',)
-              );
+                      : 'Report Post'));
         });
       },
     );
@@ -202,18 +205,54 @@ class _PostWidgetState extends State<PostWidget>
                             getImageProvider(widget.post.postedUser?.avatarUrl),
                       )),
                 ),
-                title: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => UserProfileScreen(
-                              amityUser: widget.post.postedUser!,
-                            )));
-                  },
-                  child: Text(
-                    widget.post.postedUser?.displayName ?? "Display name",
-                    style: widget.theme.textTheme.bodyText1!
-                        .copyWith(fontWeight: FontWeight.bold),
-                  ),
+                title: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => UserProfileScreen(
+                                  amityUser: widget.post.postedUser!,
+                                )));
+                      },
+                      child: Text(
+                        widget.post.postedUser?.displayName ?? "Display name",
+                        style: widget.theme.textTheme.bodyText1!
+                            .copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    widget.post.targetType == AmityPostTargetType.COMMUNITY &&
+                            widget.isFromFeed
+                        ? Icon(
+                            Icons.arrow_right_rounded,
+                            color: Colors.black,
+                          )
+                        : Container(),
+                    widget.post.targetType == AmityPostTargetType.COMMUNITY &&
+                            widget.isFromFeed
+                        ? GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ChangeNotifierProvider(
+                                        create: (context) => CommuFeedVM(),
+                                        child: CommunityScreen(
+                                          isFromFeed: true,
+                                          community: (widget.post.target
+                                                  as CommunityTarget)
+                                              .targetCommunity!,
+                                        ),
+                                      )));
+                            },
+                            child: Text(
+                              (widget.post.target as CommunityTarget)
+                                      .targetCommunity!
+                                      .displayName ??
+                                  "Community name",
+                              style: widget.theme.textTheme.bodyText1!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        : Container()
+                  ],
                 ),
                 subtitle: Text(
                   " ${widget.post.createdAt?.toLocal().day}-${widget.post.createdAt?.toLocal().month}-${widget.post.createdAt?.toLocal().year}",

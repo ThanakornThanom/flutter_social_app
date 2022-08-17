@@ -26,6 +26,8 @@ class PostVM extends ChangeNotifier {
     });
   }
 
+
+
   void listenForComments(String postID) {
     _controller = PagingController(
       pageFuture: (token) => AmitySocialClient.newCommentRepository()

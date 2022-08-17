@@ -21,6 +21,17 @@ class FeedVM extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deletePost(AmityPost post, int postIndex) async {
+    AmitySocialClient.newPostRepository()
+        .deletePost(postId: post.postId!)
+        .then((value) {
+      _amityGlobalFeedPosts.removeAt(postIndex);
+      notifyListeners();
+    }).onError((error, stackTrace) {
+      
+    });
+  }
+
   Future<void> initAmityGlobalfeed() async {
     _controllerGlobal = PagingController(
       pageFuture: (token) => AmitySocialClient.newFeedRepository()
