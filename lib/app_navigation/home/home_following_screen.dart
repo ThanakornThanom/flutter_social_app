@@ -11,9 +11,12 @@ import 'package:verbose_share_world/profile/user_profile.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
+import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
 
 import '../../generated/l10n.dart';
 import '../../post/post/create_post.dart';
+import '../../post/post/create_post_screen.dart';
+import '../../post/post/edit_post_screen.dart';
 
 class GlobalFeedTabScreen extends StatefulWidget {
   @override
@@ -99,36 +102,28 @@ class PostWidget extends StatelessWidget {
     );
   }
 
-  Widget postOptions(AmityPost post, BuildContext context) {
+  Widget postOptions(BuildContext context) {
     bool isPostOwner =
         post.postedUserId == AmityCoreClient.getCurrentUser().userId;
     List<String> postOwnerMenu = ['Edit Post', 'Delete Post'];
-    final isFlaggedByMe = post.isFlaggedByMe ?? false;
+
+    final isFlaggedByMe = post.isFlaggedByMe;
     return PopupMenuButton(
       onSelected: (value) {
         switch (value) {
           case 'Report Post':
           case 'Unreport Post':
+            print("isflag by me ${isFlaggedByMe}");
             if (isFlaggedByMe) {
-              post.report().unflag().then((value) {
-                //success
-              }).onError((error, stackTrace) {
-                //handle error
-              });
+              Provider.of<PostVM>(context, listen: false).unflagPost(post);
             } else {
-              post.report().unflag().then((value) {
-                //success
-              }).onError((error, stackTrace) {
-                //handle error
-              });
+              Provider.of<PostVM>(context, listen: false).flagPost(post);
             }
 
             break;
           case 'Edit Post':
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => CreatePostScreen(
-                      post: post,
-                    )));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => EditPostScreen(post:post)));
             break;
           case 'Delete Post':
             AmitySocialClient.newPostRepository()
@@ -147,17 +142,23 @@ class PostWidget extends StatelessWidget {
       itemBuilder: (context) {
         return List.generate(isPostOwner ? 2 : 1, (index) {
           return PopupMenuItem(
-            value: isPostOwner
-                ? postOwnerMenu[index]
-                : isFlaggedByMe
-                    ? 'Unreport Post'
-                    : 'Report Post',
-            child: Text(isPostOwner
-                ? postOwnerMenu[index]
-                : isFlaggedByMe
-                    ? 'Unreport Post'
-                    : 'Report Post'),
-          );
+              value: isPostOwner
+                  ? postOwnerMenu[index]
+                  : isFlaggedByMe
+                      ? 'Unreport Post'
+                      : 'Report Post',
+
+              // : isFlaggedByMe != null ? (isFlaggedByMe ? 'Unreport Post'
+              //     : 'Report Post') : '',
+
+              child: Text(isPostOwner
+                  ? postOwnerMenu[index]
+                  : isFlaggedByMe
+                      ? 'Unreport Post'
+                      : 'Report Post')
+              // : isFlaggedByMe != null ? (isFlaggedByMe ? 'Unreport Post'
+              //     : 'Report Post') : '',)
+              );
         });
       },
     );
@@ -229,7 +230,7 @@ class PostWidget extends StatelessWidget {
                     //   color: ApplicationColors.grey,
                     // ),
                     // SizedBox(width: 20),
-                    postOptions(post, context),
+                    postOptions(context),
                   ],
                 ),
               ),
