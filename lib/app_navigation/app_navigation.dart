@@ -10,6 +10,7 @@ import 'package:verbose_share_world/app_navigation/home/home_page.dart';
 import 'package:verbose_share_world/app_navigation/notification/notification_page.dart';
 import 'package:verbose_share_world/app_navigation/story/story_page.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
+import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 
 import '../components/custom_user_avatar.dart';
 import '../provider/ViewModel/feed_viewmodel.dart';
@@ -108,8 +109,9 @@ class _AppNavigationState extends State<AppNavigation> {
                   child: FadedScaleAnimation(
                     child: CircleAvatar(
                       backgroundImage: getImageProvider(
-                        AmityCoreClient.getCurrentUser().avatarUrl,
-                      ),
+                          Provider.of<AmityVM>(context)
+                              .currentamityUser!
+                              .avatarUrl),
                     ),
                   ),
                 ),

@@ -336,8 +336,9 @@ class _CommentScreenState extends State<CommentScreen> {
                                                   var _commentData = snapshot
                                                       .data!
                                                       .data as CommentTextData;
-                                                  var isliked =
-                                                      vm.isliked(_comments);
+                                                  var isliked = _comments
+                                                      .myReactions?.isNotEmpty;
+
                                                   return Container(
                                                     color: Colors.white,
                                                     child: ListTile(
@@ -386,7 +387,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                                           fontSize: 12,
                                                         ),
                                                       ),
-                                                      trailing: isliked
+                                                      trailing: isliked ?? false
                                                           ? GestureDetector(
                                                               onTap: () {
                                                                 vm.removeCommentReaction(
@@ -452,9 +453,9 @@ class _CommentScreenState extends State<CommentScreen> {
                                           _commentTextEditController.text);
 
                                   _commentTextEditController.clear();
-                                  await vm.scrollcontroller.animateTo(0,
-                                      curve: Curves.linear,
-                                      duration: Duration(milliseconds: 500));
+                                  vm.scrollcontroller.jumpTo(vm.scrollcontroller
+                                          .position.maxScrollExtent +
+                                      100);
                                 },
                                 child: Icon(Icons.send,
                                     color: theme.primaryColor)),

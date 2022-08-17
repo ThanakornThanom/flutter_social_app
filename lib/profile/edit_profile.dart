@@ -6,7 +6,9 @@ import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
+import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/custom_image_picker.dart';
+import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 
 import '../components/custom_user_avatar.dart';
 import '../provider/ViewModel/user_feed_viewmodel.dart';
@@ -61,6 +63,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Provider.of<ImagePickerVM>(context, listen: false)
                               .amityImage!
                               .fileId);
+
+              Provider.of<AmityVM>(context, listen: false)
+                  .refreshCurrentUserData();
             } else {
               await Provider.of<UserFeedVM>(context, listen: false)
                   .editCurrentUserInfo(
@@ -115,8 +120,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       .amityImage!
                                       .fileUrl)
                                   : getImageProvider(
-                                      AmityCoreClient.getCurrentUser()
-                                          .avatarUrl),
+                                      Provider.of<AmityVM>(
+                                        context,
+                                      ).currentamityUser?.avatarUrl,
+                                    ),
                             ),
                           ),
                         ),

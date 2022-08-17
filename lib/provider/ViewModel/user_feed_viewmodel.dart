@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'amity_viewmodel.dart';
 
 class UserFeedVM extends ChangeNotifier {
   late AmityUser amityUser;

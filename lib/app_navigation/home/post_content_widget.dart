@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../components/video_player.dart';
 import '../comments.dart';
 import 'image_viewer.dart';
 
@@ -16,6 +17,7 @@ class AmityPostWidget extends StatefulWidget {
   final List<AmityPost> posts;
   final bool isChildrenPost;
   final bool isCornerRadiusEnabled;
+
   const AmityPostWidget(
       this.posts, this.isChildrenPost, this.isCornerRadiusEnabled);
   @override
@@ -23,6 +25,7 @@ class AmityPostWidget extends StatefulWidget {
 }
 
 class _AmityPostWidgetState extends State<AmityPostWidget> {
+  VideoPlayerController? videoPlayerController;
   List<String> imageURLs = [];
   String videoUrl = "";
   bool isLoading = true;
@@ -30,9 +33,11 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   void initState() {
     super.initState();
     if (!widget.isChildrenPost) {
-      setState(() {
-        isLoading = false;
-      });
+      if (this.mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } else {
       checkPostType();
     }
@@ -52,39 +57,33 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   }
 
   Future<void> getVideoPost() async {
-    Future.delayed(Duration.zero, () async {
-      final videoData = widget.posts[0].data as VideoData;
+    final videoData = widget.posts[0].data as VideoData;
 
-      await videoData.getVideo(AmityVideoQuality.HIGH).then((AmityVideo video) {
-        if (this.mounted) {
-          setState(() {
-            isLoading = false;
-            videoUrl = video.fileUrl;
-          });
-        }
-      });
+    await videoData.getVideo(AmityVideoQuality.HIGH).then((AmityVideo video) {
+      if (this.mounted) {
+        setState(() {
+          isLoading = false;
+          videoUrl = video.fileUrl;
+        });
+      }
     });
   }
 
   Future<void> getImagePost() async {
-    Future.delayed(Duration.zero, () async {
-      List<String> imageUrlList = [];
-      print("post.data ${widget.posts.isEmpty}");
-      for (int i = 0; i < widget.posts.length; i++) {
-        try {
-          final imageData = widget.posts[i].data as ImageData;
-          final largeImageUrl = await imageData.getUrl(AmityImageSize.MEDIUM);
-          imageUrlList.add(largeImageUrl);
-        } catch (error) {
-          continue;
-          // executed for errors of all types other than Exception
-        }
-      }
+    List<String> imageUrlList = [];
+
+    for (var post in widget.posts) {
+      final imageData = post.data as ImageData;
+      final largeImageUrl = await imageData.getUrl(AmityImageSize.MEDIUM);
+
+      imageUrlList.add(largeImageUrl);
+    }
+    if (this.mounted) {
       setState(() {
         isLoading = false;
         imageURLs = imageUrlList;
       });
-    });
+    }
   }
 
   Widget postWidget() {
@@ -101,10 +100,12 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
                       ? true
                       : false);
         case AmityDataType.VIDEO:
-          return VideoPost(
-              post: widget.posts[0],
-              videoURL: videoUrl,
-              isCornerRadiusEnabled: widget.isCornerRadiusEnabled);
+          return MyVideoPlayer2(
+              url: videoUrl,
+              videoPlayerController: videoPlayerController =
+                  VideoPlayerController.network(videoUrl),
+              isCornerRadiusEnabled: widget.isCornerRadiusEnabled,
+              isEnableVideoTools: false);
         default:
           return Container();
       }
@@ -266,7 +267,6 @@ class VideoPostState extends State<VideoPost> {
   }
 
   Future<void> initializePlayer() async {
-    print("check video URL ${videoURL}");
     videoPlayerController = VideoPlayerController.network(videoURL);
     await videoPlayerController.initialize();
     ChewieController controller = ChewieController(
