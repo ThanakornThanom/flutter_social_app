@@ -12,7 +12,7 @@ class AmityVM extends ChangeNotifier {
       await getUserByID(userID);
       currentamityUser = value;
     }).catchError((error, stackTrace) {
-      throw error.toString();
+      print(error.toString());
     });
   }
 
