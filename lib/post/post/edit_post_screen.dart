@@ -14,9 +14,9 @@ import '../../components/video_player.dart';
 
 // ignore: must_be_immutable
 class EditPostScreen extends StatefulWidget {
-  AmityPost? post;
+  AmityPost? post; // Must extract children post from parent post
 
-  EditPostScreen({Key? key,this.post}) : super(key: key);
+  EditPostScreen({Key? key, this.post}) : super(key: key);
   @override
   _EditPostScreenState createState() => _EditPostScreenState();
 }
