@@ -37,8 +37,7 @@ class _CommentScreenState extends State<CommentScreen> {
     // TODO: implement initState
 
     //query comment here
-    Provider.of<PostVM>(context, listen: false)
-        .listenForComments(widget.amityPost.postId!);
+
     Provider.of<PostVM>(context, listen: false)
         .getPost(widget.amityPost.postId!, widget.amityPost);
 
@@ -318,99 +317,9 @@ class _CommentScreenState extends State<CommentScreen> {
                                             ),
                                           ),
                                         ),
-                                        ListView.builder(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemCount: vm.amityComments.length,
-                                          itemBuilder: (context, index) {
-                                            return StreamBuilder<AmityComment>(
-                                                key: UniqueKey(),
-                                                stream: vm.amityComments[index]
-                                                    .listen,
-                                                initialData:
-                                                    vm.amityComments[index],
-                                                builder: (context, snapshot) {
-                                                  var _comments =
-                                                      snapshot.data!;
-                                                  var _commentData = snapshot
-                                                      .data!
-                                                      .data as CommentTextData;
-                                                  var isliked = _comments
-                                                      .myReactions?.isNotEmpty;
-
-                                                  return Container(
-                                                    color: Colors.white,
-                                                    child: ListTile(
-                                                      leading: getAvatarImage(
-                                                          widget
-                                                              .amityPost
-                                                              .postedUser!
-                                                              .avatarUrl),
-                                                      title: RichText(
-                                                        text: TextSpan(
-                                                          style: theme.textTheme
-                                                              .bodyText1!
-                                                              .copyWith(
-                                                                  fontSize: 17),
-                                                          children: [
-                                                            TextSpan(
-                                                              text: _comments
-                                                                  .user!
-                                                                  .displayName!,
-                                                              style: theme
-                                                                  .textTheme
-                                                                  .headline6!
-                                                                  .copyWith(
-                                                                      fontSize:
-                                                                          14),
-                                                            ),
-                                                            TextSpan(
-                                                                text: '   ' +
-                                                                    DateFormat
-                                                                            .yMMMMEEEEd()
-                                                                        .format(_comments
-                                                                            .createdAt!),
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        10,
-                                                                    color: Colors
-                                                                        .grey)),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      subtitle: Text(
-                                                        _commentData.text!,
-                                                        style: theme.textTheme
-                                                            .subtitle2!
-                                                            .copyWith(
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                      trailing: isliked ?? false
-                                                          ? GestureDetector(
-                                                              onTap: () {
-                                                                vm.removeCommentReaction(
-                                                                    _comments);
-                                                              },
-                                                              child: Icon(
-                                                                Icons.favorite,
-                                                                color:
-                                                                    Colors.red,
-                                                              ),
-                                                            )
-                                                          : GestureDetector(
-                                                              onTap: () {
-                                                                vm.addCommentReaction(
-                                                                    _comments);
-                                                              },
-                                                              child: Icon(Icons
-                                                                  .favorite_border)),
-                                                    ),
-                                                  );
-                                                });
-                                          },
-                                        ),
+                                        CommentComponent(
+                                            postId: widget.amityPost.postId!,
+                                            theme: theme),
                                       ],
                                     ),
                                   ),
@@ -453,9 +362,9 @@ class _CommentScreenState extends State<CommentScreen> {
                                           _commentTextEditController.text);
 
                                   _commentTextEditController.clear();
-                                  vm.scrollcontroller.jumpTo(vm.scrollcontroller
-                                          .position.maxScrollExtent +
-                                      100);
+                                  // vm.scrollcontroller.jumpTo(vm.scrollcontroller
+                                  //         .position.maxScrollExtent +
+                                  //     100);
                                 },
                                 child: Icon(Icons.send,
                                     color: theme.primaryColor)),
@@ -471,6 +380,100 @@ class _CommentScreenState extends State<CommentScreen> {
               ),
             );
           });
+    });
+  }
+}
+
+class CommentComponent extends StatefulWidget {
+  const CommentComponent({
+    Key? key,
+    required this.postId,
+    required this.theme,
+  }) : super(key: key);
+
+  final String postId;
+  final ThemeData theme;
+
+  @override
+  State<CommentComponent> createState() => _CommentComponentState();
+}
+
+class _CommentComponentState extends State<CommentComponent> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    Provider.of<PostVM>(context, listen: false)
+        .listenForComments(widget.postId);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<PostVM>(builder: (context, vm, _) {
+      return ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: vm.amityComments.length,
+        itemBuilder: (context, index) {
+          return StreamBuilder<AmityComment>(
+              key: UniqueKey(),
+              stream: vm.amityComments[index].listen,
+              initialData: vm.amityComments[index],
+              builder: (context, snapshot) {
+                var _comments = snapshot.data!;
+                var _commentData = snapshot.data!.data as CommentTextData;
+                var isliked = _comments.myReactions?.isNotEmpty;
+
+                return Container(
+                  color: Colors.white,
+                  child: ListTile(
+                    leading:
+                        getAvatarImage(vm.amityComments[index].user!.avatarUrl),
+                    title: RichText(
+                      text: TextSpan(
+                        style: widget.theme.textTheme.bodyText1!
+                            .copyWith(fontSize: 17),
+                        children: [
+                          TextSpan(
+                            text: _comments.user!.displayName!,
+                            style: widget.theme.textTheme.headline6!
+                                .copyWith(fontSize: 14),
+                          ),
+                          TextSpan(
+                              text: '   ' +
+                                  DateFormat.yMMMMEEEEd()
+                                      .format(_comments.createdAt!),
+                              style:
+                                  TextStyle(fontSize: 10, color: Colors.grey)),
+                        ],
+                      ),
+                    ),
+                    subtitle: Text(
+                      _commentData.text!,
+                      style: widget.theme.textTheme.subtitle2!.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                    trailing: isliked ?? false
+                        ? GestureDetector(
+                            onTap: () {
+                              vm.removeCommentReaction(_comments);
+                            },
+                            child: Icon(
+                              Icons.favorite,
+                              color: Colors.red,
+                            ),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              vm.addCommentReaction(_comments);
+                            },
+                            child: Icon(Icons.favorite_border)),
+                  ),
+                );
+              });
+        },
+      );
     });
   }
 }

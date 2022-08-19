@@ -205,7 +205,7 @@ class _PostWidgetState extends State<PostWidget>
                             getImageProvider(widget.post.postedUser?.avatarUrl),
                       )),
                 ),
-                title: Row(
+                title: Wrap(
                   children: [
                     GestureDetector(
                       onTap: () {
@@ -383,6 +383,11 @@ class _PostWidgetState extends State<PostWidget>
                   ],
                 ),
               ),
+              // Divider(),
+              // CommentComponent(
+              //     key: Key(widget.post.postId!),
+              //     postId: widget.post.postId!,
+              //     theme: widget.theme)
             ],
           ),
         ),

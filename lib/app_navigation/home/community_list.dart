@@ -160,14 +160,32 @@ class CommunityWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
+      onTap: () async {
+        await Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (context) => CommuFeedVM(),
                   child: CommunityScreen(
                     community: community,
                   ),
                 )));
+        switch (communityType) {
+          case CommunityListType.my:
+            Provider.of<CommunityVM>(context, listen: false)
+                .initAmityMyCommunityList();
+            break;
+          case CommunityListType.recommend:
+            Provider.of<CommunityVM>(context, listen: false)
+                .initAmityRecommendCommunityList();
+            break;
+          case CommunityListType.trending:
+            Provider.of<CommunityVM>(context, listen: false)
+                .initAmityTrendingCommunityList();
+            break;
+          default:
+            Provider.of<CommunityVM>(context, listen: false)
+                .initAmityMyCommunityList();
+            break;
+        }
       },
       child: Card(
         elevation: 0,

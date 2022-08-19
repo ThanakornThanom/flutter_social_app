@@ -15,8 +15,9 @@ import '../../components/video_player.dart';
 // ignore: must_be_immutable
 class CreatePostScreen2 extends StatefulWidget {
   String? communityID;
-
-  CreatePostScreen2({Key? key, this.communityID}) : super(key: key);
+  BuildContext? context;
+  CreatePostScreen2({Key? key, this.communityID, this.context})
+      : super(key: key);
   @override
   _CreatePostScreen2State createState() => _CreatePostScreen2State();
 }
@@ -211,7 +212,7 @@ class _CreatePostScreen2State extends State<CreatePostScreen2> {
                         await vm.createPost(context);
                       } else {
                         //create post in Community
-                        await vm.createPost(context,
+                        await vm.createPost(widget.context!,
                             communityId: widget.communityID);
                       }
 

@@ -146,7 +146,7 @@ class CreatePostVM extends ChangeNotifier {
         print("isNotSelectedImageYet");
 
         ///create video post
-        creatVideoPost(context, communityId: communityId);
+        await creatVideoPost(context, communityId: communityId);
       } else if (isNotSelectVideoYet()) {
         print("isNotSelectVideoYet");
 
@@ -163,7 +163,7 @@ class CreatePostVM extends ChangeNotifier {
         print("isNotSelectedImageYet");
 
         ///create video post
-        creatVideoPost(context);
+        await creatVideoPost(context);
       } else if (isNotSelectVideoYet()) {
         print("isNotSelectVideoYet");
 

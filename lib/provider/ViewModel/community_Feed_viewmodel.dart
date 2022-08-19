@@ -31,6 +31,7 @@ class CommuFeedVM extends ChangeNotifier {
     )
       ..addListener(
         () {
+          print("communityListener");
           if (_controllerCommu.error == null) {
             //handle results, we suggest to clear the previous items
             //and add with the latest _controller.loadedItems

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:verbose_share_world/app_theme/application_colors.dart';
 
 class AppTheme {
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: Colors.white,
-    primaryColor: Color(0xffe80202),
+    primaryColor: ApplicationColors.primaryColor,
     fontFamily: 'Poppins',
     appBarTheme: AppBarTheme(
       color: Colors.white,
