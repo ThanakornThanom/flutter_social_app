@@ -15,8 +15,9 @@ import '../../provider/ViewModel/feed_viewmodel.dart';
 
 class CommunityScreen extends StatefulWidget {
   final AmityCommunity community;
+  final bool isFromFeed;
 
-  const CommunityScreen({Key? key, required this.community}) : super(key: key);
+  const CommunityScreen({Key? key, required this.community, this.isFromFeed = false }) : super(key: key);
 
   @override
   _CommunityScreenState createState() => _CommunityScreenState();
@@ -238,7 +239,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                 .getCommunityPosts()[index],
                             builder: (context, snapshot) {
                               return PostWidget(
-                                  post: snapshot.data!, theme: theme);
+                                post: snapshot.data!,
+                                theme: theme,
+                                postIndex: index,
+                                
+                              );
                             });
                       },
                     ),

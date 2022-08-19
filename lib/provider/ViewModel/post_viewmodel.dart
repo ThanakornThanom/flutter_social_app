@@ -26,6 +26,8 @@ class PostVM extends ChangeNotifier {
     });
   }
 
+
+
   void listenForComments(String postID) {
     _controller = PagingController(
       pageFuture: (token) => AmitySocialClient.newCommentRepository()
@@ -90,6 +92,25 @@ class PostVM extends ChangeNotifier {
     post.react().addReaction('like').then((value) => {
           //success
         });
+  }
+
+  void flagPost(AmityPost post) {
+    post.report().flag().then((value) {
+      print("flag success ${value}");
+      notifyListeners();
+    }).onError((error, stackTrace) {
+      print("flag error ${error.toString()}");
+    });
+  }
+
+  void unflagPost(AmityPost post) {
+    post.report().unflag().then((value) {
+      //success
+      print("unflag success ${value}");
+      notifyListeners();
+    }).onError((error, stackTrace) {
+      print("unflag error ${error.toString()}");
+    });
   }
 
   void removePostReaction(AmityPost post) {
