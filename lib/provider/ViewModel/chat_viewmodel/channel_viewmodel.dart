@@ -33,6 +33,8 @@ class MessageVM extends ChangeNotifier {
         for (var message in data!.messages!) {
           amityMessageList.add(message);
         }
+        scrollToBottom();
+
         notifyListeners();
       } else {
         print(error);

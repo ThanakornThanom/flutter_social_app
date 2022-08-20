@@ -106,7 +106,12 @@ class AmityChatRepoImp implements AmityChatRepo {
   Future<void> fetchChannels(
       Function(ChannelList? data, String? error) callback) async {
     print("fetchChannels...");
-    socket.emitWithAck('v3/channel.query', {"filter": "member"}, ack: (data) {
+    socket.emitWithAck('v3/channel.query', {
+      "filter": "member",
+      "options": {
+        "limit": 100,
+      }
+    }, ack: (data) {
       var amityResponse = AmityResponse.fromJson(data);
       var responsedata = amityResponse.data;
       if (amityResponse.status == "success") {
