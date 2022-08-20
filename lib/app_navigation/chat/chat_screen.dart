@@ -1,6 +1,7 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
@@ -65,10 +66,10 @@ class ChatSingleScreen extends StatelessWidget {
                 color: theme.canvasColor,
                 child: FadedSlideAnimation(
                   child: SingleChildScrollView(
+                    reverse: true,
                     controller: Provider.of<MessageVM>(context, listen: false)
                         .scrollController,
                     child: MessageComponent(
-                      key: UniqueKey(),
                       theme: theme,
                       mediaQuery: mediaQuery,
                       channelId: channelId,
@@ -100,6 +101,8 @@ class ChatSingleScreen extends StatelessWidget {
                   Container(
                     width: mediaQuery.size.width * 0.7,
                     child: TextField(
+                      controller: Provider.of<MessageVM>(context, listen: false)
+                          .textEditingController,
                       decoration: InputDecoration(
                         hintText: S.of(context).writeYourComment,
                         hintStyle: TextStyle(fontSize: 14),
@@ -108,10 +111,17 @@ class ChatSingleScreen extends StatelessWidget {
                     ),
                   ),
                   Spacer(),
-                  Icon(
-                    Icons.send,
-                    color: theme.primaryColor,
-                    size: 22,
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.heavyImpact();
+                      Provider.of<MessageVM>(context, listen: false)
+                          .sendMessage();
+                    },
+                    child: Icon(
+                      Icons.send,
+                      color: theme.primaryColor,
+                      size: 22,
+                    ),
                   ),
                   SizedBox(
                     width: 5,
@@ -200,9 +210,7 @@ class _MessageComponentState extends State<MessageComponent> {
                                   10.0 >=
                               widget.mediaQuery.size.width * 0.7
                           ? widget.mediaQuery.size.width * 0.7
-                          : (vm.amityMessageList[index].data!.text!.length *
-                                  10.0) +
-                              20,
+                          : null,
                       alignment: issSendbyCurrentUser
                           ? Alignment.centerLeft
                           : Alignment.centerRight,

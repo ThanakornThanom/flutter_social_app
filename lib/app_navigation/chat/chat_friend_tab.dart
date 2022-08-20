@@ -46,8 +46,8 @@ class ChatFriendTabScreen extends StatelessWidget {
               }
               return Card(
                 child: ListTile(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
+                  onTap: () async {
+                    await Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ChangeNotifierProvider(
                               create: (context) => MessageVM(),
                               child: ChatSingleScreen(

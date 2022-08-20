@@ -8,9 +8,13 @@ class ChannelRepo {
   Future<void> fetchChannelById(
       String channelId, Function(AmittyMessage?, String?) callback) async {}
 
-  Future<void> sendTextMessage() async {}
+  Future<void> sendTextMessage(String channelId, String text,
+      Function(AmittyMessage?, String?) callback) async {}
 
-  Future<void> sendImageMessage() async {}
+  Future<void> sendImageMessage(String channelId, String text,
+      Function(AmittyMessage?, String?) callback) async {}
 
   Future<void> reactMessage(String messageId) async {}
+
+  void disposeRepo() {}
 }

@@ -61,12 +61,39 @@ class ChannelRepoImp implements ChannelRepo {
   }
 
   @override
-  Future<void> sendImageMessage() async {
+  Future<void> sendImageMessage(String channelId, String text,
+      Function(AmittyMessage?, String?) callback) async {
     print("sendImageMessage...");
   }
 
   @override
-  Future<void> sendTextMessage() async {
+  Future<void> sendTextMessage(String channelId, String text,
+      Function(AmittyMessage?, String?) callback) async {
     print("sendTextMessage...");
+    print("fetchChannelById...");
+    socket.emitWithAck('v3/message.create', {
+      "channelId": "$channelId",
+      "type": "text",
+      "data": {"text": "$text"}
+    }, ack: (data) {
+      var amityResponse = AmityResponse.fromJson(data);
+      var responsedata = amityResponse.data;
+      if (amityResponse.status == "success") {
+        //success
+        print(responsedata!.json);
+        var amityMessages = AmittyMessage.fromJson(responsedata.json!);
+
+        callback(amityMessages, null);
+      } else {
+        //error
+        callback(null, amityResponse.message);
+      }
+    });
+  }
+
+  @override
+  void disposeRepo() {
+    socket.clearListeners();
+    socket.close();
   }
 }
