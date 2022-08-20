@@ -10,10 +10,10 @@ class AmityChatRepo {
       String channelId, Function(AmityMessage?, String?) callback) async {}
 
   Future<void> sendTextMessage(String channelId, String text,
-      Function(AmittyMessage?, String?) callback) async {}
+      Function(AmityMessage?, String?) callback) async {}
 
   Future<void> sendImageMessage(String channelId, String text,
-      Function(AmittyMessage?, String?) callback) async {}
+      Function(AmityMessage?, String?) callback) async {}
 
   Future<void> reactMessage(String messageId) async {}
 }

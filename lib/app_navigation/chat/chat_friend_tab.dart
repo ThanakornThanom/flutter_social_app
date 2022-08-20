@@ -82,8 +82,9 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
                         builder: (context) => ChangeNotifierProvider(
                               create: (context) => MessageVM(),
                               child: ChatSingleScreen(
-                                key: UniqueKey(),
-                                channelId: "qweqwe",
+                                channel: Provider.of<ChannelVM>(context,
+                                        listen: false)
+                                    .getChannelList()[index],
                               ),
                             )));
                   },

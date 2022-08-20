@@ -67,13 +67,13 @@ class AmityChatRepoImp implements AmityChatRepo {
 
   @override
   Future<void> sendImageMessage(String channelId, String text,
-      Function(AmittyMessage?, String?) callback) async {
+      Function(AmityMessage?, String?) callback) async {
     print("sendImageMessage...");
   }
 
   @override
   Future<void> sendTextMessage(String channelId, String text,
-      Function(AmittyMessage?, String?) callback) async {
+      Function(AmityMessage?, String?) callback) async {
     print("sendTextMessage...");
     print("fetchChannelById...");
     socket.emitWithAck('v3/message.create', {
@@ -86,7 +86,7 @@ class AmityChatRepoImp implements AmityChatRepo {
       if (amityResponse.status == "success") {
         //success
         print(responsedata!.json);
-        var amityMessages = AmittyMessage.fromJson(responsedata.json!);
+        var amityMessages = AmityMessage.fromJson(responsedata.json!);
 
         callback(amityMessages, null);
       } else {
