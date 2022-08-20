@@ -2,9 +2,11 @@ import 'dart:math';
 
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/chat/chat_screen.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
+import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_viewmodel.dart';
 
 class ChatItems {
   String image;
@@ -46,7 +48,12 @@ class ChatFriendTabScreen extends StatelessWidget {
                 child: ListTile(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ChatSingleScreen()));
+                        builder: (context) => ChangeNotifierProvider(
+                              create: (context) => MessageVM(),
+                              child: ChatSingleScreen(
+                                channelId: "Farrari -johnwick2",
+                              ),
+                            )));
                   },
                   leading: Stack(
                     children: [
