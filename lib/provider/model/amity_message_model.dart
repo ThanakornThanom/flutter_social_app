@@ -1,10 +1,10 @@
-class AmittyMessage {
+class AmityMessage {
   List<Messages>? messages;
   List<Users>? users;
 
-  AmittyMessage({this.messages, this.users});
+  AmityMessage({this.messages, this.users});
 
-  AmittyMessage.fromJson(Map<String, dynamic> json) {
+  AmityMessage.fromJson(Map<String, dynamic> json) {
     if (json['messages'] != null) {
       messages = <Messages>[];
       json['messages'].forEach((v) {
