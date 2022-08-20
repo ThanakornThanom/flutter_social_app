@@ -4,8 +4,9 @@ import 'package:verbose_share_world/provider/model/amity_message_model.dart';
 import 'package:verbose_share_world/repository/chat_repo_imp.dart';
 
 class MessageVM extends ChangeNotifier {
+  ScrollController? scrollController = ScrollController();
   ChannelRepoImp channelRepoImp = ChannelRepoImp();
-  List<AmittyMessage> amityMessageList = [];
+  List<Messages> amityMessageList = [];
   Future<void> initVM(String channelId) async {
     print("initVM");
     String accessToken =
@@ -16,9 +17,21 @@ class MessageVM extends ChangeNotifier {
       print(channelId);
       if (messages.messages?[0].channelId == channelId) {
         print("get new messgae...: ${messages.messages?[0].data?.text}");
-        amityMessageList.add(messages);
+        amityMessageList.add(messages.messages!.first);
         notifyListeners();
       }
+    });
+    await channelRepoImp.fetchChannelById(channelId, (data, error) {
+      if (error == null) {
+        print("success");
+        amityMessageList.clear();
+        for (var message in data!.messages!) {
+          amityMessageList.add(message);
+        }
+      } else {
+        print(error);
+      }
+      notifyListeners();
     });
   }
 }
