@@ -51,7 +51,8 @@ class ChatFriendTabScreen extends StatelessWidget {
                         builder: (context) => ChangeNotifierProvider(
                               create: (context) => MessageVM(),
                               child: ChatSingleScreen(
-                                channelId: "Farrari -johnwick2",
+                                key: UniqueKey(),
+                                channelId: "qweqwe",
                               ),
                             )));
                   },

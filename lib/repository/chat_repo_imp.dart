@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:verbose_share_world/provider/model/amity_message_model.dart';
+import 'package:verbose_share_world/provider/model/amity_response_model.dart';
 import 'package:verbose_share_world/repository/chat_repo.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -24,8 +26,23 @@ class ChannelRepoImp implements ChannelRepo {
   }
 
   @override
-  Future<void> fetchChannelById() async {
+  Future<void> fetchChannelById(String channelId,
+      Function(AmittyMessage? data, String? error) callback) async {
     print("fetchChannelById...");
+    socket.emitWithAck('v3/message.query', {"channelId": "$channelId"},
+        ack: (data) {
+      var amityResponse = AmityResponse.fromJson(data);
+      var responsedata = amityResponse.data;
+      if (amityResponse.status == "success") {
+        //success
+        var amityMessages = AmittyMessage.fromJson(responsedata!.json!);
+
+        callback(amityMessages, null);
+      } else {
+        //error
+        callback(null, amityResponse.message);
+      }
+    });
   }
 
   @override

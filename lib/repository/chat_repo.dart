@@ -5,7 +5,8 @@ class ChannelRepo {
 
   Future<void> listenToChannel(Function(AmittyMessage) callback) async {}
 
-  Future<void> fetchChannelById() async {}
+  Future<void> fetchChannelById(
+      String channelId, Function(AmittyMessage?, String?) callback) async {}
 
   Future<void> sendTextMessage() async {}
 
