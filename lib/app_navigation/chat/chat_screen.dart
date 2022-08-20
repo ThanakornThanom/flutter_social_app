@@ -1,15 +1,20 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_viewmodel.dart';
 
-class ChatSingleScreen extends StatelessWidget {
-  final String channelId;
+import '../../components/custom_user_avatar.dart';
+import '../../provider/model/amity_channel_model.dart';
+import '../../provider/model/amity_message_model.dart';
 
-  const ChatSingleScreen({Key? key, required this.channelId}) : super(key: key);
+class ChatSingleScreen extends StatelessWidget {
+  final Channels channel;
+
+  const ChatSingleScreen({Key? key, required this.channel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,21 +26,19 @@ class ChatSingleScreen extends StatelessWidget {
       title: Transform(
         transform: Matrix4.translationValues(-25, 6, 0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
               height: 45,
               margin: const EdgeInsets.symmetric(vertical: 4),
               decoration: BoxDecoration(shape: BoxShape.circle),
               child: FadedScaleAnimation(
-                child: Image.asset(
-                  'assets/images/profile_pics/Layer1804.png',
-                  fit: BoxFit.contain,
-                ),
+                child: getAvatarImage(null, fileId: channel.avatarFileId),
               ),
             ),
             SizedBox(width: 10),
             Text(
-              S.of(context).kevinTaylor,
+              channel.displayName!,
               style: theme.textTheme.headline6!.copyWith(
                 fontSize: 16.7,
                 fontWeight: FontWeight.w500,
@@ -45,11 +48,10 @@ class ChatSingleScreen extends StatelessWidget {
         ),
       ),
       leading: GestureDetector(
-        onTap: () {
-          Navigator.of(context).pop();
-        },
-        child: Icon(Icons.chevron_left),
-      ),
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Icon(Icons.chevron_left, color: Colors.black, size: 35)),
     );
     final bHeight = mediaQuery.size.height -
         mediaQuery.padding.top -
@@ -71,7 +73,7 @@ class ChatSingleScreen extends StatelessWidget {
                       key: UniqueKey(),
                       theme: theme,
                       mediaQuery: mediaQuery,
-                      channelId: channelId,
+                      channelId: channel.channelId!,
                     ),
                   ),
                   beginOffset: Offset(0, 0.3),
@@ -88,20 +90,20 @@ class ChatSingleScreen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: Row(
                 children: [
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Icon(
-                    Icons.emoji_emotions_outlined,
-                    color: theme.primaryIconTheme.color,
-                    size: 22,
-                  ),
+                  // SizedBox(
+                  //   width: 5,
+                  // ),
+                  // Icon(
+                  //   Icons.emoji_emotions_outlined,
+                  //   color: theme.primaryIconTheme.color,
+                  //   size: 22,
+                  // ),
                   SizedBox(width: 10),
                   Container(
                     width: mediaQuery.size.width * 0.7,
                     child: TextField(
                       decoration: InputDecoration(
-                        hintText: S.of(context).writeYourComment,
+                        hintText: S.of(context).writeYourMessage,
                         hintStyle: TextStyle(fontSize: 14),
                         border: InputBorder.none,
                       ),
@@ -155,6 +157,17 @@ class _MessageComponentState extends State<MessageComponent> {
     super.dispose();
   }
 
+  String getTimeStamp(Messages msg) {
+    String hour = "${DateTime.parse(msg.editedAt!).hour.toString()}";
+    String minute = "";
+    if (DateTime.parse(msg.editedAt!).minute > 9) {
+      minute = DateTime.parse(msg.editedAt!).minute.toString();
+    } else {
+      minute = "0" + DateTime.parse(msg.editedAt!).minute.toString();
+    }
+    return hour + ":" + minute;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<MessageVM>(builder: (context, vm, _) {
@@ -165,25 +178,24 @@ class _MessageComponentState extends State<MessageComponent> {
           shrinkWrap: true,
           itemCount: vm.amityMessageList.length,
           itemBuilder: (context, index) {
-            bool issSendbyCurrentUser = vm.amityMessageList[index].userId !=
+            bool isSendbyCurrentUser = vm.amityMessageList[index].userId !=
                 AmityCoreClient.getCurrentUser().userId;
             return Column(
-              crossAxisAlignment: issSendbyCurrentUser
+              crossAxisAlignment: isSendbyCurrentUser
                   ? CrossAxisAlignment.start
                   : CrossAxisAlignment.end,
               children: [
                 Row(
-                  mainAxisAlignment: issSendbyCurrentUser
+                  mainAxisAlignment: isSendbyCurrentUser
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.end,
                   children: [
-                    if (!issSendbyCurrentUser)
+                    if (!isSendbyCurrentUser)
                       Container(
                         child: Text(
-                          S.of(context).am1207,
+                          getTimeStamp(vm.amityMessageList[index]),
                           style: TextStyle(
-                              color: ApplicationColors.lightGrey300,
-                              fontSize: 8),
+                              color: ApplicationColors.grey, fontSize: 8),
                         ),
                       ),
                     Container(
@@ -191,7 +203,7 @@ class _MessageComponentState extends State<MessageComponent> {
                       padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: issSendbyCurrentUser
+                        color: isSendbyCurrentUser
                             ? ApplicationColors.lightGrey
                             : widget.theme.primaryColor,
                       ),
@@ -203,24 +215,24 @@ class _MessageComponentState extends State<MessageComponent> {
                           : (vm.amityMessageList[index].data!.text!.length *
                                   10.0) +
                               20,
-                      alignment: issSendbyCurrentUser
+                      alignment: isSendbyCurrentUser
                           ? Alignment.centerLeft
                           : Alignment.centerRight,
                       child: Text(
                         vm.amityMessageList[index].data!.text ?? "N/A",
                         style: widget.theme.textTheme.bodyText1!.copyWith(
                             fontSize: 14.7,
-                            color: issSendbyCurrentUser
+                            color: isSendbyCurrentUser
                                 ? ApplicationColors.black
                                 : ApplicationColors.white),
                       ),
                     ),
-                    if (issSendbyCurrentUser)
+                    if (isSendbyCurrentUser)
                       Container(
                         child: Text(
-                          S.of(context).am1207,
+                          getTimeStamp(vm.amityMessageList[index]),
                           style: TextStyle(
-                              color: ApplicationColors.lightGrey300,
+                              color: ApplicationColors.lightGrey500,
                               fontSize: 8),
                         ),
                       ),

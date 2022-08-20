@@ -208,7 +208,7 @@ class GroupChatScreen extends StatelessWidget {
                     width: mediaQuery.size.width * 0.7,
                     child: TextField(
                       decoration: InputDecoration(
-                        hintText: S.of(context).writeYourComment,
+                        hintText: S.of(context).writeYourMessage,
                         hintStyle: TextStyle(
                           fontSize: 12,
                         ),

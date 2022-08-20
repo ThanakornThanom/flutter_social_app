@@ -5,6 +5,7 @@ class ApplicationColors {
   static const scaffoldBackgroundColor = Colors.white;
   static const lightGrey = Color(0xfff1f1f1);
   static final lightGrey300 = Colors.grey[300];
+    static final lightGrey500 = Colors.grey[500];
   static const grey = Colors.grey;
   static const textGrey = Colors.grey;
   static const black = Colors.black;

@@ -2,12 +2,16 @@ import 'dart:math';
 
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
+import 'package:get_time_ago/get_time_ago.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/chat/chat_screen.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_list_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_viewmodel.dart';
+
+import '../../components/custom_user_avatar.dart';
 
 class ChatItems {
   String image;
@@ -31,8 +35,16 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
   }
 
   int getLength(ChannelVM vm) {
-    print("check channel list length ${vm.getChannelList().length > 0 ? vm.getChannelList()[0].toString() : ""}");
+    print(
+        "check channel list length ${vm.getChannelList().length > 0 ? vm.getChannelList()[0] : ""}");
     return vm.getChannelList().length;
+  }
+
+  String getDateTime(String dateTime) {
+    var convertedTimestamp =
+        DateTime.parse(dateTime); // Converting into [DateTime] object
+    var result = GetTimeAgo.parse(convertedTimestamp);
+    return result;
   }
 
   @override
@@ -58,12 +70,12 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
               physics: BouncingScrollPhysics(),
               itemCount: getLength(vm),
               itemBuilder: (context, index) {
-                bool _rand;
-                if ((Random().nextInt(10)) % 2 == 0) {
-                  _rand = true;
-                } else {
-                  _rand = false;
-                }
+                bool _rand = false;
+                // if ((Random().nextInt(10)) % 2 == 0) {
+                //   _rand = true;
+                // } else {
+                //   _rand = false;
+                // }
                 return Card(
                   child: ListTile(
                     onTap: () {
@@ -72,10 +84,7 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
                                 create: (context) => MessageVM(),
                                 child: ChatSingleScreen(
                                   key: UniqueKey(),
-                                  channelId: vm
-                                      .getChannelList()[index]
-                                      
-                                      .channelId!,
+                                  channel: vm.getChannelList()[index],
                                 ),
                               )));
                     },
@@ -84,10 +93,9 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
                           child: FadedScaleAnimation(
-                            child: CircleAvatar(
-                              radius: 24,
-                              backgroundImage: AssetImage(_chatItems[0].image),
-                            ),
+                            child: getAvatarImage(null,
+                                fileId:
+                                    vm.getChannelList()[index].avatarFileId),
                           ),
                         ),
                         Positioned(
@@ -115,8 +123,7 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
                       ],
                     ),
                     title: Text(
-                      vm.getChannelList()[index].displayName ??
-                          "Display name",
+                      vm.getChannelList()[index].displayName ?? "Display name",
                       style: TextStyle(
                         color: _rand
                             ? theme.primaryColor
@@ -132,7 +139,7 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
                       ),
                     ),
                     trailing: Text(
-                      vm.getChannelList()[index].lastActivity ?? "",
+                      getDateTime(vm.getChannelList()[index].lastActivity!),
                       style: theme.textTheme.bodyText1!.copyWith(
                           color: ApplicationColors.grey, fontSize: 9.3),
                     ),

@@ -349,7 +349,7 @@ class _CommentScreenState extends State<CommentScreen> {
                               controller: _commentTextEditController,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
-                                hintText: S.of(context).writeYourComment,
+                                hintText: S.of(context).writeYourMessage,
                                 hintStyle: TextStyle(fontSize: 14),
                               ),
                             ),

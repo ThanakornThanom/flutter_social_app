@@ -36,6 +36,8 @@ dependencies:
   camera: ^0.10.0
   video_thumbnail: ^0.5.2
   socket_io_client: ^1.0.0
+  get_time_ago: ^1.1.5
+ 
 
 
 

@@ -581,10 +581,10 @@ class S {
   }
 
   /// `Write your comment`
-  String get writeYourComment {
+  String get writeYourMessage {
     return Intl.message(
-      'Write your comment',
-      name: 'writeYourComment',
+      'Write your message',
+      name: 'writeYourmessage',
       desc: '',
       args: [],
     );
