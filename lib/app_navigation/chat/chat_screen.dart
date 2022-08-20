@@ -221,9 +221,7 @@ class _MessageComponentState extends State<MessageComponent> {
                                   10.0 >=
                               widget.mediaQuery.size.width * 0.7
                           ? widget.mediaQuery.size.width * 0.7
-                          : (vm.amityMessageList[index].data!.text!.length *
-                                  10.0) +
-                              20,
+                          : null,
                       alignment: isSendbyCurrentUser
                           ? Alignment.centerLeft
                           : Alignment.centerRight,
