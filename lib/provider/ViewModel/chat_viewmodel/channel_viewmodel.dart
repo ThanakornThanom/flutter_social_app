@@ -40,14 +40,14 @@ class MessageVM extends ChangeNotifier {
   }
 
   Future<void> sendMessage() async {
-    channelRepoImp.sendTextMessage(channelId, textEditingController.text,
-        (data, error) {
+    String text = textEditingController.text;
+    textEditingController.clear();
+    channelRepoImp.sendTextMessage(channelId, text, (data, error) {
       if (data != null) {
         print("sendMessage: success");
       } else {
         print(error);
       }
-      textEditingController.clear();
     });
   }
 

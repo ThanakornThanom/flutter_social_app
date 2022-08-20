@@ -29,8 +29,12 @@ class ChannelRepoImp implements ChannelRepo {
   Future<void> fetchChannelById(String channelId,
       Function(AmittyMessage? data, String? error) callback) async {
     print("fetchChannelById...");
-    socket.emitWithAck('v3/message.query', {"channelId": "$channelId"},
-        ack: (data) {
+    socket.emitWithAck('v3/message.query', {
+      "channelId": "$channelId",
+      "options": {
+        "last": 100,
+      }
+    }, ack: (data) {
       var amityResponse = AmityResponse.fromJson(data);
       var responsedata = amityResponse.data;
       if (amityResponse.status == "success") {
