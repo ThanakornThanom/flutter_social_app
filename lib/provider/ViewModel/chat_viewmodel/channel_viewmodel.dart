@@ -4,6 +4,7 @@ import 'package:verbose_share_world/provider/model/amity_message_model.dart';
 import 'package:verbose_share_world/repository/chat_repo_imp.dart';
 
 class MessageVM extends ChangeNotifier {
+  //asd
   TextEditingController textEditingController = TextEditingController();
   ScrollController? scrollController = ScrollController();
   ChannelRepoImp channelRepoImp = ChannelRepoImp();
