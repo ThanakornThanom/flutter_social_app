@@ -2,11 +2,16 @@ import 'dart:math';
 
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
+import 'package:get_time_ago/get_time_ago.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/chat/chat_screen.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
+import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_list_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_viewmodel.dart';
+
+import '../../components/custom_user_avatar.dart';
 
 class ChatItems {
   String image;
@@ -15,7 +20,33 @@ class ChatItems {
   ChatItems(this.image, this.name);
 }
 
-class ChatFriendTabScreen extends StatelessWidget {
+class ChatFriendTabScreen extends StatefulWidget {
+  @override
+  _ChatFriendTabScreenState createState() => _ChatFriendTabScreenState();
+}
+
+class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      Provider.of<ChannelVM>(context, listen: false).initVM();
+    });
+  }
+
+  int getLength(ChannelVM vm) {
+    print(
+        "check channel list length ${vm.getChannelList().length > 0 ? vm.getChannelList()[0] : ""}");
+    return vm.getChannelList().length;
+  }
+
+  String getDateTime(String dateTime) {
+    var convertedTimestamp =
+        DateTime.parse(dateTime); // Converting into [DateTime] object
+    var result = GetTimeAgo.parse(convertedTimestamp);
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     List<ChatItems> _chatItems = [
@@ -46,8 +77,8 @@ class ChatFriendTabScreen extends StatelessWidget {
               }
               return Card(
                 child: ListTile(
-                  onTap: () async {
-                    await Navigator.of(context).push(MaterialPageRoute(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ChangeNotifierProvider(
                               create: (context) => MessageVM(),
                               child: ChatSingleScreen(

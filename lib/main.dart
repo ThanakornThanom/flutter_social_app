@@ -12,6 +12,7 @@ import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/locale/language_cubit.dart';
 import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/category_viewmodel.dart';
+import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_list_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/community_Feed_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/community_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/create_post_viewmodel.dart';
@@ -55,6 +56,8 @@ class MyApp extends StatelessWidget {
             create: ((context) => ImagePickerVM())),
         ChangeNotifierProvider<CreatePostVM>(
             create: ((context) => CreatePostVM())),
+            ChangeNotifierProvider<ChannelVM>(
+            create: ((context) => ChannelVM())),
       ],
       child: BlocProvider<LanguageCubit>(
         create: (context) => LanguageCubit()..getCurrentLanguage(),

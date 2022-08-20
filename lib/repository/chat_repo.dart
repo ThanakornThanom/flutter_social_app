@@ -1,12 +1,13 @@
+import '../provider/model/amity_channel_model.dart';
 import '../provider/model/amity_message_model.dart';
 
-class ChannelRepo {
-  Future<void> initRepo(String accessToken, String channelId) async {}
+class AmityChatRepo {
+  Future<void> initRepo(String accessToken) async {}
 
-  Future<void> listenToChannel(Function(AmittyMessage) callback) async {}
+  Future<void> listenToChannel(Function(AmityMessage) callback) async {}
 
   Future<void> fetchChannelById(
-      String channelId, Function(AmittyMessage?, String?) callback) async {}
+      String channelId, Function(AmityMessage?, String?) callback) async {}
 
   Future<void> sendTextMessage(String channelId, String text,
       Function(AmittyMessage?, String?) callback) async {}
@@ -15,6 +16,4 @@ class ChannelRepo {
       Function(AmittyMessage?, String?) callback) async {}
 
   Future<void> reactMessage(String messageId) async {}
-
-  void disposeRepo() {}
 }

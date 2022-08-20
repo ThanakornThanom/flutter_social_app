@@ -9,7 +9,7 @@ class ChatsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return DefaultTabController(
-      length: 2,
+      length: 1,
       child: Scaffold(
         appBar: TabBar(
           physics: BouncingScrollPhysics(),
@@ -20,14 +20,14 @@ class ChatsPage extends StatelessWidget {
           indicatorSize: TabBarIndicatorSize.label,
           tabs: [
             Tab(text: S.of(context).friends),
-            Tab(text: S.of(context).groups),
+            // Tab(text: S.of(context).groups),
           ],
         ),
         body: TabBarView(
           physics: BouncingScrollPhysics(),
           children: [
             ChatFriendTabScreen(),
-            ChatGroupTabScreen(),
+            // ChatGroupTabScreen(),
           ],
         ),
       ),
