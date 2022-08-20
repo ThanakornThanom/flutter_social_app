@@ -38,7 +38,7 @@ class ChatSingleScreen extends StatelessWidget {
             ),
             SizedBox(width: 10),
             Text(
-              channel.displayName!,
+              channel.displayName ?? "N/A",
               style: theme.textTheme.headline6!.copyWith(
                 fontSize: 16.7,
                 fontWeight: FontWeight.w500,
