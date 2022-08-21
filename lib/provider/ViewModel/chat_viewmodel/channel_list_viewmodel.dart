@@ -23,10 +23,14 @@ class ChannelVM extends ChangeNotifier {
       ///get channel where channel id == new message channelId
       var channel = _amityChannelList.firstWhere((amityMessage) =>
           amityMessage.channelId == messages.messages?[0].channelId);
-      print("${channel.channelId} got new message");
+      print(
+          "${channel.channelId} got new message from ${messages.messages![0].userId}");
 
-      ///add unread count by 1
-      channel.setUnreadCount(channel.unreadCount! + 1);
+      if (messages.messages![0].userId !=
+          AmityCoreClient.getCurrentUser().userId) {
+        ///add unread count by 1
+        channel.setUnreadCount(channel.unreadCount + 1);
+      }
 
       //move channel to the top
       _amityChannelList.remove(channel);
@@ -46,10 +50,11 @@ class ChannelVM extends ChangeNotifier {
           for (var channel in data.channels!) {
             print("success 3");
             _amityChannelList.add(channel);
-
-            if (channelUserMap[channel.channelId] != null) {
-              var count = channel.messageCount! -
-                  channelUserMap[channel.channelId]!.readToSegment!;
+            String key =
+                channel.channelId! + AmityCoreClient.getCurrentUser().userId!;
+            if (channelUserMap[key] != null) {
+              var count =
+                  channel.messageCount! - channelUserMap[key]!.readToSegment!;
               channel.setUnreadCount(count);
               print(channel.unreadCount);
             }
@@ -67,8 +72,20 @@ class ChannelVM extends ChangeNotifier {
 
   void _addUnreadCountToEachChannel(ChannelList data) {
     for (var channelUser in data.channelUsers!) {
-      channelUserMap[channelUser.channelId!] = channelUser;
+      channelUserMap[channelUser.channelId! + channelUser.userId!] =
+          channelUser;
     }
     print("mapReadSegment complete");
+  }
+
+  void removeUnreadCount(String channelId) {
+    ///get channel where channel id == new message channelId
+    var channel = _amityChannelList
+        .firstWhere((amityMessage) => amityMessage.channelId == channelId);
+
+    ///set unread count = 0
+    channel.setUnreadCount(0);
+
+    notifyListeners();
   }
 }

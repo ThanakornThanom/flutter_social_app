@@ -123,7 +123,7 @@ class Reactions {
 }
 
 class Data {
-  String? text;
+  String? text = "";
 
   Data({this.text});
 

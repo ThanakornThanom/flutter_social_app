@@ -3,6 +3,7 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_list_viewmodel.dart';
@@ -214,17 +215,33 @@ class _MessageComponentState extends State<MessageComponent> {
   @override
   Widget build(BuildContext context) {
     return Consumer<MessageVM>(builder: (context, vm, _) {
-      return vm.amityMessageList.length == 0
-          ? Center(child: CircularProgressIndicator())
+      return vm.amityMessageList == null
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        backgroundColor: widget.theme.highlightColor,
+                        color: widget.theme.hintColor,
+                      )
+                    ],
+                  ),
+                )
+              ],
+            )
           : Container(
               padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: vm.amityMessageList.length,
+                itemCount: vm.amityMessageList?.length,
                 itemBuilder: (context, index) {
                   bool isSendbyCurrentUser =
-                      vm.amityMessageList[index].userId !=
+                      vm.amityMessageList?[index].userId !=
                           AmityCoreClient.getCurrentUser().userId;
                   return Column(
                     crossAxisAlignment: isSendbyCurrentUser
@@ -239,7 +256,7 @@ class _MessageComponentState extends State<MessageComponent> {
                           if (!isSendbyCurrentUser)
                             Container(
                               child: Text(
-                                getTimeStamp(vm.amityMessageList[index]),
+                                getTimeStamp(vm.amityMessageList![index]),
                                 style: TextStyle(
                                     color: ApplicationColors.grey, fontSize: 8),
                               ),
@@ -255,7 +272,7 @@ class _MessageComponentState extends State<MessageComponent> {
                             ),
                             // width: mediaQuery.size.width * 0.7,
                             width:
-                                vm.amityMessageList[index].data!.text!.length *
+                                vm.amityMessageList![index].data!.text!.length *
                                             10.0 >=
                                         widget.mediaQuery.size.width * 0.7
                                     ? widget.mediaQuery.size.width * 0.7
@@ -264,7 +281,7 @@ class _MessageComponentState extends State<MessageComponent> {
                                 ? Alignment.centerLeft
                                 : Alignment.centerRight,
                             child: Text(
-                              vm.amityMessageList[index].data!.text ?? "N/A",
+                              vm.amityMessageList?[index].data!.text ?? "N/A",
                               style: widget.theme.textTheme.bodyText1!.copyWith(
                                   fontSize: 14.7,
                                   color: isSendbyCurrentUser
@@ -275,7 +292,7 @@ class _MessageComponentState extends State<MessageComponent> {
                           if (isSendbyCurrentUser)
                             Container(
                               child: Text(
-                                getTimeStamp(vm.amityMessageList[index]),
+                                getTimeStamp(vm.amityMessageList![index]),
                                 style: TextStyle(
                                     color: ApplicationColors.lightGrey500,
                                     fontSize: 8),
@@ -283,7 +300,7 @@ class _MessageComponentState extends State<MessageComponent> {
                             ),
                         ],
                       ),
-                      if (index + 1 == vm.amityMessageList.length)
+                      if (index + 1 == vm.amityMessageList?.length)
                         SizedBox(
                           height: 90,
                         )

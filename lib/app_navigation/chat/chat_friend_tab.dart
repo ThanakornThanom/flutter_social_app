@@ -61,7 +61,7 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
               itemBuilder: (context, index) {
                 var messageCount = vm.getChannelList()[index].unreadCount;
 
-                bool _rand = messageCount! > 0 ? true : false;
+                bool _rand = messageCount > 0 ? true : false;
                 // if ((Random().nextInt(10)) % 2 == 0) {
                 //   _rand = true;
                 // } else {

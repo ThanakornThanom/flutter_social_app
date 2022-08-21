@@ -133,9 +133,46 @@ class AmityChatRepoImp implements AmityChatRepo {
     });
   }
 
+  Future<void> startReading(String channelId,
+      {Function(String? data, String? error)? callback}) async {
+    socket.emitWithAck('channel.startReading', {"channelId": "$channelId"},
+        ack: (data) async {
+      var amityResponse = await AmityResponse.fromJson(data);
+      var responsedata = amityResponse.data;
+      if (amityResponse.status == "success") {
+        //success
+        print("startReading: success");
+        callback!("success", null);
+      } else {
+        //error
+        print("startReading: error: ${amityResponse.message}");
+        callback!(null, amityResponse.message);
+      }
+    });
+  }
+
+  Future<void> stopReading(String channelId,
+      {Function(String? data, String? error)? callback}) async {
+    socket.emitWithAck('channel.stopReading', {
+      {"channelId": "$channelId"}
+    }, ack: (data) async {
+      var amityResponse = await AmityResponse.fromJson(data);
+      var responsedata = amityResponse.data;
+      if (amityResponse.status == "success") {
+        //success
+        print("stopReading: success");
+        callback!("success", null);
+      } else {
+        //error
+        print("stopReading: error: ${amityResponse.message}");
+        callback!(null, amityResponse.message);
+      }
+    });
+  }
+
   Future<void> markSeen(String channelId) async {
     socket.emitWithAck('v3/channel.maekSeen', {
-      {"channelId": "$channelId", "readToSegment": 0}
+      {"channelId": "$channelId", "readToSegment": 100}
     }, ack: (data) async {
       var amityResponse = await AmityResponse.fromJson(data);
       var responsedata = amityResponse.data;

@@ -73,7 +73,7 @@ class Channels {
   String? updatedAt;
   String? avatarFileId;
   bool? isDeleted;
-  int? unreadCount;
+  int unreadCount = 0;
 
   Channels(
       {this.channelId,
