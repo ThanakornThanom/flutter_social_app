@@ -19,7 +19,7 @@ class ChatsPage extends StatelessWidget {
           unselectedLabelColor: ApplicationColors.black,
           indicatorSize: TabBarIndicatorSize.label,
           tabs: [
-            Tab(text: S.of(context).friends),
+            Tab(text: S.of(context).groups),
             // Tab(text: S.of(context).groups),
           ],
         ),

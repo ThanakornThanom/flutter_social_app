@@ -270,15 +270,8 @@ class _MessageComponentState extends State<MessageComponent> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: Colors.red),
-                                  child: Text(
-                                    "Unsupport type message😰",
-                                    style: widget.theme.textTheme.bodyText1!
-                                        .copyWith(
-                                            fontSize: 14.7,
-                                            color: isSendbyCurrentUser
-                                                ? ApplicationColors.black
-                                                : ApplicationColors.white),
-                                  ),
+                                  child: Text("Unsupport type message😰",
+                                      style: TextStyle(color: Colors.white)),
                                 )
                               : Container(
                                   margin: EdgeInsets.fromLTRB(10, 4, 10, 4),
