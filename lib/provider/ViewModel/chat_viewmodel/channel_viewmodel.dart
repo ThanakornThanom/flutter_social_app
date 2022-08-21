@@ -6,7 +6,8 @@ import 'package:verbose_share_world/repository/chat_repo_imp.dart';
 class MessageVM extends ChangeNotifier {
   //asd
   TextEditingController textEditingController = TextEditingController();
-  ScrollController? scrollController = ScrollController();
+  ScrollController? scrollController =
+      ScrollController(keepScrollOffset: false);
   AmityChatRepoImp channelRepoImp = AmityChatRepoImp();
   List<Messages> amityMessageList = [];
   late String channelId;
@@ -22,9 +23,13 @@ class MessageVM extends ChangeNotifier {
       if (messages.messages?[0].channelId == channelId) {
         print("get new messgae...: ${messages.messages?[0].data?.text}");
         amityMessageList.add(messages.messages!.first);
-        notifyListeners();
-        scrollToBottom();
+
+        if (messages.messages?[0].userId ==
+            AmityCoreClient.getCurrentUser().userId) {
+          scrollToBottom();
+        }
       }
+      notifyListeners();
     });
     channelRepoImp.fetchChannelById(channelId, (data, error) {
       if (error == null) {
@@ -64,8 +69,14 @@ class MessageVM extends ChangeNotifier {
     scrollController?.jumpTo(0);
   }
 
+  markSeen() {
+    print("markSeen...");
+    channelRepoImp.markSeen(channelId);
+  }
+
   @override
-  void dispose() {
+  Future<void> dispose() async {
+    await markSeen();
     channelRepoImp.disposeRepo();
     scrollController = null;
     amityMessageList.clear();

@@ -73,6 +73,7 @@ class Channels {
   String? updatedAt;
   String? avatarFileId;
   bool? isDeleted;
+  int? unreadCount;
 
   Channels(
       {this.channelId,
@@ -149,6 +150,10 @@ class Channels {
     data['avatarFileId'] = this.avatarFileId;
     data['isDeleted'] = this.isDeleted;
     return data;
+  }
+
+  void setUnreadCount(int count) {
+    unreadCount = count;
   }
 }
 

@@ -41,7 +41,10 @@ class _CreatePostScreen2State extends State<CreatePostScreen2> {
           style:
               theme.textTheme.headline6!.copyWith(fontWeight: FontWeight.w500)),
       leading: IconButton(
-        icon: Icon(Icons.chevron_left),
+        icon: Icon(
+          Icons.chevron_left,
+          color: theme.indicatorColor,
+        ),
         onPressed: () {
           Navigator.of(context).pop();
         },
@@ -63,12 +66,9 @@ class _CreatePostScreen2State extends State<CreatePostScreen2> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Align(
-                    alignment: Alignment.topLeft,
-                    child: CircleAvatar(
-                      backgroundImage: getImageProvider(
-                          AmityCoreClient.getCurrentUser().avatarUrl),
-                    ),
-                  ),
+                      alignment: Alignment.topLeft,
+                      child: getAvatarImage(
+                          AmityCoreClient.getCurrentUser().avatarUrl)),
                   SizedBox(
                     height: 10,
                   ),

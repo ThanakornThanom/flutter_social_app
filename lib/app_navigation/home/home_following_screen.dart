@@ -10,6 +10,7 @@ import 'package:verbose_share_world/app_navigation/home/post_content_widget.dart
 import 'package:verbose_share_world/components/custom_user_avatar.dart';
 import 'package:verbose_share_world/profile/user_profile.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
+import 'package:verbose_share_world/provider/ViewModel/edit_post_viewmodel.dart';
 
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
@@ -142,7 +143,9 @@ class _PostWidgetState extends State<PostWidget>
             break;
           case 'Edit Post':
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => EditPostScreen(post: widget.post)));
+                builder: (context) => ChangeNotifierProvider<EditPostVM>(
+                    create: (context) => EditPostVM(),
+                    child: EditPostScreen(post: widget.post))));
             break;
           case 'Delete Post':
             Provider.of<FeedVM>(context, listen: false)
@@ -193,18 +196,15 @@ class _PostWidgetState extends State<PostWidget>
               ListTile(
                 contentPadding: EdgeInsets.all(0),
                 leading: FadeAnimation(
-                  child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => UserProfileScreen(
-                                  amityUser: widget.post.postedUser!,
-                                )));
-                      },
-                      child: CircleAvatar(
-                        backgroundImage:
-                            getImageProvider(widget.post.postedUser?.avatarUrl),
-                      )),
-                ),
+                    child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => UserProfileScreen(
+                                    amityUser: widget.post.postedUser!,
+                                  )));
+                        },
+                        child:
+                            getAvatarImage(widget.post.postedUser?.avatarUrl))),
                 title: Wrap(
                   children: [
                     GestureDetector(

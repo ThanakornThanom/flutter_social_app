@@ -214,80 +214,84 @@ class _MessageComponentState extends State<MessageComponent> {
   @override
   Widget build(BuildContext context) {
     return Consumer<MessageVM>(builder: (context, vm, _) {
-      return Container(
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-        child: ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: vm.amityMessageList.length,
-          itemBuilder: (context, index) {
-            bool isSendbyCurrentUser = vm.amityMessageList[index].userId !=
-                AmityCoreClient.getCurrentUser().userId;
-            return Column(
-              crossAxisAlignment: isSendbyCurrentUser
-                  ? CrossAxisAlignment.start
-                  : CrossAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: isSendbyCurrentUser
-                      ? MainAxisAlignment.start
-                      : MainAxisAlignment.end,
-                  children: [
-                    if (!isSendbyCurrentUser)
-                      Container(
-                        child: Text(
-                          getTimeStamp(vm.amityMessageList[index]),
-                          style: TextStyle(
-                              color: ApplicationColors.grey, fontSize: 8),
-                        ),
+      return vm.amityMessageList.length == 0
+          ? Center(child: CircularProgressIndicator())
+          : Container(
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: vm.amityMessageList.length,
+                itemBuilder: (context, index) {
+                  bool isSendbyCurrentUser =
+                      vm.amityMessageList[index].userId !=
+                          AmityCoreClient.getCurrentUser().userId;
+                  return Column(
+                    crossAxisAlignment: isSendbyCurrentUser
+                        ? CrossAxisAlignment.start
+                        : CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisAlignment: isSendbyCurrentUser
+                            ? MainAxisAlignment.start
+                            : MainAxisAlignment.end,
+                        children: [
+                          if (!isSendbyCurrentUser)
+                            Container(
+                              child: Text(
+                                getTimeStamp(vm.amityMessageList[index]),
+                                style: TextStyle(
+                                    color: ApplicationColors.grey, fontSize: 8),
+                              ),
+                            ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(10, 4, 10, 4),
+                            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: isSendbyCurrentUser
+                                  ? ApplicationColors.lightGrey
+                                  : widget.theme.primaryColor,
+                            ),
+                            // width: mediaQuery.size.width * 0.7,
+                            width:
+                                vm.amityMessageList[index].data!.text!.length *
+                                            10.0 >=
+                                        widget.mediaQuery.size.width * 0.7
+                                    ? widget.mediaQuery.size.width * 0.7
+                                    : null,
+                            alignment: isSendbyCurrentUser
+                                ? Alignment.centerLeft
+                                : Alignment.centerRight,
+                            child: Text(
+                              vm.amityMessageList[index].data!.text ?? "N/A",
+                              style: widget.theme.textTheme.bodyText1!.copyWith(
+                                  fontSize: 14.7,
+                                  color: isSendbyCurrentUser
+                                      ? ApplicationColors.black
+                                      : ApplicationColors.white),
+                            ),
+                          ),
+                          if (isSendbyCurrentUser)
+                            Container(
+                              child: Text(
+                                getTimeStamp(vm.amityMessageList[index]),
+                                style: TextStyle(
+                                    color: ApplicationColors.lightGrey500,
+                                    fontSize: 8),
+                              ),
+                            ),
+                        ],
                       ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(10, 4, 10, 4),
-                      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: isSendbyCurrentUser
-                            ? ApplicationColors.lightGrey
-                            : widget.theme.primaryColor,
-                      ),
-                      // width: mediaQuery.size.width * 0.7,
-                      width: vm.amityMessageList[index].data!.text!.length *
-                                  10.0 >=
-                              widget.mediaQuery.size.width * 0.7
-                          ? widget.mediaQuery.size.width * 0.7
-                          : null,
-                      alignment: isSendbyCurrentUser
-                          ? Alignment.centerLeft
-                          : Alignment.centerRight,
-                      child: Text(
-                        vm.amityMessageList[index].data!.text ?? "N/A",
-                        style: widget.theme.textTheme.bodyText1!.copyWith(
-                            fontSize: 14.7,
-                            color: isSendbyCurrentUser
-                                ? ApplicationColors.black
-                                : ApplicationColors.white),
-                      ),
-                    ),
-                    if (isSendbyCurrentUser)
-                      Container(
-                        child: Text(
-                          getTimeStamp(vm.amityMessageList[index]),
-                          style: TextStyle(
-                              color: ApplicationColors.lightGrey500,
-                              fontSize: 8),
-                        ),
-                      ),
-                  ],
-                ),
-                if (index + 1 == vm.amityMessageList.length)
-                  SizedBox(
-                    height: 90,
-                  )
-              ],
+                      if (index + 1 == vm.amityMessageList.length)
+                        SizedBox(
+                          height: 90,
+                        )
+                    ],
+                  );
+                },
+              ),
             );
-          },
-        ),
-      );
     });
   }
 }

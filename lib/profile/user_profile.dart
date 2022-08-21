@@ -93,14 +93,11 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                               ),
                               Container(
                                 child: FadedScaleAnimation(
-                                    child: CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: getImageProvider(
-                                    Provider.of<AmityVM>(
-                                      context,
-                                    ).currentamityUser?.avatarUrl,
-                                  ),
-                                )),
+                                    child: getAvatarImage(
+                                        Provider.of<AmityVM>(
+                                          context,
+                                        ).currentamityUser?.avatarUrl,
+                                        radius: 50)),
                               ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -257,7 +254,11 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                         stream: vm.amityPosts[index].listen,
                         initialData: vm.amityPosts[index],
                         builder: (context, snapshot) {
-                          return PostWidget(post: snapshot.data!, theme: theme,postIndex: index,);
+                          return PostWidget(
+                            post: snapshot.data!,
+                            theme: theme,
+                            postIndex: index,
+                          );
                         });
                   },
                 )

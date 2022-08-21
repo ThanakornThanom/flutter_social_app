@@ -96,13 +96,11 @@ class AmityChatRepoImp implements AmityChatRepo {
     });
   }
 
-  @override
   void disposeRepo() {
     socket.clearListeners();
     socket.close();
   }
 
-  @override
   Future<void> fetchChannels(
       Function(ChannelList? data, String? error) callback) async {
     print("fetchChannels...");
@@ -117,7 +115,7 @@ class AmityChatRepoImp implements AmityChatRepo {
       if (amityResponse.status == "success") {
         //success
         var amityChannels = ChannelList.fromJson(responsedata!.json!);
-        print("check amity channel list imp ${amityChannels}");
+        print("check amity channel list imp ${responsedata.json!}");
         callback(amityChannels, null);
       } else {
         //error
@@ -126,13 +124,28 @@ class AmityChatRepoImp implements AmityChatRepo {
     });
   }
 
-  @override
   Future<void> listenToChannelList(Function(ChannelList) callback) async {
     print("listenToChannelListUpdate...");
     socket.on('channel.update', (data) async {
       var channelObj = await ChannelList.fromJson(data);
 
       callback(channelObj);
+    });
+  }
+
+  Future<void> markSeen(String channelId) async {
+    socket.emitWithAck('v3/channel.maekSeen', {
+      {"channelId": "$channelId", "readToSegment": 0}
+    }, ack: (data) async {
+      var amityResponse = await AmityResponse.fromJson(data);
+      var responsedata = amityResponse.data;
+      if (amityResponse.status == "success") {
+        //success
+        print("merkSeen: success");
+      } else {
+        //error
+        print("merkSeen: error: ${amityResponse.message}");
+      }
     });
   }
 }
