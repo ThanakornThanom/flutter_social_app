@@ -7,10 +7,14 @@ import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/provider/ViewModel/create_post_viewmodel.dart';
+import 'package:verbose_share_world/provider/ViewModel/edit_post_viewmodel.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../app_navigation/home/community_feed.dart';
 import '../../components/custom_user_avatar.dart';
 import '../../components/video_player.dart';
+import '../../profile/user_profile.dart';
+import '../../provider/ViewModel/community_Feed_viewmodel.dart';
 
 // ignore: must_be_immutable
 class EditPostScreen extends StatefulWidget {
@@ -24,8 +28,9 @@ class EditPostScreen extends StatefulWidget {
 class _EditPostScreenState extends State<EditPostScreen> {
   @override
   void initState() {
-    // TODO: implement initState
-    Provider.of<CreatePostVM>(context, listen: false).inits();
+    Provider.of<EditPostVM>(context, listen: false)
+        .initForEditPost(widget.post!);
+
     super.initState();
   }
 
@@ -36,11 +41,14 @@ class _EditPostScreenState extends State<EditPostScreen> {
     final myAppbar = AppBar(
       backgroundColor: ApplicationColors.white,
       elevation: 0,
-      title: Text(S.of(context).createPost,
+      title: Text(S.of(context).edit,
           style:
               theme.textTheme.headline6!.copyWith(fontWeight: FontWeight.w500)),
       leading: IconButton(
-        icon: Icon(Icons.chevron_left),
+        icon: Icon(
+          Icons.chevron_left,
+          color: theme.indicatorColor,
+        ),
         onPressed: () {
           Navigator.of(context).pop();
         },
@@ -49,7 +57,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
     final bheight = mediaQuery.size.height -
         mediaQuery.padding.top -
         myAppbar.preferredSize.height;
-    return Consumer<CreatePostVM>(builder: (context, vm, _m) {
+    return Consumer<EditPostVM>(builder: (context, vm, _m) {
       return Scaffold(
         appBar: myAppbar,
         body: SafeArea(
@@ -61,11 +69,66 @@ class _EditPostScreenState extends State<EditPostScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: CircleAvatar(
-                      backgroundImage: getImageProvider(
-                          AmityCoreClient.getCurrentUser().avatarUrl),
+                  ListTile(
+                    contentPadding: EdgeInsets.all(0),
+                    leading: FadeAnimation(
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => UserProfileScreen(
+                                        amityUser: widget.post!.postedUser!,
+                                      )));
+                            },
+                            child: getAvatarImage(
+                                widget.post!.postedUser?.avatarUrl))),
+                    title: Wrap(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => UserProfileScreen(
+                                      amityUser: widget.post!.postedUser!,
+                                    )));
+                          },
+                          child: Text(
+                            widget.post!.postedUser?.displayName ??
+                                "Display name",
+                            style: theme.textTheme.bodyText1!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        widget.post!.targetType == AmityPostTargetType.COMMUNITY
+                            ? Icon(
+                                Icons.arrow_right_rounded,
+                                color: Colors.black,
+                              )
+                            : Container(),
+                        widget.post!.targetType == AmityPostTargetType.COMMUNITY
+                            ? GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          ChangeNotifierProvider(
+                                            create: (context) => CommuFeedVM(),
+                                            child: CommunityScreen(
+                                              isFromFeed: true,
+                                              community: (widget.post!.target
+                                                      as CommunityTarget)
+                                                  .targetCommunity!,
+                                            ),
+                                          )));
+                                },
+                                child: Text(
+                                  (widget.post!.target as CommunityTarget)
+                                          .targetCommunity!
+                                          .displayName ??
+                                      "Community name",
+                                  style: theme.textTheme.bodyText1!
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                              )
+                            : Container()
+                      ],
                     ),
                   ),
                   SizedBox(
@@ -85,32 +148,36 @@ class _EditPostScreenState extends State<EditPostScreen> {
                             ),
                             // style: t/1heme.textTheme.bodyText1.copyWith(color: Colors.grey),
                           ),
-                          (vm.amityVideo != null)
-                              ? (vm.amityVideo!.isComplete)
-                                  ? MyVideoPlayer(
-                                      file: vm.amityVideo!.file!,
-                                    )
-                                  : CircularProgressIndicator()
+                          (vm.videoUrl != null)
+                              ? MyVideoPlayer2(
+                                  url: vm.videoUrl!,
+                                  isCornerRadiusEnabled: true,
+                                  isEnableVideoTools: false,
+                                  videoPlayerController:
+                                      VideoPlayerController.network(
+                                          vm.videoUrl!),
+                                )
                               : Container(),
-                          GridView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 150,
-                                    childAspectRatio: 1,
-                                    crossAxisSpacing: 10,
-                                    mainAxisSpacing: 10),
-                            itemCount: vm.amityImages.length,
-                            itemBuilder: (_, i) {
-                              return (vm.amityImages[i].isComplete)
-                                  ? FadeAnimation(
+                          vm.imageUrlList == null
+                              ? Container()
+                              : GridView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  gridDelegate:
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                          maxCrossAxisExtent: 150,
+                                          childAspectRatio: 1,
+                                          crossAxisSpacing: 10,
+                                          mainAxisSpacing: 10),
+                                  itemCount: vm.imageUrlList.length,
+                                  itemBuilder: (_, i) {
+                                    return FadeAnimation(
                                       child: Container(
                                           child: Stack(
                                         fit: StackFit.expand,
                                         children: [
                                           Image.network(
-                                            vm.amityImages[i].fileInfo!.fileUrl,
+                                            vm.imageUrlList[i],
                                             fit: BoxFit.cover,
                                           ),
                                           Align(
@@ -125,16 +192,9 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                   ))),
                                         ],
                                       )),
-                                    )
-                                  : FadeAnimation(
-                                      child: Container(
-                                        color: theme.highlightColor,
-                                        child: Center(
-                                            child: CircularProgressIndicator()),
-                                      ),
                                     );
-                            },
-                          )
+                                  },
+                                )
                         ],
                       ),
                     ),
@@ -206,14 +266,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      // if (widget.communityID == null) {
-                      //   //creat post in user Timeline
-                      //   await vm.createPost(context);
-                      // } else {
-                      //   //create post in Community
-                      //   await vm.createPost(context,
-                      //       communityId: widget.communityID);
-                      // }
+                      //edit post
+                      //waiting for update
 
                       Navigator.of(context).pop();
                     },
@@ -226,7 +280,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
-                        S.of(context).submitPost,
+                        S.of(context).edit,
                         style: theme.textTheme.button,
                       ),
                     ),

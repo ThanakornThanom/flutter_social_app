@@ -9,13 +9,11 @@ class AmityChatRepo {
   Future<void> fetchChannelById(
       String channelId, Function(AmityMessage?, String?) callback) async {}
 
-  Future<void> sendTextMessage() async {}
+  Future<void> sendTextMessage(String channelId, String text,
+      Function(AmityMessage?, String?) callback) async {}
 
-  Future<void> sendImageMessage() async {}
+  Future<void> sendImageMessage(String channelId, String text,
+      Function(AmityMessage?, String?) callback) async {}
 
   Future<void> reactMessage(String messageId) async {}
-
-  Future<void> fetchChannels(Function(ChannelList?, String?) callback) async {}
-
-  Future<void> listenToChannelList(Function(ChannelList) callback) async {}
 }

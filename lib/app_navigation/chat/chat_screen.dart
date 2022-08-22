@@ -1,10 +1,12 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
+import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_list_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_viewmodel.dart';
 
 import '../../components/custom_user_avatar.dart';
@@ -23,11 +25,17 @@ class ChatSingleScreen extends StatelessWidget {
     final myAppBar = AppBar(
       elevation: 0,
       backgroundColor: ApplicationColors.white,
-      title: Transform(
-        transform: Matrix4.translationValues(-25, 6, 0),
+      leadingWidth: 0,
+      title: Container(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Icon(Icons.chevron_left, color: Colors.black, size: 35)),
             Container(
               height: 45,
               margin: const EdgeInsets.symmetric(vertical: 4),
@@ -37,92 +45,125 @@ class ChatSingleScreen extends StatelessWidget {
               ),
             ),
             SizedBox(width: 10),
-            Text(
-              channel.displayName!,
-              style: theme.textTheme.headline6!.copyWith(
-                fontSize: 16.7,
-                fontWeight: FontWeight.w500,
+            Expanded(
+              child: Container(
+                child: Text(
+                  channel.displayName ?? "N/A",
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.headline6!.copyWith(
+                    fontSize: 16.7,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
             ),
           ],
         ),
       ),
-      leading: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          child: Icon(Icons.chevron_left, color: Colors.black, size: 35)),
     );
     final bHeight = mediaQuery.size.height -
         mediaQuery.padding.top -
         myAppBar.preferredSize.height;
+
+    final textfielHeight = 60.0;
     return Scaffold(
       backgroundColor: ApplicationColors.white,
       appBar: myAppBar,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: Container(
-                color: theme.canvasColor,
-                child: FadedSlideAnimation(
-                  child: SingleChildScrollView(
-                    controller: Provider.of<MessageVM>(context, listen: false)
-                        .scrollController,
-                    child: MessageComponent(
-                      key: UniqueKey(),
-                      theme: theme,
-                      mediaQuery: mediaQuery,
-                      channelId: channel.channelId!,
-                    ),
-                  ),
-                  beginOffset: Offset(0, 0.3),
-                  endOffset: Offset(0, 0),
-                  slideCurve: Curves.linearToEaseOut,
+            FadedSlideAnimation(
+              child: SingleChildScrollView(
+                reverse: true,
+                controller: Provider.of<MessageVM>(context, listen: false)
+                    .scrollController,
+                child: MessageComponent(
+                  bheight: bHeight - textfielHeight,
+                  theme: theme,
+                  mediaQuery: mediaQuery,
+                  channelId: channel.channelId!,
                 ),
               ),
+              beginOffset: Offset(0, 0.3),
+              endOffset: Offset(0, 0),
+              slideCurve: Curves.linearToEaseOut,
             ),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border(top: BorderSide(color: theme.highlightColor))),
-              height: 60,
-              width: mediaQuery.size.width,
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Row(
-                children: [
-                  // SizedBox(
-                  //   width: 5,
-                  // ),
-                  // Icon(
-                  //   Icons.emoji_emotions_outlined,
-                  //   color: theme.primaryIconTheme.color,
-                  //   size: 22,
-                  // ),
-                  SizedBox(width: 10),
-                  Container(
-                    width: mediaQuery.size.width * 0.7,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: S.of(context).writeYourMessage,
-                        hintStyle: TextStyle(fontSize: 14),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.send,
-                    color: theme.primaryColor,
-                    size: 22,
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                ],
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ChatTextFieldComponent(
+                    theme: theme,
+                    textfielHeight: textfielHeight,
+                    mediaQuery: mediaQuery),
+              ],
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ChatTextFieldComponent extends StatelessWidget {
+  const ChatTextFieldComponent({
+    Key? key,
+    required this.theme,
+    required this.textfielHeight,
+    required this.mediaQuery,
+  }) : super(key: key);
+
+  final ThemeData theme;
+  final double textfielHeight;
+  final MediaQueryData mediaQuery;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          color: theme.canvasColor,
+          border: Border(top: BorderSide(color: theme.highlightColor))),
+      height: textfielHeight,
+      width: mediaQuery.size.width,
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: Row(
+        children: [
+          // SizedBox(
+          //   width: 5,
+          // ),
+          // Icon(
+          //   Icons.emoji_emotions_outlined,
+          //   color: theme.primaryIconTheme.color,
+          //   size: 22,
+          // ),
+          SizedBox(width: 10),
+          Container(
+            width: mediaQuery.size.width * 0.7,
+            child: TextField(
+              controller: Provider.of<MessageVM>(context, listen: false)
+                  .textEditingController,
+              decoration: InputDecoration(
+                hintText: S.of(context).writeYourMessage,
+                hintStyle: TextStyle(fontSize: 14),
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+          Spacer(),
+          GestureDetector(
+            onTap: () {
+              HapticFeedback.heavyImpact();
+              Provider.of<MessageVM>(context, listen: false).sendMessage();
+            },
+            child: Icon(
+              Icons.send,
+              color: theme.primaryColor,
+              size: 22,
+            ),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+        ],
       ),
     );
   }
@@ -134,12 +175,15 @@ class MessageComponent extends StatefulWidget {
     required this.theme,
     required this.mediaQuery,
     required this.channelId,
+    required this.bheight,
   }) : super(key: key);
   final String channelId;
 
   final ThemeData theme;
 
   final MediaQueryData mediaQuery;
+
+  final double bheight;
 
   @override
   State<MessageComponent> createState() => _MessageComponentState();
@@ -171,78 +215,114 @@ class _MessageComponentState extends State<MessageComponent> {
   @override
   Widget build(BuildContext context) {
     return Consumer<MessageVM>(builder: (context, vm, _) {
-      return Container(
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-        child: ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: vm.amityMessageList.length,
-          itemBuilder: (context, index) {
-            bool isSendbyCurrentUser = vm.amityMessageList[index].userId !=
-                AmityCoreClient.getCurrentUser().userId;
-            return Column(
-              crossAxisAlignment: isSendbyCurrentUser
-                  ? CrossAxisAlignment.start
-                  : CrossAxisAlignment.end,
+      return vm.amityMessageList == null
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: isSendbyCurrentUser
-                      ? MainAxisAlignment.start
-                      : MainAxisAlignment.end,
-                  children: [
-                    if (!isSendbyCurrentUser)
-                      Container(
-                        child: Text(
-                          getTimeStamp(vm.amityMessageList[index]),
-                          style: TextStyle(
-                              color: ApplicationColors.grey, fontSize: 8),
-                        ),
-                      ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(10, 4, 10, 4),
-                      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: isSendbyCurrentUser
-                            ? ApplicationColors.lightGrey
-                            : widget.theme.primaryColor,
-                      ),
-                      // width: mediaQuery.size.width * 0.7,
-                      width: vm.amityMessageList[index].data!.text!.length *
-                                  10.0 >=
-                              widget.mediaQuery.size.width * 0.7
-                          ? widget.mediaQuery.size.width * 0.7
-                          : (vm.amityMessageList[index].data!.text!.length *
-                                  10.0) +
-                              20,
-                      alignment: isSendbyCurrentUser
-                          ? Alignment.centerLeft
-                          : Alignment.centerRight,
-                      child: Text(
-                        vm.amityMessageList[index].data!.text ?? "N/A",
-                        style: widget.theme.textTheme.bodyText1!.copyWith(
-                            fontSize: 14.7,
-                            color: isSendbyCurrentUser
-                                ? ApplicationColors.black
-                                : ApplicationColors.white),
-                      ),
-                    ),
-                    if (isSendbyCurrentUser)
-                      Container(
-                        child: Text(
-                          getTimeStamp(vm.amityMessageList[index]),
-                          style: TextStyle(
-                              color: ApplicationColors.lightGrey500,
-                              fontSize: 8),
-                        ),
-                      ),
-                  ],
-                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        backgroundColor: widget.theme.highlightColor,
+                        color: widget.theme.hintColor,
+                      )
+                    ],
+                  ),
+                )
               ],
+            )
+          : Container(
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: vm.amityMessageList?.length,
+                itemBuilder: (context, index) {
+                  var data = vm.amityMessageList![index].data;
+                  print(data!.text);
+                  bool isSendbyCurrentUser =
+                      vm.amityMessageList?[index].userId !=
+                          AmityCoreClient.getCurrentUser().userId;
+                  return Column(
+                    crossAxisAlignment: isSendbyCurrentUser
+                        ? CrossAxisAlignment.start
+                        : CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisAlignment: isSendbyCurrentUser
+                            ? MainAxisAlignment.start
+                            : MainAxisAlignment.end,
+                        children: [
+                          if (!isSendbyCurrentUser)
+                            Container(
+                              child: Text(
+                                getTimeStamp(vm.amityMessageList![index]),
+                                style: TextStyle(
+                                    color: ApplicationColors.grey, fontSize: 8),
+                              ),
+                            ),
+                          vm.amityMessageList![index].data!.text == null
+                              ? Container(
+                                  margin: EdgeInsets.fromLTRB(10, 4, 10, 4),
+                                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.red),
+                                  child: Text("Unsupport type message😰",
+                                      style: TextStyle(color: Colors.white)),
+                                )
+                              : Container(
+                                  margin: EdgeInsets.fromLTRB(10, 4, 10, 4),
+                                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: isSendbyCurrentUser
+                                        ? ApplicationColors.lightGrey
+                                        : widget.theme.primaryColor,
+                                  ),
+                                  // width: mediaQuery.size.width * 0.7,
+                                  width: vm.amityMessageList![index].data!.text!
+                                                  .length *
+                                              10.0 >=
+                                          widget.mediaQuery.size.width * 0.7
+                                      ? widget.mediaQuery.size.width * 0.7
+                                      : null,
+                                  alignment: isSendbyCurrentUser
+                                      ? Alignment.centerLeft
+                                      : Alignment.centerRight,
+                                  child: Text(
+                                    vm.amityMessageList?[index].data!.text ??
+                                        "N/A",
+                                    style: widget.theme.textTheme.bodyText1!
+                                        .copyWith(
+                                            fontSize: 14.7,
+                                            color: isSendbyCurrentUser
+                                                ? ApplicationColors.black
+                                                : ApplicationColors.white),
+                                  ),
+                                ),
+                          if (isSendbyCurrentUser)
+                            Container(
+                              child: Text(
+                                getTimeStamp(vm.amityMessageList![index]),
+                                style: TextStyle(
+                                    color: ApplicationColors.lightGrey500,
+                                    fontSize: 8),
+                              ),
+                            ),
+                        ],
+                      ),
+                      if (index + 1 == vm.amityMessageList?.length)
+                        SizedBox(
+                          height: 90,
+                        )
+                    ],
+                  );
+                },
+              ),
             );
-          },
-        ),
-      );
     });
   }
 }

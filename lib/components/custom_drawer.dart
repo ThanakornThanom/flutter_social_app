@@ -47,14 +47,11 @@ class MyDrawer extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       FadedScaleAnimation(
-                          child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: getImageProvider(
-                          Provider.of<AmityVM>(
-                            context,
-                          ).currentamityUser?.avatarUrl,
-                        ),
-                      )),
+                          child: getAvatarImage(
+                              Provider.of<AmityVM>(
+                                context,
+                              ).currentamityUser?.avatarUrl,
+                              radius: 50)),
                       SizedBox(height: 20),
                       Container(
                         child: Text(

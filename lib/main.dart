@@ -21,6 +21,7 @@ import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/user_feed_viewmodel.dart';
 import 'package:verbose_share_world/routes/routes.dart';
 import 'package:verbose_share_world/provider/ViewModel/custom_image_picker.dart';
+import 'package:verbose_share_world/utils/navigation_key.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,14 +57,14 @@ class MyApp extends StatelessWidget {
             create: ((context) => ImagePickerVM())),
         ChangeNotifierProvider<CreatePostVM>(
             create: ((context) => CreatePostVM())),
-            ChangeNotifierProvider<ChannelVM>(
-            create: ((context) => ChannelVM())),
+        ChangeNotifierProvider<ChannelVM>(create: ((context) => ChannelVM())),
       ],
       child: BlocProvider<LanguageCubit>(
         create: (context) => LanguageCubit()..getCurrentLanguage(),
         child: BlocBuilder<LanguageCubit, Locale>(
           builder: (context, locale) {
             return MaterialApp(
+              navigatorKey: NavigationService.navigatorKey,
               localizationsDelegates: [
                 S.delegate,
                 CountryLocalizations.delegate,

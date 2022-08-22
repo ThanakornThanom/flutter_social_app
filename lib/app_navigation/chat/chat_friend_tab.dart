@@ -28,10 +28,10 @@ class ChatFriendTabScreen extends StatefulWidget {
 class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
   @override
   void initState() {
-    super.initState();
     Future.delayed(Duration.zero, () {
       Provider.of<ChannelVM>(context, listen: false).initVM();
     });
+    super.initState();
   }
 
   int getLength(ChannelVM vm) {
@@ -49,17 +49,6 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<ChatItems> _chatItems = [
-      ChatItems('assets/images/Layer707.png', 'Emili Williamson'),
-      ChatItems('assets/images/Layer709.png', 'Harshu Makkar'),
-      ChatItems('assets/images/Layer948.png', 'Mrs. White'),
-      ChatItems('assets/images/Layer884.png', 'Marie Black'),
-      ChatItems('assets/images/Layer915.png', 'Emili Williamson'),
-      ChatItems('assets/images/Layer946.png', 'Emili Williamson'),
-      ChatItems('assets/images/Layer948.png', 'Emili Williamson'),
-      ChatItems('assets/images/Layer949.png', 'Emili Williamson'),
-      ChatItems('assets/images/Layer950.png', 'Emili Williamson'),
-    ];
     final theme = Theme.of(context);
     return Consumer<ChannelVM>(builder: (context, vm, _) {
       return Scaffold(
@@ -70,7 +59,9 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
               physics: BouncingScrollPhysics(),
               itemCount: getLength(vm),
               itemBuilder: (context, index) {
-                bool _rand = false;
+                var messageCount = vm.getChannelList()[index].unreadCount;
+
+                bool _rand = messageCount > 0 ? true : false;
                 // if ((Random().nextInt(10)) % 2 == 0) {
                 //   _rand = true;
                 // } else {
@@ -110,7 +101,10 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
                                   padding: EdgeInsets.fromLTRB(4, 0, 4, 2),
                                   child: Center(
                                     child: Text(
-                                      '${Random().nextInt(10)}',
+                                      vm
+                                          .getChannelList()[index]
+                                          .unreadCount
+                                          .toString(),
                                       style: theme.textTheme.bodyText1!
                                           .copyWith(
                                               color: ApplicationColors.white,

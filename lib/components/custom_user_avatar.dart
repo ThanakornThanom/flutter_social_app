@@ -5,9 +5,12 @@ import 'package:optimized_cached_image/optimized_cached_image.dart';
 getAvatarImage(String? url, {double? radius, String? fileId}) {
   if (url != null) {
     var imageOPS = OptimizedCacheImage(
-      imageBuilder: (context, imageProvider) => CircleAvatar(
-          backgroundColor: Colors.transparent,
-          backgroundImage: (imageProvider)),
+      imageBuilder: (context, imageProvider) => Container(
+        child: CircleAvatar(
+            radius: radius,
+            backgroundColor: Colors.transparent,
+            backgroundImage: (imageProvider)),
+      ),
       imageUrl: url,
       fit: BoxFit.fill,
       placeholder: (context, url) => CircleAvatar(
