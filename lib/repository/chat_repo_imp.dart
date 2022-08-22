@@ -27,14 +27,18 @@ class AmityChatRepoImp implements AmityChatRepo {
   }
 
   @override
-  Future<void> fetchChannelById(String channelId,
-      Function(AmityMessage? data, String? error) callback) async {
+  Future<void> fetchChannelById(
+      {String? paginationToken,
+      required String channelId,
+      required Function(
+        AmityMessage?,
+        String?,
+      )
+          callback}) async {
     print("fetchChannelById...");
     socket.emitWithAck('v3/message.query', {
       "channelId": "$channelId",
-      "options": {
-        "last": 100,
-      }
+      "options": {"last": 30, "token": paginationToken}
     }, ack: (data) {
       var amityResponse = AmityResponse.fromJson(data);
       var responsedata = amityResponse.data;
