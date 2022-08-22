@@ -7,7 +7,9 @@ class AmityChatRepo {
   Future<void> listenToChannel(Function(AmityMessage) callback) async {}
 
   Future<void> fetchChannelById(
-      String channelId, Function(AmityMessage?, String?) callback) async {}
+      {String? paginationToken,
+      required String channelId,
+      required Function(AmityMessage?, String?) callback}) async {}
 
   Future<void> sendTextMessage(String channelId, String text,
       Function(AmityMessage?, String?) callback) async {}

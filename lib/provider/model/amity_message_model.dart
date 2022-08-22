@@ -1,8 +1,9 @@
 class AmityMessage {
   List<Messages>? messages;
   List<Users>? users;
+  Paging? paging;
 
-  AmityMessage({this.messages, this.users});
+  AmityMessage({this.messages, this.users, this.paging});
 
   AmityMessage.fromJson(Map<String, dynamic> json) {
     if (json['messages'] != null) {
@@ -17,6 +18,8 @@ class AmityMessage {
         users!.add(new Users.fromJson(v));
       });
     }
+
+    paging = json["paging"] == null ? null : Paging.fromJson(json["paging"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -183,6 +186,25 @@ class Users {
     data['roles'] = this.roles;
     data['flagCount'] = this.flagCount;
     data['hashFlag'] = this.hashFlag;
+    return data;
+  }
+}
+
+class Paging {
+  String? next;
+  String? previous;
+
+  Paging({this.next, this.previous});
+
+  Paging.fromJson(Map<String, dynamic> json) {
+    next = json['next'];
+    previous = json['previous'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['next'] = this.next;
+    data['previous'] = this.previous;
     return data;
   }
 }

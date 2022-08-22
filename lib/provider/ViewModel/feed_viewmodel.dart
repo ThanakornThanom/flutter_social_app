@@ -27,9 +27,7 @@ class FeedVM extends ChangeNotifier {
         .then((value) {
       _amityGlobalFeedPosts.removeAt(postIndex);
       notifyListeners();
-    }).onError((error, stackTrace) {
-      
-    });
+    }).onError((error, stackTrace) {});
   }
 
   Future<void> initAmityGlobalfeed() async {

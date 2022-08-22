@@ -82,6 +82,7 @@ class ChatSingleScreen extends StatelessWidget {
                   theme: theme,
                   mediaQuery: mediaQuery,
                   channelId: channel.channelId!,
+                  channel: channel,
                 ),
               ),
               beginOffset: Offset(0, 0.3),
@@ -176,8 +177,10 @@ class MessageComponent extends StatefulWidget {
     required this.mediaQuery,
     required this.channelId,
     required this.bheight,
+    required this.channel,
   }) : super(key: key);
   final String channelId;
+  final Channels channel;
 
   final ThemeData theme;
 
@@ -192,7 +195,8 @@ class MessageComponent extends StatefulWidget {
 class _MessageComponentState extends State<MessageComponent> {
   @override
   void initState() {
-    Provider.of<MessageVM>(context, listen: false).initVM(widget.channelId);
+    Provider.of<MessageVM>(context, listen: false)
+        .initVM(widget.channelId, widget.channel);
     super.initState();
   }
 
