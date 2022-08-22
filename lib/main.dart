@@ -19,6 +19,7 @@ import 'package:verbose_share_world/provider/ViewModel/create_post_viewmodel.dar
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/user_feed_viewmodel.dart';
+import 'package:verbose_share_world/provider/ViewModel/user_viewmodel.dart';
 import 'package:verbose_share_world/routes/routes.dart';
 import 'package:verbose_share_world/provider/ViewModel/custom_image_picker.dart';
 import 'package:verbose_share_world/utils/navigation_key.dart';
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<CategoryVM>(create: ((context) => CategoryVM())),
+        ChangeNotifierProvider<UserVM>(create: ((context) => UserVM())),
         ChangeNotifierProvider<AmityVM>(create: ((context) => AmityVM())),
         ChangeNotifierProvider<FeedVM>(create: ((context) => FeedVM())),
         ChangeNotifierProvider<CommunityVM>(
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<CreatePostVM>(
             create: ((context) => CreatePostVM())),
         ChangeNotifierProvider<ChannelVM>(create: ((context) => ChannelVM())),
+        
       ],
       child: BlocProvider<LanguageCubit>(
         create: (context) => LanguageCubit()..getCurrentLanguage(),

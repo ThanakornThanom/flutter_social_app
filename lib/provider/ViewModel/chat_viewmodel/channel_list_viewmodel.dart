@@ -1,5 +1,6 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verbose_share_world/provider/model/amity_message_model.dart';
 import 'package:verbose_share_world/repository/chat_repo_imp.dart';
 
@@ -17,7 +18,7 @@ class ChannelVM extends ChangeNotifier {
   Future<void> initVM() async {
     print("initVM");
     String accessToken =
-        "eyJhbGciOiJSUzI1NiIsImtpZCI6IkdTLWNDSUFib1IyQUhfQXczY29Bb0VtR1ZkdzFfaWxjc09BWGx6OXBoSFkifQ.eyJ1c2VyIjp7InJlZnJlc2hUb2tlbiI6IjA1YzBhZGYyNmY3ZTAwMzZiN2Q5MzBlZTU3OTkxNTE4M2Q1MzU4MjI2MGM0MWNlOGFkZGZjMTE1NWNmODViYmNjMTZkM2M0YWIwMmE1ODg1IiwidXNlcklkIjoiNjE4MmVhYWVmYTJmN2UyYzZiNzI4YjQ4IiwicHVibGljVXNlcklkIjoiam9obndpY2syIiwiZGV2aWNlSW5mbyI6eyJraW5kIjoiaW9zIiwibW9kZWwiOiJzdHJpbmciLCJzZGtWZXJzaW9uIjoic3RyaW5nIn0sIm5ldHdvcmtJZCI6IjVmY2EwYjRhYTZhNmMxOGQ3NjE1ODg2YyIsImRpc3BsYXlOYW1lIjoiam9obndpY2syIn0sInN1YiI6IjYxODJlYWFlZmEyZjdlMmM2YjcyOGI0OCIsImlzcyI6Imh0dHBzOi8vYXBpLmFtaXR5LmNvIiwiaWF0IjoxNjYwOTcwOTExLCJleHAiOjE2OTI1Mjg1MTF9.MsYr0hQAtn6rGYyJ41GkNwe41nxFxT6UHyPX6DZYtTNA2PSHT-o2tgjGLFj1UJEPwnxbCdv4z1jjHb__q9Id1bACy_CHoQ-sKrXurwYbhSS4W3FRyGpbGGoAZiRBztEkk0RiUbHQOGsWz0E-f3iDz7kOmeWNL72q1JWqPI7-yokmLfdLUanVJnG_gS08I6UoxNnt64wUk28Z_CyalhEdxyidenN1UGjeWqMzxsE5iivtsfR56f_D6UtFsDZuyqtFCrQk09WmE_0lAc-Auj2At0HK3sFzvPapdSUmi8t5OR6i0oWuvK51xUm8PisW3y5Lk8ChivV-1Qaa9Uk8Aj--hg";
+        "eyJhbGciOiJSUzI1NiIsImtpZCI6IkdTLWNDSUFib1IyQUhfQXczY29Bb0VtR1ZkdzFfaWxjc09BWGx6OXBoSFkifQ.eyJ1c2VyIjp7InJlZnJlc2hUb2tlbiI6Ijg1NGQ1MmFkZDhjMmJlNmJiY2IyZGVhMmI4ZThhOTBjYWZhNDUwY2QzZmExOGQxNjNhNTkwYzFiOGVkNmExZDMxYTZiODY2ZTQ1ZGRmYmE4IiwidXNlcklkIjoiNjE4MmVhYWVmYTJmN2UyYzZiNzI4YjQ4IiwicHVibGljVXNlcklkIjoiam9obndpY2syIiwibmV0d29ya0lkIjoiNWZjYTBiNGFhNmE2YzE4ZDc2MTU4ODZjIiwiZGlzcGxheU5hbWUiOiJqb2hud2ljazIifSwic3ViIjoiNjE4MmVhYWVmYTJmN2UyYzZiNzI4YjQ4IiwiaXNzIjoiaHR0cHM6Ly9hcGkuYW1pdHkuY28iLCJpYXQiOjE2NjExNzIzMjIsImV4cCI6MTY5MjcyOTkyMn0.31c2IW6mZmPyBa6ryJ7AOQpe9vr7ojTUY4v7mpV9F6EAiDTymTXfGlrxJJHIqnxsLde_YPbf-g2Vq6nsvpQ1poP1cf_AqjITz4r2qv9w8x3gi-93nrmgr9CZtFEUdj-Cb89snsu-WTW1-SRzkFbo5ovgiUii42CHfK_GYATngThshHjbZF4slg2UBG72ZREaucnMJmUmL1z-UI0n4A-QiQrgP21TCxsCOY06KKKDgZlZoTuzxmtMWCdykf6b35NUWd-wrE7h9BI05lt3TGCj92gMNpiEdV_CeHddDOgTCrAcodmv2tp2_QkA7zKbtFYKVlyLwfUxU4RdoaFLPjiCxQ";
     await channelRepoImp.initRepo(accessToken);
     await channelRepoImp.listenToChannel((messages) {
       ///get channel where channel id == new message channelId
@@ -70,6 +71,36 @@ class ChannelVM extends ChangeNotifier {
     });
   }
 
+  Future<void> createGroupChannel(String displayName, List<String> userIds,
+      Function(ChannelList? data, String? error) callback,
+      {String? avatarFileId}) async {
+    await channelRepoImp.createGroupChannel(displayName, userIds,
+        (data, error) {
+      if (data != null) {
+        print("createGroupChannel: success");
+        callback(data, null);
+      } else {
+        print(error);
+        callback(null, error);
+      }
+    }, avatarFileId: avatarFileId);
+  }
+
+  createConversationChannel(List<String> userIds,
+      Function(ChannelList? data, String? error) callback) async {
+    await channelRepoImp.createConversationChannel(userIds, (data, error) {
+      if (data != null) {
+        print("createConversationChannel: success ${data}");
+       
+        callback(data, null);
+        
+      } else {
+        print(error);
+        callback(null, error);
+      }
+    });
+  }
+
   void _addUnreadCountToEachChannel(ChannelList data) {
     for (var channelUser in data.channelUsers!) {
       channelUserMap[channelUser.channelId! + channelUser.userId!] =
@@ -80,12 +111,19 @@ class ChannelVM extends ChangeNotifier {
 
   void removeUnreadCount(String channelId) {
     ///get channel where channel id == new message channelId
-    var channel = _amityChannelList
-        .firstWhere((amityMessage) => amityMessage.channelId == channelId);
 
-    ///set unread count = 0
-    channel.setUnreadCount(0);
+    try {
+      if (_amityChannelList.length > 0) {
+        var channel = _amityChannelList
+            .firstWhere((amityMessage) => amityMessage.channelId == channelId);
 
-    notifyListeners();
+        ///set unread count = 0
+        channel.setUnreadCount(0);
+
+        notifyListeners();
+      }
+    } catch (error) {
+      print(error);
+    }
   }
 }

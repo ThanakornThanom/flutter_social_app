@@ -7,6 +7,7 @@ class AmityVM extends ChangeNotifier {
   AmityUser? currentamityUser;
   Future<void> login(String userID) async {
     log("login with $userID");
+  
     await AmityCoreClient.login(userID).submit().then((value) async {
       log("success");
       await getUserByID(userID);
