@@ -63,7 +63,7 @@ class _UserListState extends State<UserList> {
 
   void onNextTap() async {
     if (getSelectedLength() > 1) {
-      Navigator.of(context).push(MaterialPageRoute(
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => CreateChatGroup(
           key: UniqueKey(),
           userIds: Provider.of<UserVM>(context, listen: false).selectedUserList,

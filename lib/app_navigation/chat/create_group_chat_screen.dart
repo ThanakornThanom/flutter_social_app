@@ -49,9 +49,9 @@ class _CreateChatGroupState extends State<CreateChatGroup> {
         displayName,
         Provider.of<UserVM>(context, listen: false).selectedUserList,
         (channel, error) {
-           Provider.of<UserVM>(context, listen: false).clearSelectedUser();
+      Provider.of<UserVM>(context, listen: false).clearSelectedUser();
       if (channel != null) {
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => ChangeNotifierProvider(
                   create: (context) => MessageVM(),
                   child: ChatSingleScreen(
