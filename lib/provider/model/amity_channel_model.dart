@@ -74,6 +74,7 @@ class Channels {
   String? avatarFileId;
   bool? isDeleted;
   int unreadCount = 0;
+  String latestMessage = "";
 
   Channels(
       {this.channelId,
@@ -160,6 +161,10 @@ class Channels {
 
   void setUnreadCount(int count) {
     unreadCount = count;
+  }
+
+  void setLatestMessage(String text) {
+    latestMessage = text;
   }
 }
 

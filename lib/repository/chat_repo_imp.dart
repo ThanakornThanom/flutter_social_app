@@ -31,6 +31,7 @@ class AmityChatRepoImp implements AmityChatRepo {
   @override
   Future<void> fetchChannelById(
       {String? paginationToken,
+      int? limit = 30,
       required String channelId,
       required Function(
         AmityMessage?,
@@ -40,9 +41,8 @@ class AmityChatRepoImp implements AmityChatRepo {
     print("fetchChannelById...");
     socket.emitWithAck('v3/message.query', {
       "channelId": "$channelId",
-      "options": {"last": 30, "token": paginationToken}
+      "options": {"last": limit, "token": paginationToken}
     }, ack: (data) {
-      print("query channel error ");
       var amityResponse = AmityResponse.fromJson(data);
       var responsedata = amityResponse.data;
       if (amityResponse.status == "success") {
@@ -119,7 +119,7 @@ class AmityChatRepoImp implements AmityChatRepo {
     socket.close();
   }
 
-  Future<void> fetchChannels(
+  Future<void> fetchChannelsList(
       Function(ChannelList? data, String? error) callback) async {
     print("fetchChannels...");
     socket.emitWithAck('v3/channel.query', {

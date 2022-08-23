@@ -1,6 +1,7 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:verbose_share_world/generated/intl/messages_fr.dart';
 import 'package:verbose_share_world/provider/model/amity_message_model.dart';
 import 'package:verbose_share_world/repository/chat_repo_imp.dart';
 
@@ -36,6 +37,8 @@ class ChannelVM extends ChangeNotifier {
           AmityCoreClient.getCurrentUser().userId) {
         ///add unread count by 1
         channel.setUnreadCount(channel.unreadCount + 1);
+        channel.setLatestMessage(
+            messages.messages![0].data!.text ?? "Not Text message: 📷");
       }
 
       //move channel to the top
@@ -49,7 +52,7 @@ class ChannelVM extends ChangeNotifier {
       notifyListeners();
     });
 
-    await channelRepoImp.fetchChannels((data, error) {
+    await channelRepoImp.fetchChannelsList((data, error) async {
       if (error == null && data != null) {
         _amityChannelList.clear();
 
@@ -57,6 +60,7 @@ class ChannelVM extends ChangeNotifier {
 
         if (data.channels != null) {
           for (var channel in data.channels!) {
+            _addLatestMessage(channel);
             _amityChannelList.add(channel);
             String key =
                 channel.channelId! + AmityCoreClient.getCurrentUser().userId!;
@@ -73,6 +77,31 @@ class ChannelVM extends ChangeNotifier {
 
       notifyListeners();
     });
+  }
+
+  Future<void> _addLatestMessage(Channels channel) async {
+    await channelRepoImp.fetchChannelById(
+      channelId: channel.channelId!,
+      limit: 1,
+      callback: (data, error) {
+        if (data != null) {
+          if (data.messages!.isNotEmpty) {
+            var latestMessage =
+                data.messages![0].data?.text ?? "Not Text message: 📷";
+            print(
+                "get latest message from ${channel.channelId} as $latestMessage");
+            channel.setLatestMessage(latestMessage);
+            notifyListeners();
+          } else {
+            print("No latest message");
+            channel.setLatestMessage("No message yet");
+            notifyListeners();
+          }
+        } else {
+          print("error from : _addLatestMessage => $messages");
+        }
+      },
+    );
   }
 
   Future<void> createGroupChannel(String displayName, List<String> userIds,

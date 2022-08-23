@@ -142,7 +142,7 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      S.of(context).yesThatWasAwesome,
+                      vm.getChannelList()[index].latestMessage,
                       style: theme.textTheme.subtitle2!.copyWith(
                         color: theme.hintColor,
                         fontSize: 10.7,
