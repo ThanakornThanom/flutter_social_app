@@ -10,7 +10,6 @@ import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_li
 import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_viewmodel.dart';
 
 import '../../components/custom_user_avatar.dart';
-import '../../provider/ViewModel/user_viewmodel.dart';
 import '../../provider/model/amity_channel_model.dart';
 import '../../provider/model/amity_message_model.dart';
 
@@ -196,20 +195,9 @@ class MessageComponent extends StatefulWidget {
 class _MessageComponentState extends State<MessageComponent> {
   @override
   void initState() {
-    initVM();
-    super.initState();
-  }
-
-  void initVM() async {
-    String token = "";
-    if (Provider.of<UserVM>(context, listen: false).accessToken == "") {
-      token = await Provider.of<UserVM>(context, listen: false)
-          .generateAccessToken();
-    } else {
-      token = Provider.of<UserVM>(context, listen: false).accessToken;
-    }
     Provider.of<MessageVM>(context, listen: false)
-        .initVM(widget.channelId, widget.channel, token);
+        .initVM(widget.channelId, widget.channel);
+    super.initState();
   }
 
   @override
@@ -231,7 +219,7 @@ class _MessageComponentState extends State<MessageComponent> {
   @override
   Widget build(BuildContext context) {
     return Consumer<MessageVM>(builder: (context, vm, _) {
-      return vm.isChatLoading
+      return vm.amityMessageList == null
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

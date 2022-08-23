@@ -33,13 +33,12 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
     Future.delayed(Duration.zero, () async {
       String token = "";
       if (Provider.of<UserVM>(context, listen: false).accessToken == "") {
-        token = await Provider.of<UserVM>(context, listen: false)
-            .generateAccessToken();
-      }
-      else {
+        token =
+            await Provider.of<UserVM>(context, listen: false).initAccessToken();
+      } else {
         token = Provider.of<UserVM>(context, listen: false).accessToken;
       }
-      Provider.of<ChannelVM>(context, listen: false).initVM(token);
+      Provider.of<ChannelVM>(context, listen: false).initVM();
     });
     super.initState();
   }

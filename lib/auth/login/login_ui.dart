@@ -10,6 +10,7 @@ import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 
+import '../../provider/ViewModel/user_viewmodel.dart';
 import '../../routes/routes.dart';
 
 class LoginUi extends StatefulWidget {
@@ -46,7 +47,6 @@ class _LoginUiState extends State<LoginUi> {
               SizedBox(height: 40),
               CustomButton(
                   label: S.of(context).signIn,
-
                   isLoading: isLoggingIn,
                   onTap: () async {
                     log("tap signIn");
@@ -55,6 +55,8 @@ class _LoginUiState extends State<LoginUi> {
                     });
                     await Provider.of<AmityVM>(context, listen: false)
                         .login(_userIDController.text);
+                    await Provider.of<UserVM>(context, listen: false)
+                        .initAccessToken();
 
                     Navigator.pushNamed(context, LoginRoutes.app);
                   }),

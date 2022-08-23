@@ -18,7 +18,7 @@ class UserVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> generateAccessToken() async {
+  Future<String> initAccessToken() async {
     var dio = Dio();
     final response = await dio.post(
       "https://api.${dotenv.env["REGION"]}.amity.co/api/v3/sessions",
@@ -28,13 +28,13 @@ class UserVM extends ChangeNotifier {
       },
       options: Options(
         headers: {
-          "x-api-key":
-              dotenv.env["API_KEY"] // set content-length
+          "x-api-key": dotenv.env["API_KEY"] // set content-length
         },
       ),
     );
     if (response.statusCode == 200) {
-      return response.data["accessToken"];
+      accessToken = response.data["accessToken"];
+      return accessToken;
     } else {
       return "";
     }
