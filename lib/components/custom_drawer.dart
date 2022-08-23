@@ -104,71 +104,71 @@ class MyDrawer extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 30),
-                      GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (_) {
-                              return FadedSlideAnimation(
-                                child: AlertDialog(
-                                  title: Text(
-                                    S.of(context).selectLanguage,
-                                    style: theme.textTheme.headline6!.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                  content: Container(
-                                    width: 300,
-                                    child: ListView.builder(
-                                        physics: BouncingScrollPhysics(),
-                                        itemCount:
-                                            AppConfig.languagesSupported.length,
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) =>
-                                            TextButton(
-                                              onPressed: () {
-                                                BlocProvider.of<LanguageCubit>(
-                                                        context)
-                                                    .selectLanguage(AppConfig
-                                                        .languagesSupported.keys
-                                                        .elementAt(index));
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text(
-                                                  AppConfig.languagesSupported[
-                                                      AppConfig
-                                                          .languagesSupported
-                                                          .keys
-                                                          .elementAt(index)]!),
-                                            )),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('Cancel'),
-                                    ),
-                                  ],
-                                ),
-                                beginOffset: Offset(0, 0.3),
-                                endOffset: Offset(0, 0),
-                                slideCurve: Curves.linearToEaseOut,
-                              );
-                            },
-                          );
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          child: Text(
-                            S.of(context).changeLanguage,
-                            style: theme.textTheme.headline6!.copyWith(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 30),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     showDialog(
+                      //       context: context,
+                      //       barrierDismissible: false,
+                      //       builder: (_) {
+                      //         return FadedSlideAnimation(
+                      //           child: AlertDialog(
+                      //             title: Text(
+                      //               S.of(context).selectLanguage,
+                      //               style: theme.textTheme.headline6!.copyWith(
+                      //                   fontWeight: FontWeight.bold,
+                      //                   fontSize: 16),
+                      //             ),
+                      //             content: Container(
+                      //               width: 300,
+                      //               child: ListView.builder(
+                      //                   physics: BouncingScrollPhysics(),
+                      //                   itemCount:
+                      //                       AppConfig.languagesSupported.length,
+                      //                   shrinkWrap: true,
+                      //                   itemBuilder: (context, index) =>
+                      //                       TextButton(
+                      //                         onPressed: () {
+                      //                           BlocProvider.of<LanguageCubit>(
+                      //                                   context)
+                      //                               .selectLanguage(AppConfig
+                      //                                   .languagesSupported.keys
+                      //                                   .elementAt(index));
+                      //                           Navigator.of(context).pop();
+                      //                         },
+                      //                         child: Text(
+                      //                             AppConfig.languagesSupported[
+                      //                                 AppConfig
+                      //                                     .languagesSupported
+                      //                                     .keys
+                      //                                     .elementAt(index)]!),
+                      //                       )),
+                      //             ),
+                      //             actions: [
+                      //               TextButton(
+                      //                 onPressed: () {
+                      //                   Navigator.of(context).pop();
+                      //                 },
+                      //                 child: Text('Cancel'),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //           beginOffset: Offset(0, 0.3),
+                      //           endOffset: Offset(0, 0),
+                      //           slideCurve: Curves.linearToEaseOut,
+                      //         );
+                      //       },
+                      //     );
+                      //   },
+                      //   child: Container(
+                      //     width: double.infinity,
+                      //     child: Text(
+                      //       S.of(context).changeLanguage,
+                      //       style: theme.textTheme.headline6!.copyWith(
+                      //           fontWeight: FontWeight.bold, fontSize: 16),
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(height: 30),
                       GestureDetector(
                         onTap: () {
                           AmityCoreClient.logout();
