@@ -18,6 +18,7 @@ class LoginUi extends StatefulWidget {
 }
 
 class _LoginUiState extends State<LoginUi> {
+  bool isLoggingIn = false;
   TextEditingController _userIDController =
       TextEditingController(text: "johnwick2");
   // TextEditingController _countryController = TextEditingController();
@@ -45,8 +46,13 @@ class _LoginUiState extends State<LoginUi> {
               SizedBox(height: 40),
               CustomButton(
                   label: S.of(context).signIn,
+
+                  isLoading: isLoggingIn,
                   onTap: () async {
                     log("tap signIn");
+                    setState(() {
+                      isLoggingIn = true;
+                    });
                     await Provider.of<AmityVM>(context, listen: false)
                         .login(_userIDController.text);
 

@@ -30,8 +30,16 @@ class ChatFriendTabScreen extends StatefulWidget {
 class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      Provider.of<ChannelVM>(context, listen: false).initVM();
+    Future.delayed(Duration.zero, () async {
+      String token = "";
+      if (Provider.of<UserVM>(context, listen: false).accessToken == "") {
+        token = await Provider.of<UserVM>(context, listen: false)
+            .generateAccessToken();
+      }
+      else {
+        token = Provider.of<UserVM>(context, listen: false).accessToken;
+      }
+      Provider.of<ChannelVM>(context, listen: false).initVM(token);
     });
     super.initState();
   }
@@ -164,10 +172,10 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
           backgroundColor: theme.primaryColor,
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => UserList(
-                        UniqueKey(),
-                      ),
-                    ));
+              builder: (context) => UserList(
+                UniqueKey(),
+              ),
+            ));
           },
         ),
       );

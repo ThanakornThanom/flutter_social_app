@@ -1,11 +1,14 @@
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class UserVM extends ChangeNotifier {
   List<AmityUser> _userList = [];
   List<String> selectedUserList = [];
+  String accessToken = "";
   List<AmityUser> getUserList() {
     return _userList;
   }
@@ -13,6 +16,28 @@ class UserVM extends ChangeNotifier {
   void clearSelectedUser() {
     selectedUserList.clear();
     notifyListeners();
+  }
+
+  Future<String> generateAccessToken() async {
+    var dio = Dio();
+    final response = await dio.post(
+      "https://api.${dotenv.env["REGION"]}.amity.co/api/v3/sessions",
+      data: {
+        'userId': AmityCoreClient.getUserId(),
+        'deviceId': AmityCoreClient.getUserId()
+      },
+      options: Options(
+        headers: {
+          "x-api-key":
+              dotenv.env["API_KEY"] // set content-length
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      return response.data["accessToken"];
+    } else {
+      return "";
+    }
   }
 
   Future<AmityUser?> getUserByID(String id) async {

@@ -38,6 +38,8 @@ dependencies:
   socket_io_client: ^1.0.0
   get_time_ago: ^1.1.5
   shimmer: ^2.0.0
+  dio: ^4.0.6
+  flutter_dotenv: ^5.0.2
  
 
 
@@ -61,6 +63,7 @@ flutter:
     - assets/images/
     - assets/images/profile_pics/
     - assets/Icons/
+    - assets/.env
 
   fonts:
     - family: Poppins

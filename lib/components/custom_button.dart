@@ -7,6 +7,7 @@ class CustomButton extends StatelessWidget {
   final Widget? icon;
   final double? iconGap;
   final Function? onTap;
+  bool? isLoading;
   final Color? color;
   final Color? textColor;
   final double? padding;
@@ -20,6 +21,7 @@ class CustomButton extends StatelessWidget {
     this.icon,
     this.iconGap,
     this.onTap,
+    this.isLoading,
     this.color,
     this.textColor,
     this.padding,
@@ -48,13 +50,28 @@ class CustomButton extends StatelessWidget {
             children: [
               icon ?? SizedBox.shrink(),
               icon != null ? SizedBox(width: iconGap ?? 20) : SizedBox.shrink(),
-              Text(
-                label ?? S.of(context).next,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.button!.copyWith(
-                    color: textColor ?? theme.scaffoldBackgroundColor,
-                    fontSize: textSize ?? 16),
-              ),
+              isLoading != null
+                  ? (isLoading!
+                      ? Container(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ))
+                      : Text(
+                          label ?? S.of(context).next,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.button!.copyWith(
+                              color: textColor ?? theme.scaffoldBackgroundColor,
+                              fontSize: textSize ?? 16),
+                        ))
+                  : Text(
+                      label ?? S.of(context).next,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.button!.copyWith(
+                          color: textColor ?? theme.scaffoldBackgroundColor,
+                          fontSize: textSize ?? 16),
+                    ),
               trailing != null ? Spacer() : SizedBox.shrink(),
               trailing ?? SizedBox.shrink(),
             ],

@@ -20,7 +20,7 @@ class MessageVM extends ChangeNotifier {
   bool ispaginationLoading = false;
 
   ///init
-  Future<void> initVM(String channelId, Channels channel) async {
+  Future<void> initVM(String channelId, Channels channel, String token) async {
     this.channelId = channelId;
     this.isChatLoading = true;
     Future.delayed(Duration.zero, () {
@@ -51,7 +51,6 @@ class MessageVM extends ChangeNotifier {
     channelRepoImp.fetchChannelById(
         channelId: channelId,
         callback: (data, error) async {
-         
           if (error == null) {
             notifyListeners();
             scrollController?.addListener(() async {
