@@ -44,6 +44,7 @@ class ImagePickerVM extends ChangeNotifier {
                         var fileInfo = value as AmityUploadComplete;
 
                         amityImage = fileInfo.getFile;
+                        print("check amity image ${amityImage!.fileId}");
                         notifyListeners();
                         
                       }).onError((error, stackTrace) {

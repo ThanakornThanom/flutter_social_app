@@ -40,6 +40,7 @@ class AmityChatRepoImp implements AmityChatRepo {
       "channelId": "$channelId",
       "options": {"last": 30, "token": paginationToken}
     }, ack: (data) {
+       print("query channel error ");
       var amityResponse = AmityResponse.fromJson(data);
       var responsedata = amityResponse.data;
       if (amityResponse.status == "success") {
@@ -49,6 +50,7 @@ class AmityChatRepoImp implements AmityChatRepo {
         callback(amityMessages, null);
       } else {
         //error
+       
         callback(null, amityResponse.message);
       }
     });
@@ -165,15 +167,15 @@ class AmityChatRepoImp implements AmityChatRepo {
     });
   }
 
-  
-   Future<void> createGroupChannel(String displayName,List<String> userIds,
-      Function(ChannelList? data, String? error) callback,{String? avatarFileId}) async {
+  Future<void> createGroupChannel(String displayName, List<String> userIds,
+      Function(ChannelList? data, String? error) callback,
+      {String? avatarFileId}) async {
     print("createChannels...");
     socket.emitWithAck('v3/channel.create', {
       "type": "community",
       "displayName": displayName,
-      "avatarFileId":avatarFileId,
-      "userIds":userIds
+      "avatarFileId": avatarFileId,
+      "userIds": userIds
     }, ack: (data) {
       var amityResponse = AmityResponse.fromJson(data);
       var responsedata = amityResponse.data;
@@ -187,15 +189,12 @@ class AmityChatRepoImp implements AmityChatRepo {
       }
     });
   }
-  Future<void> createConversationChannel(
-      
-      List<String> userIds,
+
+  Future<void> createConversationChannel(List<String> userIds,
       Function(ChannelList? data, String? error) callback) async {
     print("createChannels...");
-    socket.emitWithAck('v3/channel.createConversation', {
-    
-      "userIds": userIds
-    }, ack: (data) {
+    socket.emitWithAck('v3/channel.createConversation', {"userIds": userIds},
+        ack: (data) {
       var amityResponse = AmityResponse.fromJson(data);
       var responsedata = amityResponse.data;
       if (amityResponse.status == "success") {
