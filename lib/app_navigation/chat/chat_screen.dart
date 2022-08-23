@@ -10,6 +10,7 @@ import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_li
 import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_viewmodel.dart';
 
 import '../../components/custom_user_avatar.dart';
+import '../../provider/ViewModel/user_viewmodel.dart';
 import '../../provider/model/amity_channel_model.dart';
 import '../../provider/model/amity_message_model.dart';
 
@@ -195,9 +196,20 @@ class MessageComponent extends StatefulWidget {
 class _MessageComponentState extends State<MessageComponent> {
   @override
   void initState() {
-    Provider.of<MessageVM>(context, listen: false)
-        .initVM(widget.channelId, widget.channel);
+    initVM();
     super.initState();
+  }
+
+  void initVM() async {
+    String token = "";
+    if (Provider.of<UserVM>(context, listen: false).accessToken == "") {
+      token = await Provider.of<UserVM>(context, listen: false)
+          .generateAccessToken();
+    } else {
+      token = Provider.of<UserVM>(context, listen: false).accessToken;
+    }
+    Provider.of<MessageVM>(context, listen: false)
+        .initVM(widget.channelId, widget.channel, token);
   }
 
   @override
