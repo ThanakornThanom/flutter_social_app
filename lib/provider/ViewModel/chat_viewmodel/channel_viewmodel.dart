@@ -15,12 +15,18 @@ class MessageVM extends ChangeNotifier {
       ScrollController(keepScrollOffset: false);
   AmityChatRepoImp channelRepoImp = AmityChatRepoImp();
   List<Messages>? amityMessageList;
+  bool isChatLoading = true;
   late String channelId;
   bool ispaginationLoading = false;
 
   ///init
   Future<void> initVM(String channelId, Channels channel) async {
     this.channelId = channelId;
+    this.isChatLoading = true;
+    Future.delayed(Duration.zero, () {
+      notifyListeners();
+    });
+
     print("initVM");
     String accessToken =
         "eyJhbGciOiJSUzI1NiIsImtpZCI6IkdTLWNDSUFib1IyQUhfQXczY29Bb0VtR1ZkdzFfaWxjc09BWGx6OXBoSFkifQ.eyJ1c2VyIjp7InJlZnJlc2hUb2tlbiI6Ijg1NGQ1MmFkZDhjMmJlNmJiY2IyZGVhMmI4ZThhOTBjYWZhNDUwY2QzZmExOGQxNjNhNTkwYzFiOGVkNmExZDMxYTZiODY2ZTQ1ZGRmYmE4IiwidXNlcklkIjoiNjE4MmVhYWVmYTJmN2UyYzZiNzI4YjQ4IiwicHVibGljVXNlcklkIjoiam9obndpY2syIiwibmV0d29ya0lkIjoiNWZjYTBiNGFhNmE2YzE4ZDc2MTU4ODZjIiwiZGlzcGxheU5hbWUiOiJqb2hud2ljazIifSwic3ViIjoiNjE4MmVhYWVmYTJmN2UyYzZiNzI4YjQ4IiwiaXNzIjoiaHR0cHM6Ly9hcGkuYW1pdHkuY28iLCJpYXQiOjE2NjExNzIzMjIsImV4cCI6MTY5MjcyOTkyMn0.31c2IW6mZmPyBa6ryJ7AOQpe9vr7ojTUY4v7mpV9F6EAiDTymTXfGlrxJJHIqnxsLde_YPbf-g2Vq6nsvpQ1poP1cf_AqjITz4r2qv9w8x3gi-93nrmgr9CZtFEUdj-Cb89snsu-WTW1-SRzkFbo5ovgiUii42CHfK_GYATngThshHjbZF4slg2UBG72ZREaucnMJmUmL1z-UI0n4A-QiQrgP21TCxsCOY06KKKDgZlZoTuzxmtMWCdykf6b35NUWd-wrE7h9BI05lt3TGCj92gMNpiEdV_CeHddDOgTCrAcodmv2tp2_QkA7zKbtFYKVlyLwfUxU4RdoaFLPjiCxQ";
@@ -45,7 +51,9 @@ class MessageVM extends ChangeNotifier {
     channelRepoImp.fetchChannelById(
         channelId: channelId,
         callback: (data, error) async {
+         
           if (error == null) {
+            notifyListeners();
             scrollController?.addListener(() async {
               if (!ispaginationLoading) {
                 var currentMessageCount = amityMessageList!.length;
@@ -116,6 +124,7 @@ class MessageVM extends ChangeNotifier {
                 }
               },
             );
+
             notifyListeners();
           } else {
             print(error);

@@ -219,7 +219,7 @@ class _MessageComponentState extends State<MessageComponent> {
   @override
   Widget build(BuildContext context) {
     return Consumer<MessageVM>(builder: (context, vm, _) {
-      return vm.amityMessageList == null
+      return vm.isChatLoading
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
