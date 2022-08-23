@@ -1,4 +1,5 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:verbose_share_world/provider/ViewModel/create_post_viewmodel.dart';
 
 class EditPostVM extends CreatePostVM {
@@ -26,7 +27,7 @@ class EditPostVM extends CreatePostVM {
         var videoData = children[0].data as VideoData;
 
         videoUrl =
-            "https://api.sg.amity.co/api/v3/files/${videoData.fileId}/download?size=full";
+            "https://api.${dotenv.env["REGION"]}.amity.co/api/v3/files/${videoData.fileId}/download?size=full";
         print("VideoPost: $videoUrl");
       }
     }

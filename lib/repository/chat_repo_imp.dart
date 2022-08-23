@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:verbose_share_world/provider/model/amity_channel_model.dart';
@@ -14,7 +15,8 @@ class AmityChatRepoImp implements AmityChatRepo {
   @override
   Future<void> initRepo(String accessToken) async {
     print("initRepo...");
-    socket = await io.io('wss://api.sg.amity.co/?token=$accessToken',
+    socket = await io.io(
+        'wss://api.${dotenv.env["REGION"]}.amity.co/?token=$accessToken',
         io.OptionBuilder().setTransports(["websocket"]).build());
     socket.onConnectError((data) => print("onConnectError:$data"));
     socket.onConnecting((data) => print("connecting..."));
@@ -40,7 +42,7 @@ class AmityChatRepoImp implements AmityChatRepo {
       "channelId": "$channelId",
       "options": {"last": 30, "token": paginationToken}
     }, ack: (data) {
-       print("query channel error ");
+      print("query channel error ");
       var amityResponse = AmityResponse.fromJson(data);
       var responsedata = amityResponse.data;
       if (amityResponse.status == "success") {
@@ -50,7 +52,7 @@ class AmityChatRepoImp implements AmityChatRepo {
         callback(amityMessages, null);
       } else {
         //error
-       
+
         callback(null, amityResponse.message);
       }
     });

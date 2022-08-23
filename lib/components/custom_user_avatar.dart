@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 
 getAvatarImage(String? url, {double? radius, String? fileId}) {
@@ -26,7 +27,7 @@ getAvatarImage(String? url, {double? radius, String? fileId}) {
           backgroundColor: Colors.transparent,
           backgroundImage: (imageProvider)),
       imageUrl:
-          "https://api.sg.amity.co/api/v3/files/${fileId}/download?size=full",
+          "https://api.${dotenv.env["REGION"]}.amity.co/api/v3/files/${fileId}/download?size=full",
       fit: BoxFit.fill,
       placeholder: (context, url) => CircleAvatar(
           radius: radius,
