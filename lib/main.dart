@@ -29,15 +29,47 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-await dotenv.load(fileName: "assets/.env");
+  await dotenv.load(fileName: "assets/.env");
+  AmityRegionalHttpEndpoint? amityEndpoint;
+  if (dotenv.env["REGION"] != null) {
+    var region = dotenv.env["REGION"]!.toLowerCase().trim();
+
+    if (dotenv.env["REGION"]!.isNotEmpty) {
+      switch (region) {
+        case "":
+          {
+            print("REGION is not specify Please check .env file");
+          }
+          ;
+          break;
+        case "sg":
+          {
+            amityEndpoint = AmityRegionalHttpEndpoint.SG;
+          }
+          ;
+          break;
+        case "us":
+          {
+            amityEndpoint = AmityRegionalHttpEndpoint.US;
+          }
+          ;
+          break;
+        case "eu":
+          {
+            amityEndpoint = AmityRegionalHttpEndpoint.EU;
+          }
+          ;
+      }
+    } else {
+      throw "REGION is not specify Please check .env file";
+    }
+  } else {
+    throw "REGION is not specify Please check .env file";
+  }
+
   await AmityCoreClient.setup(
       option: AmityCoreClientOption(
-          apiKey:
-              // 'b0eeee5c33dea2364f628d1e540a1688845884e4bd32692c',
-              'b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f',
-          httpEndpoint: AmityRegionalHttpEndpoint.SG
-          // AmityRegionalHttpEndpoint.US,
-          ),
+          apiKey: dotenv.env["API_KEY"]!, httpEndpoint: amityEndpoint!),
       sycInitialization: true);
 
   runApp(Phoenix(child: MyApp()));
@@ -60,7 +92,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<CreatePostVM>(
             create: ((context) => CreatePostVM())),
         ChangeNotifierProvider<ChannelVM>(create: ((context) => ChannelVM())),
-        
       ],
       child: BlocProvider<LanguageCubit>(
         create: (context) => LanguageCubit()..getCurrentLanguage(),
