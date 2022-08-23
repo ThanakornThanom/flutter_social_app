@@ -6,12 +6,14 @@ import 'package:get_time_ago/get_time_ago.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/chat/chat_screen.dart';
+import 'package:verbose_share_world/app_navigation/chat/user_list_screen.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_list_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_viewmodel.dart';
 
 import '../../components/custom_user_avatar.dart';
+import '../../provider/ViewModel/user_viewmodel.dart';
 
 class ChatItems {
   String image;
@@ -160,7 +162,13 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
           heroTag: 'chat',
           child: Icon(Icons.person_add),
           backgroundColor: theme.primaryColor,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => UserList(
+                        UniqueKey(),
+                      ),
+                    ));
+          },
         ),
       );
     });

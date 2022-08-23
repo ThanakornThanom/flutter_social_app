@@ -165,13 +165,56 @@ class AmityChatRepoImp implements AmityChatRepo {
     });
   }
 
+  
+   Future<void> createGroupChannel(String displayName,List<String> userIds,
+      Function(ChannelList? data, String? error) callback,{String? avatarFileId}) async {
+    print("createChannels...");
+    socket.emitWithAck('v3/channel.create', {
+      "type": "community",
+      "displayName": displayName,
+      "avatarFileId":avatarFileId,
+      "userIds":userIds
+    }, ack: (data) {
+      var amityResponse = AmityResponse.fromJson(data);
+      var responsedata = amityResponse.data;
+      if (amityResponse.status == "success") {
+        //success
+        var amityChannel = ChannelList.fromJson(responsedata!.json!);
+        callback(amityChannel, null);
+      } else {
+        //error
+        callback(null, amityResponse.message);
+      }
+    });
+  }
+  Future<void> createConversationChannel(
+      
+      List<String> userIds,
+      Function(ChannelList? data, String? error) callback) async {
+    print("createChannels...");
+    socket.emitWithAck('v3/channel.createConversation', {
+    
+      "userIds": userIds
+    }, ack: (data) {
+      var amityResponse = AmityResponse.fromJson(data);
+      var responsedata = amityResponse.data;
+      if (amityResponse.status == "success") {
+        //success
+        var amityChannel = ChannelList.fromJson(responsedata!.json!);
+        callback(amityChannel, null);
+      } else {
+        //error
+        callback(null, amityResponse.message);
+      }
+    });
+  }
+
   Future<void> stopReading(String channelId,
       {Function(String? data, String? error)? callback}) async {
     socket.emitWithAck('channel.stopReading', {
       {"channelId": "$channelId"}
     }, ack: (data) async {
       var amityResponse = await AmityResponse.fromJson(data);
-      var responsedata = amityResponse.data;
       if (amityResponse.status == "success") {
         //success
         print("stopReading: success");
@@ -189,7 +232,6 @@ class AmityChatRepoImp implements AmityChatRepo {
       {"channelId": "$channelId", "readToSegment": 100}
     }, ack: (data) async {
       var amityResponse = await AmityResponse.fromJson(data);
-      var responsedata = amityResponse.data;
       if (amityResponse.status == "success") {
         //success
         print("merkSeen: success");

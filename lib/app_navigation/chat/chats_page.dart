@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/app_navigation/chat/chat_friend_tab.dart';
-import 'package:verbose_share_world/app_navigation/chat/chat_group_tab_screen.dart';
+
 import 'package:verbose_share_world/generated/l10n.dart';
 
 class ChatsPage extends StatelessWidget {

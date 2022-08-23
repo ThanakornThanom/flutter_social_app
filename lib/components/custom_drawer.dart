@@ -159,18 +159,19 @@ class MyDrawer extends StatelessWidget {
                             },
                           );
                         },
-                        child: Container(
-                          width: double.infinity,
-                          child: Text(
-                            S.of(context).changeLanguage,
-                            style: theme.textTheme.headline6!.copyWith(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ),
+                        // child: Container(
+                        //   width: double.infinity,
+                        //   child: Text(
+                        //     S.of(context).changeLanguage,
+                        //     style: theme.textTheme.headline6!.copyWith(
+                        //         fontWeight: FontWeight.bold, fontSize: 16),
+                        //   ),
+                        // ),
                       ),
                       SizedBox(height: 30),
                       GestureDetector(
                         onTap: () {
+                          AmityCoreClient.logout();
                           Phoenix.rebirth(context);
                         },
                         child: Container(

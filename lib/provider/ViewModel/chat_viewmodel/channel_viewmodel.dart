@@ -6,7 +6,6 @@ import 'package:verbose_share_world/provider/model/amity_message_model.dart';
 import 'package:verbose_share_world/repository/chat_repo_imp.dart';
 
 import '../../../utils/navigation_key.dart';
-import '../../model/amity_channel_model.dart';
 
 class MessageVM extends ChangeNotifier {
   //asd
@@ -16,23 +15,19 @@ class MessageVM extends ChangeNotifier {
   AmityChatRepoImp channelRepoImp = AmityChatRepoImp();
   List<Messages>? amityMessageList;
   late String channelId;
-  bool ispaginationLoading = false;
-
-  ///init
-  Future<void> initVM(String channelId, Channels channel) async {
+  Future<void> initVM(String channelId) async {
     this.channelId = channelId;
     print("initVM");
     String accessToken =
-        "eyJhbGciOiJSUzI1NiIsImtpZCI6IkdTLWNDSUFib1IyQUhfQXczY29Bb0VtR1ZkdzFfaWxjc09BWGx6OXBoSFkifQ.eyJ1c2VyIjp7InJlZnJlc2hUb2tlbiI6IjhlNjVhYmY0MjM3OThkOWMwNmViMzBlMmRkMTU1YjcwZTJjNzM0NjdjNDA1MDRlY2U2NGRkNGUxMDk1NmIzNjNkZDFhNzIwN2Q0YjdkYTg3IiwidXNlcklkIjoiNjE4MmVhYWVmYTJmN2UyYzZiNzI4YjQ4IiwicHVibGljVXNlcklkIjoiam9obndpY2syIiwiZGV2aWNlSW5mbyI6eyJraW5kIjoiaW9zIiwibW9kZWwiOiJzdHJpbmciLCJzZGtWZXJzaW9uIjoic3RyaW5nIn0sIm5ldHdvcmtJZCI6IjVmY2EwYjRhYTZhNmMxOGQ3NjE1ODg2YyIsImRpc3BsYXlOYW1lIjoiam9obndpY2syIn0sInN1YiI6IjYxODJlYWFlZmEyZjdlMmM2YjcyOGI0OCIsImlzcyI6Imh0dHBzOi8vYXBpLmFtaXR5LmNvIiwiaWF0IjoxNjYxMTU5MTUyLCJleHAiOjE2OTI3MTY3NTJ9.ZlQXS6ZZZJngjkmNjzasBmUoAmOclqovoRizw1PVAcMeU5xfZrcUiP-8RLDzixaFitVmlZpZhr_qEnJ2Ian6BpAaHByqiR8gP4I8O3AGeDmCGvihp3BVAc7Uo1pzmxfCsz7ykWOhrn9ho-5ke8wPieTSGDNKe_27qQqlv5edCNzo1zPQSVHZUN5ZGE6TfaZQaVJ-OaAWTbEVALoXHw95rEzvlwRvF23TPX3-xdiY_9wOX05kbKC9MA0Llf8VajqcXglqxEL1smguA9K-kz50j4JVqm-L4Xn8adtf9faL_e1U8H-ZWqtu1uh-dSMUwpiyDw8xtgrdr6VEkX_b4Nklxg";
+        "eyJhbGciOiJSUzI1NiIsImtpZCI6IkdTLWNDSUFib1IyQUhfQXczY29Bb0VtR1ZkdzFfaWxjc09BWGx6OXBoSFkifQ.eyJ1c2VyIjp7InJlZnJlc2hUb2tlbiI6Ijg1NGQ1MmFkZDhjMmJlNmJiY2IyZGVhMmI4ZThhOTBjYWZhNDUwY2QzZmExOGQxNjNhNTkwYzFiOGVkNmExZDMxYTZiODY2ZTQ1ZGRmYmE4IiwidXNlcklkIjoiNjE4MmVhYWVmYTJmN2UyYzZiNzI4YjQ4IiwicHVibGljVXNlcklkIjoiam9obndpY2syIiwibmV0d29ya0lkIjoiNWZjYTBiNGFhNmE2YzE4ZDc2MTU4ODZjIiwiZGlzcGxheU5hbWUiOiJqb2hud2ljazIifSwic3ViIjoiNjE4MmVhYWVmYTJmN2UyYzZiNzI4YjQ4IiwiaXNzIjoiaHR0cHM6Ly9hcGkuYW1pdHkuY28iLCJpYXQiOjE2NjExNzIzMjIsImV4cCI6MTY5MjcyOTkyMn0.31c2IW6mZmPyBa6ryJ7AOQpe9vr7ojTUY4v7mpV9F6EAiDTymTXfGlrxJJHIqnxsLde_YPbf-g2Vq6nsvpQ1poP1cf_AqjITz4r2qv9w8x3gi-93nrmgr9CZtFEUdj-Cb89snsu-WTW1-SRzkFbo5ovgiUii42CHfK_GYATngThshHjbZF4slg2UBG72ZREaucnMJmUmL1z-UI0n4A-QiQrgP21TCxsCOY06KKKDgZlZoTuzxmtMWCdykf6b35NUWd-wrE7h9BI05lt3TGCj92gMNpiEdV_CeHddDOgTCrAcodmv2tp2_QkA7zKbtFYKVlyLwfUxU4RdoaFLPjiCxQ";
     await channelRepoImp.initRepo(accessToken);
-    channelRepoImp.listenToChannel((messages) async {
+    await channelRepoImp.listenToChannel((messages) async {
       print(messages.messages![0].channelId);
       print(channelId);
       if (messages.messages?[0].channelId == channelId) {
         print("get new messgae...: ${messages.messages?[0].data?.text}");
         amityMessageList?.add(messages.messages!.first);
-        channel.messageCount = channel.messageCount! + 1;
-        channel.setUnreadCount(channel.unreadCount - 1);
+
         if (messages.messages?[0].userId ==
             AmityCoreClient.getCurrentUser().userId) {
           scrollToBottom();
@@ -41,87 +36,36 @@ class MessageVM extends ChangeNotifier {
 
       notifyListeners();
     });
+    channelRepoImp.fetchChannelById(channelId, (data, error) async {
+      if (error == null) {
+        amityMessageList = [];
+        print("success");
+        amityMessageList?.clear();
+        for (var message in data!.messages!) {
+          amityMessageList?.add(message);
+        }
+        scrollToBottom();
 
-    channelRepoImp.fetchChannelById(
-        channelId: channelId,
-        callback: (data, error) async {
-          if (error == null) {
-            scrollController?.addListener(() async {
-              if (!ispaginationLoading) {
-                var currentMessageCount = amityMessageList!.length;
-                var totalMessageCount = channel.messageCount!;
-
-                if ((scrollController!.position.pixels ==
-                        (scrollController!.position.maxScrollExtent)) &&
-                    (currentMessageCount < totalMessageCount)) {
-                  ispaginationLoading = true;
-
-                  print("ispaginationLoading = false");
-                  var token = data!.paging!.previous;
-                  print(token);
-                  print("minScrollExtent");
-                  await channelRepoImp.fetchChannelById(
-                    channelId: channelId,
-                    paginationToken: token,
-                    callback: (pagingData, error) {
-                      if (error == null) {
-                        print("paging data: $pagingData");
-
-                        if (pagingData!.paging!.previous == null) {
-                          scrollController!.removeListener(() {
-                            removeListener(() {
-                              print("remove listener");
-                            });
-                          });
-                        } else {
-                          data.paging!.previous = pagingData.paging!.previous;
-                        }
-
-                        var reversedMessage = pagingData.messages!.reversed;
-                        for (var message in reversedMessage) {
-                          print(message.data!.text);
-                          amityMessageList?.insert(0, message);
-                        }
-                        notifyListeners();
-                        ispaginationLoading = false;
-                      } else {
-                        ispaginationLoading = false;
-                        print(error);
-                      }
-                    },
-                  );
-                } else {
-                  print(
-                      "pagination is not ready: $currentMessageCount/$totalMessageCount");
-                }
-              }
-            });
-            amityMessageList = [];
-            print("success");
-            amityMessageList?.clear();
-            for (var message in data!.messages!) {
-              amityMessageList?.add(message);
+        channelRepoImp.startReading(
+          channelId,
+          callback: (data, error) {
+            if (error == null) {
+              print("set unread count = 0");
+              Provider.of<ChannelVM>(
+                      NavigationService.navigatorKey.currentContext!,
+                      listen: false)
+                  .removeUnreadCount(channelId);
             }
-            scrollToBottom();
-
-            channelRepoImp.startReading(
-              channelId,
-              callback: (data, error) {
-                if (error == null) {
-                  print("set unread count = 0");
-                  Provider.of<ChannelVM>(
-                          NavigationService.navigatorKey.currentContext!,
-                          listen: false)
-                      .removeUnreadCount(channelId);
-                }
-              },
-            );
-            notifyListeners();
-          } else {
-            print(error);
-          }
-        });
+          },
+        );
+        notifyListeners();
+      } else {
+        print(error);
+      }
+    });
   }
+
+ 
 
   Future<void> sendMessage() async {
     String text = textEditingController.text;
