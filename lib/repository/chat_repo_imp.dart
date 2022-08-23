@@ -64,6 +64,16 @@ class AmityChatRepoImp implements AmityChatRepo {
     });
   }
 
+  //   @override
+  // Future<void> listenToChannelList(Function(AmityMessage) callback) async {
+  //   print("listenToChannelById...");
+  //   socket.on('channel.didCreate', (data) async {
+  //     var messageObj = await AmityMessage.fromJson(data);
+
+  //     callback(messageObj);
+  //   });
+  // }
+
   @override
   Future<void> reactMessage(String messageId) async {
     print("reactMessage...");
@@ -119,7 +129,7 @@ class AmityChatRepoImp implements AmityChatRepo {
       if (amityResponse.status == "success") {
         //success
         var amityChannels = ChannelList.fromJson(responsedata!.json!);
-        print("check amity channel list imp ${responsedata.json!}");
+
         callback(amityChannels, null);
       } else {
         //error
@@ -128,12 +138,12 @@ class AmityChatRepoImp implements AmityChatRepo {
     });
   }
 
-  Future<void> listenToChannelList(Function(ChannelList) callback) async {
+  Future<void> listenToChannelList(Function(Channels) callback) async {
     print("listenToChannelListUpdate...");
-    socket.on('channel.update', (data) async {
+    socket.on('v3.channel.didCreate', (data) async {
       var channelObj = await ChannelList.fromJson(data);
 
-      callback(channelObj);
+      callback(channelObj.channels![0]);
     });
   }
 

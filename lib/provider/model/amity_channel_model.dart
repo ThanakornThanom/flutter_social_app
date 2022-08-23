@@ -105,7 +105,13 @@ class Channels {
         ? new Metadata.fromJson(json['metadata'])
         : null;
     type = json['type'];
-    tags = json['tags'].cast<String>();
+    if (json['tags'] != null) {
+      List<String> _tags = [];
+      json['tags'].forEach((v) {
+        _tags.add(v);
+      });
+      tags = _tags;
+    }
     isMuted = json['isMuted'];
     isRateLimited = json['isRateLimited'];
     muteTimeout = json['muteTimeout'];

@@ -26,7 +26,7 @@ class ChannelVM extends ChangeNotifier {
           amityMessage.channelId == messages.messages?[0].channelId);
       print(
           "${channel.channelId} got new message from ${messages.messages![0].userId}");
-
+      channel.lastActivity = messages.messages![0].createdAt;
       if (messages.messages![0].userId !=
           AmityCoreClient.getCurrentUser().userId) {
         ///add unread count by 1
@@ -38,18 +38,20 @@ class ChannelVM extends ChangeNotifier {
       _amityChannelList.insert(0, channel);
       notifyListeners();
     });
+
+    await channelRepoImp.listenToChannelList((channel) {
+      _amityChannelList.insert(0, channel);
+      notifyListeners();
+    });
+
     await channelRepoImp.fetchChannels((data, error) {
       if (error == null && data != null) {
-        print("success ${data.channels}");
         _amityChannelList.clear();
 
         _addUnreadCountToEachChannel(data);
 
         if (data.channels != null) {
-          print("success 2");
-
           for (var channel in data.channels!) {
-            print("success 3");
             _amityChannelList.add(channel);
             String key =
                 channel.channelId! + AmityCoreClient.getCurrentUser().userId!;
@@ -57,11 +59,8 @@ class ChannelVM extends ChangeNotifier {
               var count =
                   channel.messageCount! - channelUserMap[key]!.readToSegment!;
               channel.setUnreadCount(count);
-              print(channel.unreadCount);
             }
           }
-
-          print(channelUserMap);
         }
       } else {
         print(error);

@@ -43,8 +43,15 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
   String getDateTime(String dateTime) {
     var convertedTimestamp =
         DateTime.parse(dateTime); // Converting into [DateTime] object
-    var result = GetTimeAgo.parse(convertedTimestamp);
-    return result;
+    var result = GetTimeAgo.parse(
+      convertedTimestamp,
+    );
+
+    if (result == "0 seconds ago") {
+      return "just now";
+    } else {
+      return result;
+    }
   }
 
   @override
@@ -133,7 +140,10 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
                       ),
                     ),
                     trailing: Text(
-                      getDateTime(vm.getChannelList()[index].lastActivity!),
+                      (vm.getChannelList()[index].lastActivity == null)
+                          ? ""
+                          : getDateTime(
+                              vm.getChannelList()[index].lastActivity!),
                       style: theme.textTheme.bodyText1!.copyWith(
                           color: ApplicationColors.grey, fontSize: 9.3),
                     ),
