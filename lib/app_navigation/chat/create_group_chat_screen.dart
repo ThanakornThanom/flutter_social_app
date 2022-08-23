@@ -60,7 +60,10 @@ class _CreateChatGroupState extends State<CreateChatGroup> {
                   ),
                 )));
       }
-    },avatarFileId: Provider.of<ImagePickerVM>(context, listen: false).amityImage?.fileId);
+    },
+        avatarFileId: Provider.of<ImagePickerVM>(context, listen: false)
+            .amityImage
+            ?.fileId);
   }
 
   @override

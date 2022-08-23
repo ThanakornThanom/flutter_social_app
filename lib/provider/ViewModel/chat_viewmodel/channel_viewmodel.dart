@@ -35,7 +35,7 @@ class MessageVM extends ChangeNotifier {
         .accessToken;
 
     await channelRepoImp.initRepo(accessToken);
-    channelRepoImp.listenToChannel((messages) async {
+    await channelRepoImp.listenToChannel((messages) async {
       print(messages.messages![0].channelId);
       print(channelId);
       if (messages.messages?[0].channelId == channelId) {

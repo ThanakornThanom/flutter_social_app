@@ -38,7 +38,9 @@ class _UserListState extends State<UserList> {
   void initState() {
     super.initState();
     // community = widget.community;
+
     Future.delayed(Duration.zero, () {
+      Provider.of<UserVM>(context, listen: false).clearSelectedUser();
       Provider.of<UserVM>(context, listen: false).getUsers();
     });
   }

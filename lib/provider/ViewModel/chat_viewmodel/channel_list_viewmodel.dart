@@ -33,12 +33,13 @@ class ChannelVM extends ChangeNotifier {
       print(
           "${channel.channelId} got new message from ${messages.messages![0].userId}");
       channel.lastActivity = messages.messages![0].createdAt;
+
+      channel.setLatestMessage(
+          messages.messages![0].data!.text ?? "Not Text message: 📷");
       if (messages.messages![0].userId !=
           AmityCoreClient.getCurrentUser().userId) {
         ///add unread count by 1
         channel.setUnreadCount(channel.unreadCount + 1);
-        channel.setLatestMessage(
-            messages.messages![0].data!.text ?? "Not Text message: 📷");
       }
 
       //move channel to the top
