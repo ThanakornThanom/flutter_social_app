@@ -7,11 +7,10 @@ class AmityVM extends ChangeNotifier {
   AmityUser? currentamityUser;
   Future<void> login(String userID) async {
     log("login with $userID");
-
+  
     await AmityCoreClient.login(userID).submit().then((value) async {
       log("success");
       await getUserByID(userID);
-      print("get user ID");
       currentamityUser = value;
     }).catchError((error, stackTrace) {
       print(error.toString());
@@ -32,8 +31,7 @@ class AmityVM extends ChangeNotifier {
   }
 
   Future<void> getUserByID(String id) async {
-   
-     AmityCoreClient.newUserRepository().getUser(id).then((user) {
+    await AmityCoreClient.newUserRepository().getUser(id).then((user) {
       log("IsGlobalban: ${user.isGlobalBan}");
     }).onError((error, stackTrace) {
       log(error.toString());
