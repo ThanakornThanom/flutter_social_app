@@ -1,6 +1,8 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 
+import '../../components/alert_dialog.dart';
+
 class CommuFeedVM extends ChangeNotifier {
   late String communityID;
 
@@ -30,7 +32,7 @@ class CommuFeedVM extends ChangeNotifier {
       pageSize: 20,
     )
       ..addListener(
-        () {
+        () async {
           print("communityListener");
           if (_controllerCommu.error == null) {
             //handle results, we suggest to clear the previous items
@@ -41,7 +43,8 @@ class CommuFeedVM extends ChangeNotifier {
             notifyListeners();
           } else {
             //error on pagination controller
-
+            await AmityDialog().showAlertErrorDialog(
+                title: "Error!", message: _controllerCommu.error.toString());
             //update widgets
 
           }

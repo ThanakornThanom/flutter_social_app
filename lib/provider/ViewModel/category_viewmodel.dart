@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 
+import '../../components/alert_dialog.dart';
+
 class CategoryVM extends ChangeNotifier {
   var _categories = <AmityCommunityCategory>[];
   var _selectedCategories = <String>[];
@@ -70,6 +72,9 @@ class CategoryVM extends ChangeNotifier {
       _selectedCategories = ids;
 
       notifyListeners();
+    }).onError((error, stackTrace) async {
+      await AmityDialog()
+          .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
     // .onError((error, stackTrace) {
     //   handle error

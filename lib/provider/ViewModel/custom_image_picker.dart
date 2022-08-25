@@ -4,6 +4,8 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../components/alert_dialog.dart';
+
 class ImagePickerVM extends ChangeNotifier {
   final ImagePicker _picker = ImagePicker();
   AmityFileInfo? amityImage;
@@ -46,9 +48,10 @@ class ImagePickerVM extends ChangeNotifier {
                         amityImage = fileInfo.getFile;
                         print("check amity image ${amityImage!.fileId}");
                         notifyListeners();
-                        
-                      }).onError((error, stackTrace) {
+                      }).onError((error, stackTrace) async {
                         print("error: ${error}");
+                        await AmityDialog().showAlertErrorDialog(
+                            title: "Error!", message: error.toString());
                       });
                     }),
                 Divider(
@@ -70,8 +73,10 @@ class ImagePickerVM extends ChangeNotifier {
                       amityImage = fileInfo.getFile;
                       notifyListeners();
                       Navigator.pop(context);
-                    }).onError((error, stackTrace) {
+                    }).onError((error, stackTrace) async {
                       print("error: ${error}");
+                      await AmityDialog().showAlertErrorDialog(
+                          title: "Error!", message: error.toString());
                     });
                   },
                 ),

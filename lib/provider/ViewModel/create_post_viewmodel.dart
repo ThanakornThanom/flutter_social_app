@@ -10,6 +10,8 @@ import 'package:verbose_share_world/app_navigation/home/post_content_widget.dart
 import 'package:verbose_share_world/provider/ViewModel/community_Feed_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 
+import '../../components/alert_dialog.dart';
+
 class AmityFileInfoWithUploadStatus {
   AmityFileInfo? fileInfo;
   bool isComplete = false;
@@ -73,8 +75,10 @@ class CreatePostVM extends ChangeNotifier {
               print(value);
             }
             notifyListeners();
-          }).onError((error, stackTrace) {
+          }).onError((error, stackTrace) async {
             print("error: ${error}");
+            await AmityDialog().showAlertErrorDialog(
+                title: "Error!", message: error.toString());
           });
         }
       }
@@ -96,8 +100,10 @@ class CreatePostVM extends ChangeNotifier {
 
           amityImages.last.addFile(fileInfo.getFile);
           notifyListeners();
-        }).onError((error, stackTrace) {
+        }).onError((error, stackTrace) async {
           print("error: ${error}");
+          await AmityDialog()
+              .showAlertErrorDialog(title: "Error!", message: error.toString());
         });
       }
     }
@@ -122,8 +128,10 @@ class CreatePostVM extends ChangeNotifier {
           amityVideo!.addFile(fileInfo.getFile);
 
           notifyListeners();
-        }).onError((error, stackTrace) {
+        }).onError((error, stackTrace) async {
           print("error: ${error}");
+          await AmityDialog()
+              .showAlertErrorDialog(title: "Error!", message: error.toString());
         });
       }
     }
@@ -192,8 +200,10 @@ class CreatePostVM extends ChangeNotifier {
             .scrollcontroller
             .jumpTo(0);
         notifyListeners();
-      }).onError((error, stackTrace) {
+      }).onError((error, stackTrace) async {
         print(error);
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
     } else {
       await AmitySocialClient.newPostRepository()
@@ -208,8 +218,10 @@ class CreatePostVM extends ChangeNotifier {
         );
         Provider.of<FeedVM>(context, listen: false).scrollcontroller.jumpTo(0);
         notifyListeners();
-      }).onError((error, stackTrace) {
+      }).onError((error, stackTrace) async {
         print(error);
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
     }
   }
@@ -240,8 +252,10 @@ class CreatePostVM extends ChangeNotifier {
         Provider.of<CommuFeedVM>(context, listen: false)
             .scrollcontroller
             .jumpTo(0);
-      }).onError((error, stackTrace) {
+      }).onError((error, stackTrace) async {
         print(error);
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
     } else {
       await AmitySocialClient.newPostRepository()
@@ -254,8 +268,10 @@ class CreatePostVM extends ChangeNotifier {
         ///add post to feedx
         Provider.of<FeedVM>(context, listen: false).addPostToFeed(post);
         Provider.of<FeedVM>(context, listen: false).scrollcontroller.jumpTo(0);
-      }).onError((error, stackTrace) {
+      }).onError((error, stackTrace) async {
         print(error);
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
     }
   }
@@ -280,8 +296,9 @@ class CreatePostVM extends ChangeNotifier {
                   .scrollcontroller
                   .jumpTo(0);
             })
-            .onError((error, stackTrace) {
-              print(error);
+            .onError((error, stackTrace) async {
+              await AmityDialog().showAlertErrorDialog(
+                  title: "Error!", message: error.toString());
             });
       } else {
         await AmitySocialClient.newPostRepository()
@@ -297,8 +314,9 @@ class CreatePostVM extends ChangeNotifier {
                   .scrollcontroller
                   .jumpTo(0);
             })
-            .onError((error, stackTrace) {
-              print(error);
+            .onError((error, stackTrace) async {
+              await AmityDialog().showAlertErrorDialog(
+                  title: "Error!", message: error.toString());
             });
       }
     }

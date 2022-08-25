@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../../components/alert_dialog.dart';
+
 class UserVM extends ChangeNotifier {
   List<AmityUser> _userList = [];
   List<String> selectedUserList = [];
@@ -36,7 +38,7 @@ class UserVM extends ChangeNotifier {
       accessToken = response.data["accessToken"];
       return accessToken;
     } else {
-      return "";
+      return "error :initAccessToken";
     }
   }
 
@@ -44,8 +46,10 @@ class UserVM extends ChangeNotifier {
     await AmityCoreClient.newUserRepository().getUser(id).then((user) {
       log("IsGlobalban: ${user.isGlobalBan}");
       return user;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       log(error.toString());
+      await AmityDialog()
+          .showAlertErrorDialog(title: "Error!", message: error.toString());
       return AmityUser();
     });
   }
@@ -72,8 +76,10 @@ class UserVM extends ChangeNotifier {
       _userList.clear();
       _userList.addAll(users);
       notifyListeners();
-    }).catchError((error, stackTrace) {
+    }).catchError((error, stackTrace) async {
       print(error.toString());
+      await AmityDialog()
+          .showAlertErrorDialog(title: "Error!", message: error.toString());
       notifyListeners();
     });
   }

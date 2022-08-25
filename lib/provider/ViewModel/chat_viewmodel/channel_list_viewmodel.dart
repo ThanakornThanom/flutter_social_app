@@ -5,6 +5,7 @@ import 'package:verbose_share_world/generated/intl/messages_fr.dart';
 import 'package:verbose_share_world/provider/model/amity_message_model.dart';
 import 'package:verbose_share_world/repository/chat_repo_imp.dart';
 
+import '../../../components/alert_dialog.dart';
 import '../../../utils/navigation_key.dart';
 import '../../model/amity_channel_model.dart';
 import '../user_viewmodel.dart';
@@ -74,6 +75,8 @@ class ChannelVM extends ChangeNotifier {
         }
       } else {
         print(error);
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error!);
       }
 
       notifyListeners();
@@ -109,12 +112,14 @@ class ChannelVM extends ChangeNotifier {
       Function(ChannelList? data, String? error) callback,
       {String? avatarFileId}) async {
     await channelRepoImp.createGroupChannel(displayName, userIds,
-        (data, error) {
+        (data, error) async {
       if (data != null) {
         print("createGroupChannel: success");
         callback(data, null);
       } else {
         print(error);
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error!);
         callback(null, error);
       }
     }, avatarFileId: avatarFileId);
@@ -122,13 +127,16 @@ class ChannelVM extends ChangeNotifier {
 
   createConversationChannel(List<String> userIds,
       Function(ChannelList? data, String? error) callback) async {
-    await channelRepoImp.createConversationChannel(userIds, (data, error) {
+    await channelRepoImp.createConversationChannel(userIds,
+        (data, error) async {
       if (data != null) {
         print("createConversationChannel: success ${data}");
 
         callback(data, null);
       } else {
         print(error);
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error!);
         callback(null, error);
       }
     });
@@ -142,7 +150,7 @@ class ChannelVM extends ChangeNotifier {
     print("mapReadSegment complete");
   }
 
-  void removeUnreadCount(String channelId) {
+  void removeUnreadCount(String channelId) async {
     ///get channel where channel id == new message channelId
 
     try {
@@ -156,6 +164,8 @@ class ChannelVM extends ChangeNotifier {
         notifyListeners();
       }
     } catch (error) {
+      await AmityDialog()
+          .showAlertErrorDialog(title: "Error!", message: error.toString());
       print(error);
     }
   }
