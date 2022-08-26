@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../components/alert_dialog.dart';
+import '../../repository/chat_repo_imp.dart';
 
 class UserVM extends ChangeNotifier {
   List<AmityUser> _userList = [];
   List<String> selectedUserList = [];
+  AmityChatRepoImp channelRepoImp = AmityChatRepoImp();
   String accessToken = "";
   List<AmityUser> getUserList() {
     return _userList;
@@ -19,6 +21,20 @@ class UserVM extends ChangeNotifier {
     selectedUserList.clear();
     notifyListeners();
   }
+
+  // Future<void> searchUser(String keyword) async {
+  //   AmityCoreClient.newUserRepository()
+  //       .searchUserByDisplayName(keyword)
+  //       .keyword(keyword)
+  //       .query()
+  //       .then((value) {
+  //     print("get new user value ${value}");
+  //     _userList.clear();
+  //     _userList.addAll(value);
+  //     notifyListeners();
+  //   });
+
+  // }
 
   Future<String> initAccessToken() async {
     var dio = Dio();
@@ -61,6 +77,17 @@ class UserVM extends ChangeNotifier {
       selectedUserList.add(id);
     }
     notifyListeners();
+  }
+
+  Future<void> searchUser(String keyword, String accessToken) async {
+    await channelRepoImp.searchUser(keyword, callback: (data, error) {
+      if (data != null) {
+        _userList.clear();
+        _userList.addAll(data);
+        print("check user list ${data} ==== ${_userList}");
+        notifyListeners();
+      } else {}
+    }, accessToken: accessToken);
   }
 
   bool checkIfSelected(String id) {
