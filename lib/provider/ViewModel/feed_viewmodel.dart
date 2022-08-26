@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 
+import '../../components/alert_dialog.dart';
+
 enum Feedtype { GLOBAL, COOMU }
 
 class FeedVM extends ChangeNotifier {
@@ -27,7 +29,10 @@ class FeedVM extends ChangeNotifier {
         .then((value) {
       _amityGlobalFeedPosts.removeAt(postIndex);
       notifyListeners();
-    }).onError((error, stackTrace) {});
+    }).onError((error, stackTrace) async {
+      await AmityDialog()
+          .showAlertErrorDialog(title: "Error!", message: error.toString());
+    });
   }
 
   Future<void> initAmityGlobalfeed() async {
@@ -37,7 +42,7 @@ class FeedVM extends ChangeNotifier {
           .getPagingData(token: token, limit: 20),
       pageSize: 20,
     )..addListener(
-        () {
+        () async {
           log("initAmityGlobalfeed");
           if (_controllerGlobal.error == null) {
             _amityGlobalFeedPosts.clear();
@@ -48,6 +53,8 @@ class FeedVM extends ChangeNotifier {
             //Error on pagination controller
 
             print("error");
+            await AmityDialog().showAlertErrorDialog(
+                title: "Error!", message: _controllerGlobal.error.toString());
           }
         },
       );

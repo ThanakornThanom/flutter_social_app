@@ -3,17 +3,21 @@ import 'dart:developer';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 
+import '../../components/alert_dialog.dart';
+
 class AmityVM extends ChangeNotifier {
   AmityUser? currentamityUser;
   Future<void> login(String userID) async {
     log("login with $userID");
-  
+
     await AmityCoreClient.login(userID).submit().then((value) async {
       log("success");
-      await getUserByID(userID);
+      getUserByID(userID);
       currentamityUser = value;
-    }).catchError((error, stackTrace) {
+    }).catchError((error, stackTrace) async {
       print(error.toString());
+      await AmityDialog()
+          .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
   }
 
@@ -24,17 +28,21 @@ class AmityVM extends ChangeNotifier {
           .then((user) {
         currentamityUser = user;
         notifyListeners();
-      }).onError((error, stackTrace) {
+      }).onError((error, stackTrace) async {
         log(error.toString());
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
     }
   }
 
   Future<void> getUserByID(String id) async {
     await AmityCoreClient.newUserRepository().getUser(id).then((user) {
-      log("IsGlobalban: ${user.isGlobalBan}");
-    }).onError((error, stackTrace) {
-      log(error.toString());
+      print("IsGlobalban: ${user.isGlobalBan}");
+    }).onError((error, stackTrace) async {
+      print(error.toString());
+      await AmityDialog()
+          .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
   }
 }

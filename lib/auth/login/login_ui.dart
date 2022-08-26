@@ -4,6 +4,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/auth/login_navigator.dart';
+import 'package:verbose_share_world/components/alert_dialog.dart';
 import 'package:verbose_share_world/components/custom_button.dart';
 import 'package:verbose_share_world/components/entry_field.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
@@ -57,6 +58,9 @@ class _LoginUiState extends State<LoginUi> {
                         .login(_userIDController.text);
                     await Provider.of<UserVM>(context, listen: false)
                         .initAccessToken();
+                    setState(() {
+                      isLoggingIn = false;
+                    });
 
                     Navigator.pushNamed(context, LoginRoutes.app);
                   }),

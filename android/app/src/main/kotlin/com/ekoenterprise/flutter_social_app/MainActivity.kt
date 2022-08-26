@@ -1,4 +1,4 @@
-package com.flutter.share_world
+package com.ekoenterprise.flutter_social_app
 
 import io.flutter.embedding.android.FlutterActivity
 

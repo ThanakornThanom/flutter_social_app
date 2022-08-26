@@ -5,6 +5,7 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../components/alert_dialog.dart';
 import 'amity_viewmodel.dart';
 
 class UserFeedVM extends ChangeNotifier {
@@ -72,7 +73,11 @@ class UserFeedVM extends ChangeNotifier {
           .displayName(displayName)
           .update()
           .then((value) => {print("update displayname success")})
-          .onError((error, stackTrace) => {print("update displayname fail")});
+          .onError((error, stackTrace) async => {
+                print("update displayname fail"),
+                await AmityDialog().showAlertErrorDialog(
+                    title: "Error!", message: error.toString())
+              });
     }
     if (description != null) {
       await AmityCoreClient.getCurrentUser()
@@ -80,7 +85,11 @@ class UserFeedVM extends ChangeNotifier {
           .description(description)
           .update()
           .then((value) => {print("update description success")})
-          .onError((error, stackTrace) => {print("update description fail")});
+          .onError((error, stackTrace) async => {
+                print("update description fail"),
+                await AmityDialog().showAlertErrorDialog(
+                    title: "Error!", message: error.toString())
+              });
     }
     if (avatarFileID != null) {
       await AmityCoreClient.getCurrentUser()
@@ -88,8 +97,11 @@ class UserFeedVM extends ChangeNotifier {
           .avatarFileId(avatarFileID)
           .update()
           .then((value) => {print("update avatarFileID success")})
-          .onError(
-              (error, stackTrace) => {print("avatarFileID displayname fail")});
+          .onError((error, stackTrace) async => {
+                print("avatarFileID displayname fail"),
+                await AmityDialog().showAlertErrorDialog(
+                    title: "Error!", message: error.toString())
+              });
     }
   }
 }

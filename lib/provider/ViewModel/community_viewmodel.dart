@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 
+import '../../components/alert_dialog.dart';
+
 enum CommunityListType { my, recommend, trending }
 
 enum CommunityFeedMenuOption { edit, members }
@@ -38,11 +40,13 @@ class CommunityVM extends ChangeNotifier {
 
     AmitySocialClient.newCommunityRepository()
         .getTrendingCommunities()
-        .then((List<AmityCommunity> trendingCommunites) =>
-            {_amityTrendingCommunities = trendingCommunites, notifyListeners()})
-        .onError((error, stackTrace) => {
-              //handle error
-            });
+        .then((List<AmityCommunity> trendingCommunites) {
+      _amityTrendingCommunities = trendingCommunites;
+      notifyListeners();
+    }).onError((error, stackTrace) async {
+      await AmityDialog()
+          .showAlertErrorDialog(title: "Error!", message: error.toString());
+    });
   }
 
   Future<void> updateCommunity(
@@ -62,7 +66,10 @@ class CommunityVM extends ChangeNotifier {
           .isPublic(isPublic)
           .update()
           .then((value) => notifyListeners())
-          .onError((error, stackTrace) => {});
+          .onError((error, stackTrace) async {
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error.toString());
+      });
     } else {
       AmitySocialClient.newCommunityRepository()
           .updateCommunity(communityId)
@@ -72,7 +79,10 @@ class CommunityVM extends ChangeNotifier {
           .isPublic(isPublic)
           .update()
           .then((value) => notifyListeners())
-          .onError((error, stackTrace) => {});
+          .onError((error, stackTrace) async {
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error.toString());
+      });
     }
   }
 
@@ -85,13 +95,13 @@ class CommunityVM extends ChangeNotifier {
 
     AmitySocialClient.newCommunityRepository()
         .getRecommendedCommunities()
-        .then((List<AmityCommunity> recommendCommunites) => {
-              _amityRecommendCommunities = recommendCommunites,
-              notifyListeners()
-            })
-        .onError((error, stackTrace) => {
-              //handle error
-            });
+        .then((List<AmityCommunity> recommendCommunites) async {
+      _amityRecommendCommunities = recommendCommunites;
+      notifyListeners();
+    }).onError((error, stackTrace) async {
+      await AmityDialog()
+          .showAlertErrorDialog(title: "Error!", message: error.toString());
+    });
   }
 
   void joinCommunity(String communityId, {CommunityListType? type}) async {
@@ -103,7 +113,10 @@ class CommunityVM extends ChangeNotifier {
       }
 
       notifyListeners();
-    }).onError((error, stackTrace) {});
+    }).onError((error, stackTrace) async {
+      await AmityDialog()
+          .showAlertErrorDialog(title: "Error!", message: error.toString());
+    });
   }
 
   void leaveCommunity(String communityId, {CommunityListType? type}) async {
@@ -114,8 +127,9 @@ class CommunityVM extends ChangeNotifier {
         refreshCommunity(type);
       }
       notifyListeners();
-    }).onError((error, stackTrace) {
-      //handle error
+    }).onError((error, stackTrace) async {
+      await AmityDialog()
+          .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
   }
 

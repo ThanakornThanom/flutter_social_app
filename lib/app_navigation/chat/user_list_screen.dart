@@ -64,7 +64,9 @@ class _UserListState extends State<UserList> {
   }
 
   void onNextTap() async {
-    if (getSelectedLength() > 1) {
+    if (true
+        // getSelectedLength() > 1
+        ) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => CreateChatGroup(
           key: UniqueKey(),
@@ -115,7 +117,10 @@ class _UserListState extends State<UserList> {
                     onPressed: () {
                       onNextTap();
                     },
-                    child: Text(getSelectedLength() > 1 ? "Next" : "Create"))
+                    child: Text(true
+                        // getSelectedLength() > 1
+                        ? "Next"
+                        : "Create"))
                 : Container()
           ],
         ),

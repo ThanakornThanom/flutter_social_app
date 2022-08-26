@@ -5,6 +5,7 @@ import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_li
 import 'package:verbose_share_world/provider/model/amity_message_model.dart';
 import 'package:verbose_share_world/repository/chat_repo_imp.dart';
 
+import '../../../components/alert_dialog.dart';
 import '../../../utils/navigation_key.dart';
 import '../../model/amity_channel_model.dart';
 import '../user_viewmodel.dart';
@@ -74,7 +75,7 @@ class MessageVM extends ChangeNotifier {
                   await channelRepoImp.fetchChannelById(
                     channelId: channelId,
                     paginationToken: token,
-                    callback: (pagingData, error) {
+                    callback: (pagingData, error) async {
                       if (error == null) {
                         print("paging data: $pagingData");
 
@@ -98,6 +99,8 @@ class MessageVM extends ChangeNotifier {
                       } else {
                         ispaginationLoading = false;
                         print(error);
+                        await AmityDialog().showAlertErrorDialog(
+                            title: "Error!", message: error);
                       }
                     },
                   );
@@ -131,6 +134,8 @@ class MessageVM extends ChangeNotifier {
             notifyListeners();
           } else {
             print(error);
+            await AmityDialog()
+                .showAlertErrorDialog(title: "Error!", message: error);
           }
         });
   }
@@ -138,11 +143,13 @@ class MessageVM extends ChangeNotifier {
   Future<void> sendMessage() async {
     String text = textEditingController.text;
     textEditingController.clear();
-    channelRepoImp.sendTextMessage(channelId, text, (data, error) {
+    channelRepoImp.sendTextMessage(channelId, text, (data, error) async {
       if (data != null) {
         print("sendMessage: success");
       } else {
         print(error);
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error!);
       }
     });
   }

@@ -277,34 +277,29 @@ class _MessageComponentState extends State<MessageComponent> {
                                   child: Text("Unsupport type message😰",
                                       style: TextStyle(color: Colors.white)),
                                 )
-                              : Container(
-                                  margin: EdgeInsets.fromLTRB(10, 4, 10, 4),
-                                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: isSendbyCurrentUser
-                                        ? ApplicationColors.lightGrey
-                                        : widget.theme.primaryColor,
-                                  ),
-                                  // width: mediaQuery.size.width * 0.7,
-                                  width: vm.amityMessageList![index].data!.text!
-                                                  .length *
-                                              10.0 >=
-                                          widget.mediaQuery.size.width * 0.7
-                                      ? widget.mediaQuery.size.width * 0.7
-                                      : null,
-                                  alignment: isSendbyCurrentUser
-                                      ? Alignment.centerLeft
-                                      : Alignment.centerRight,
-                                  child: Text(
-                                    vm.amityMessageList?[index].data!.text ??
-                                        "N/A",
-                                    style: widget.theme.textTheme.bodyText1!
-                                        .copyWith(
-                                            fontSize: 14.7,
-                                            color: isSendbyCurrentUser
-                                                ? ApplicationColors.black
-                                                : ApplicationColors.white),
+                              : Flexible(
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                        maxWidth:
+                                            widget.mediaQuery.size.width * 0.7),
+                                    margin: EdgeInsets.fromLTRB(10, 4, 10, 4),
+                                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: isSendbyCurrentUser
+                                          ? ApplicationColors.lightGrey
+                                          : widget.theme.primaryColor,
+                                    ),
+                                    child: Text(
+                                      vm.amityMessageList?[index].data!.text ??
+                                          "N/A",
+                                      style: widget.theme.textTheme.bodyText1!
+                                          .copyWith(
+                                              fontSize: 14.7,
+                                              color: isSendbyCurrentUser
+                                                  ? ApplicationColors.black
+                                                  : ApplicationColors.white),
+                                    ),
                                   ),
                                 ),
                           if (isSendbyCurrentUser)
