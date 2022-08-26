@@ -4,6 +4,7 @@ import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:outline_search_bar/outline_search_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_navigation/comments.dart';
 import 'package:verbose_share_world/app_navigation/home/community_feed.dart';
@@ -95,6 +96,42 @@ class _UserListState extends State<UserList> {
     }
   }
 
+  void searchUser(String keyword) async {
+    String token = "";
+    if (Provider.of<UserVM>(context, listen: false).accessToken == "") {
+      token =
+          await Provider.of<UserVM>(context, listen: false).initAccessToken();
+    } else {
+      token = Provider.of<UserVM>(context, listen: false).accessToken;
+    }
+    Provider.of<UserVM>(context, listen: false).searchUser(keyword, token);
+  }
+
+  Widget searchBar() {
+    return Padding(
+      padding: EdgeInsets.only(left: 8.0, right: 8.0),
+      child: OutlineSearchBar(
+        hintText: "Search user...",
+        borderColor: Colors.transparent,
+        backgroundColor: Colors.grey[200],
+        searchButtonPosition: SearchButtonPosition.leading,
+        searchButtonIconColor: Colors.grey[500],
+        clearButtonColor: Colors.grey[400]!,
+        onClearButtonPressed: (value){
+           Future.delayed(Duration.zero, () {
+            Provider.of<UserVM>(context, listen: false).getUsers();
+          });
+        },
+        onTypingFinished: (value) {
+          print("enter typing finished ${value}");
+
+          searchUser(value);
+          // Provider.of<UserVM>(context, listen: false).searchUser(value);
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -137,6 +174,7 @@ class _UserListState extends State<UserList> {
                   child: FadedSlideAnimation(
                     child: Column(
                       children: [
+                        searchBar(),
                         getLength() < 1
                             ? Expanded(
                                 child: Center(

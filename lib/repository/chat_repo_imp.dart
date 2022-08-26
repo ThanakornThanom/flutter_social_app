@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -239,6 +240,41 @@ class AmityChatRepoImp implements AmityChatRepo {
       } else {
         //error
         log("merkSeen: error: ${amityResponse.message}");
+      }
+    });
+  }
+
+  @override
+  Future<void> searchUser(String keyword,
+      {Function(List<AmityUser>? data, String? error)? callback,
+      String? accessToken}) async {
+    // print("check socket ${socket}");
+      await initRepo(accessToken!);
+    
+    socket.emitWithAck('user.query', {
+      "search": keyword,
+      "sortBy": "displayName",
+    }, ack: (data) {
+      var amityResponse = AmityResponse.fromJson(data);
+      var responsedata = amityResponse.data;
+      List<AmityUser> users = [];
+      if (amityResponse.status == "success") {
+        var userList = responsedata!.json!;
+        for (var user in userList["results"]) {
+          var amityUser = AmityUser();
+          amityUser.userId = user["userId"];
+          amityUser.displayName = user["displayName"];
+          users.add(amityUser);
+        }
+        // userList.forEach((key, value) {
+        //   print("check key value ${key} ${value}");
+        // });
+
+        callback!(users, null);
+      } else {
+        //error
+        callback!(null, "");
+        // callback(null, amityResponse.message);
       }
     });
   }

@@ -3,6 +3,7 @@ import '../provider/model/amity_message_model.dart';
 
 class AmityChatRepo {
   Future<void> initRepo(String accessToken) async {}
+  Future<void> searchUser(String keyword) async {}
 
   Future<void> listenToChannel(Function(AmityMessage) callback) async {}
 
