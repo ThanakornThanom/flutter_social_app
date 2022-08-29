@@ -111,28 +111,40 @@ class CreatePostVM extends ChangeNotifier {
 
   Future<void> addVideo() async {
     if (isNotSelectedImageYet()) {
-      final XFile? video = await _picker.pickVideo(source: ImageSource.gallery);
+      try {
+        final XFile? video =
+            await _picker.pickVideo(source: ImageSource.gallery);
 
-      if (video != null) {
-        var fileWithStatus = AmityFileInfoWithUploadStatus();
-        amityVideo = fileWithStatus;
-        amityVideo!.file = File(video.path);
-        ;
-        notifyListeners();
-        await AmityCoreClient.newFileRepository()
-            .video(File(video.path))
-            .upload()
-            .then((value) {
-          var fileInfo = value as AmityUploadComplete;
-
-          amityVideo!.addFile(fileInfo.getFile);
-
+        if (video != null) {
+          var fileWithStatus = AmityFileInfoWithUploadStatus();
+          amityVideo = fileWithStatus;
+          amityVideo!.file = File(video.path);
+          ;
           notifyListeners();
-        }).onError((error, stackTrace) async {
-          print("error: ${error}");
-          await AmityDialog()
-              .showAlertErrorDialog(title: "Error!", message: error.toString());
-        });
+          await AmityCoreClient.newFileRepository()
+              .video(File(video.path))
+              .upload()
+              .then((value) {
+            var fileInfo = value as AmityUploadComplete;
+
+            amityVideo!.addFile(fileInfo.getFile);
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${fileInfo.getFile.fileId}");
+
+            notifyListeners();
+          }).onError((error, stackTrace) async {
+            print("error: ${error}");
+            await AmityDialog().showAlertErrorDialog(
+                title: "Error!", message: error.toString());
+          });
+        } else {
+          print("error: video is null");
+          await AmityDialog().showAlertErrorDialog(
+              title: "Error!", message: "error: video is null");
+        }
+      } catch (error) {
+        print("error: ${error}");
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error.toString());
       }
     }
   }
