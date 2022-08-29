@@ -47,39 +47,45 @@ class _GlobalFeedTabScreenState extends State<GlobalFeedTabScreen> {
 
     final theme = Theme.of(context);
     return Consumer<FeedVM>(builder: (context, vm, _) {
-      return Column(
-        children: [
-          Expanded(
-            child: Container(
-              height: bHeight,
-              color: ApplicationColors.lightGrey,
-              child: FadedSlideAnimation(
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: vm.getAmityPosts().length,
-                  controller: vm.scrollcontroller,
-                  itemBuilder: (context, index) {
-                    return StreamBuilder<AmityPost>(
-                        key: Key(vm.getAmityPosts()[index].postId!),
-                        stream: vm.getAmityPosts()[index].listen,
-                        initialData: vm.getAmityPosts()[index],
-                        builder: (context, snapshot) {
-                          return PostWidget(
-                            post: snapshot.data!,
-                            theme: theme,
-                            postIndex: index,
-                            isFromFeed: true,
-                          );
-                        });
-                  },
+      return RefreshIndicator(
+        onRefresh: () async {
+          await Provider.of<FeedVM>(context, listen: false)
+              .initAmityGlobalfeed();
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                height: bHeight,
+                color: ApplicationColors.lightGrey,
+                child: FadedSlideAnimation(
+                  child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: vm.getAmityPosts().length,
+                    controller: vm.scrollcontroller,
+                    itemBuilder: (context, index) {
+                      return StreamBuilder<AmityPost>(
+                          key: Key(vm.getAmityPosts()[index].postId!),
+                          stream: vm.getAmityPosts()[index].listen,
+                          initialData: vm.getAmityPosts()[index],
+                          builder: (context, snapshot) {
+                            return PostWidget(
+                              post: snapshot.data!,
+                              theme: theme,
+                              postIndex: index,
+                              isFromFeed: true,
+                            );
+                          });
+                    },
+                  ),
+                  beginOffset: Offset(0, 0.3),
+                  endOffset: Offset(0, 0),
+                  slideCurve: Curves.linearToEaseOut,
                 ),
-                beginOffset: Offset(0, 0.3),
-                endOffset: Offset(0, 0),
-                slideCurve: Curves.linearToEaseOut,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     });
   }

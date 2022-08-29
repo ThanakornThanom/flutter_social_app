@@ -54,6 +54,11 @@ class ChannelVM extends ChangeNotifier {
       notifyListeners();
     });
 
+    await refreshChannels();
+  }
+
+  Future<void> refreshChannels() async {
+    print("refreshChannels...");
     await channelRepoImp.fetchChannelsList((data, error) async {
       if (error == null && data != null) {
         _amityChannelList.clear();

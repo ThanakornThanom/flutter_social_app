@@ -161,7 +161,7 @@ class CommunityVM extends ChangeNotifier {
         .filter(AmityCommunityFilter.MEMBER)
         .sortBy(AmityCommunitySortOption.LAST_CREATED)
         .includeDeleted(false)
-        .getPagingData()
+        .getPagingData(limit: 100)
         .then((value) {
       _amityMyCommunities = value.data;
       notifyListeners();
