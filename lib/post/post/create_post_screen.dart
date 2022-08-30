@@ -88,7 +88,7 @@ class _CreatePostScreen2State extends State<CreatePostScreen2> {
                           ),
                           (vm.amityVideo != null)
                               ? (vm.amityVideo!.isComplete)
-                                  ? MyVideoPlayer(
+                                  ? LocalVideoPlayer(
                                       file: vm.amityVideo!.file!,
                                     )
                                   : CircularProgressIndicator()

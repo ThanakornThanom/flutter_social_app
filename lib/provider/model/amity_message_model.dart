@@ -150,18 +150,17 @@ class Users {
   String? userId;
   List<String>? roles;
   int? flagCount;
-  Null? hashFlag;
 
-  Users(
-      {this.sId,
-      this.path,
-      this.displayName,
-      this.updatedAt,
-      this.createdAt,
-      this.userId,
-      this.roles,
-      this.flagCount,
-      this.hashFlag});
+  Users({
+    this.sId,
+    this.path,
+    this.displayName,
+    this.updatedAt,
+    this.createdAt,
+    this.userId,
+    this.roles,
+    this.flagCount,
+  });
 
   Users.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -172,7 +171,6 @@ class Users {
     userId = json['userId'];
     roles = json['roles'].cast<String>();
     flagCount = json['flagCount'];
-    hashFlag = json['hashFlag'];
   }
 
   Map<String, dynamic> toJson() {
@@ -185,7 +183,7 @@ class Users {
     data['userId'] = this.userId;
     data['roles'] = this.roles;
     data['flagCount'] = this.flagCount;
-    data['hashFlag'] = this.hashFlag;
+
     return data;
   }
 }

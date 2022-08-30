@@ -25,7 +25,6 @@ class AmityPostWidget extends StatefulWidget {
 }
 
 class _AmityPostWidgetState extends State<AmityPostWidget> {
-  VideoPlayerController? videoPlayerController;
   List<String> imageURLs = [];
   String videoUrl = "";
   bool isLoading = true;
@@ -101,10 +100,9 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
                       : false);
         case AmityDataType.VIDEO:
           return MyVideoPlayer2(
+              post: widget.posts[0],
               url: videoUrl,
-              videoPlayerController: videoPlayerController =
-                  VideoPlayerController.network(videoUrl),
-              isCornerRadiusEnabled: widget.isCornerRadiusEnabled,
+              isInFeed: widget.isCornerRadiusEnabled,
               isEnableVideoTools: false);
         default:
           return Container();
@@ -114,7 +112,7 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading ? Container() : postWidget();
+    return postWidget();
   }
 }
 
@@ -244,53 +242,49 @@ class VideoPost extends StatefulWidget {
 }
 
 class VideoPostState extends State<VideoPost> {
-  AmityPost post = AmityPost(postId: "");
-  String videoURL = "";
-  bool isCornerRadiusEnabled = true;
   late VideoPlayerController videoPlayerController;
   ChewieController? chewieController;
 
   @override
   void initState() {
-    post = widget.post;
-    videoURL = widget.videoURL;
-    isCornerRadiusEnabled = widget.isCornerRadiusEnabled;
     initializePlayer();
     super.initState();
   }
 
   @override
   void dispose() {
-    videoPlayerController.dispose();
     chewieController?.dispose();
     super.dispose();
   }
 
   Future<void> initializePlayer() async {
-    videoPlayerController = VideoPlayerController.network(videoURL);
-    await videoPlayerController.initialize();
-    ChewieController controller = ChewieController(
-      showControlsOnInitialize: true,
-      videoPlayerController: videoPlayerController,
-      autoPlay: true,
-      deviceOrientationsAfterFullScreen: [
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown
-      ],
-      looping: true,
-    );
+    videoPlayerController =
+        await VideoPlayerController.network(widget.videoURL);
+    await videoPlayerController.initialize().then((value) {
+      ChewieController controller = ChewieController(
+        showControlsOnInitialize: true,
+        videoPlayerController: videoPlayerController,
+        autoPlay: true,
+        deviceOrientationsAfterFullScreen: [
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown
+        ],
+        looping: true,
+      );
 
-    controller.setVolume(0.0);
-
-    setState(() {
-      chewieController = controller;
+      controller.setVolume(0.0);
+      setState(() {
+        log("setstate");
+        chewieController = controller;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(isCornerRadiusEnabled ? 10 : 0),
+      borderRadius:
+          BorderRadius.circular(widget.isCornerRadiusEnabled ? 10 : 0),
       child: Container(
         height: 250,
         color: Colors.black,

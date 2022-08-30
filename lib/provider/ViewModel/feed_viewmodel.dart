@@ -14,6 +14,7 @@ class FeedVM extends ChangeNotifier {
 
   final scrollcontroller = ScrollController();
 
+  bool loadingNexPage = false;
   List<AmityPost> getAmityPosts() {
     return _amityGlobalFeedPosts;
   }
@@ -39,8 +40,8 @@ class FeedVM extends ChangeNotifier {
     _controllerGlobal = PagingController(
       pageFuture: (token) => AmitySocialClient.newFeedRepository()
           .getGlobalFeed()
-          .getPagingData(token: token, limit: 20),
-      pageSize: 20,
+          .getPagingData(token: token, limit: 5),
+      pageSize: 5,
     )..addListener(
         () async {
           log("initAmityGlobalfeed");
@@ -75,11 +76,18 @@ class FeedVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  void loadnextpage() {
-    if ((scrollcontroller.position.pixels ==
-            scrollcontroller.position.maxScrollExtent) &&
-        _controllerGlobal.hasMoreItems) {
-      _controllerGlobal.fetchNextPage();
+  void loadnextpage() async {
+    if ((scrollcontroller.position.pixels >
+            scrollcontroller.position.maxScrollExtent - 800) &&
+        _controllerGlobal.hasMoreItems &&
+        !loadingNexPage) {
+      loadingNexPage = true;
+      notifyListeners();
+      print("loading Next Page...");
+      await _controllerGlobal.fetchNextPage().then((value) {
+        loadingNexPage = false;
+        notifyListeners();
+      });
     }
   }
 }

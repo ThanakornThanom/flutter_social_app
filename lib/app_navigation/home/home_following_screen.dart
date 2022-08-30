@@ -49,8 +49,7 @@ class _GlobalFeedTabScreenState extends State<GlobalFeedTabScreen> {
     return Consumer<FeedVM>(builder: (context, vm, _) {
       return RefreshIndicator(
         onRefresh: () async {
-          await Provider.of<FeedVM>(context, listen: false)
-              .initAmityGlobalfeed();
+          await vm.initAmityGlobalfeed();
         },
         child: Column(
           children: [
@@ -110,7 +109,8 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget>
-    with AutomaticKeepAliveClientMixin {
+// with AutomaticKeepAliveClientMixin
+{
   Widget postWidgets() {
     List<Widget> widgets = [];
     if (widget.post.data != null) {
@@ -401,18 +401,18 @@ class _PostWidgetState extends State<PostWidget>
     );
   }
 
-  @override
-  bool get wantKeepAlive {
-    final childrenPosts = widget.post.children;
-    if (childrenPosts != null && childrenPosts.isNotEmpty) {
-      if (childrenPosts[0].data is VideoData) {
-        print("keep ${childrenPosts[0].parentPostId} alive");
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
+  // @override
+  // bool get wantKeepAlive {
+  //   final childrenPosts = widget.post.children;
+  //   if (childrenPosts != null && childrenPosts.isNotEmpty) {
+  //     if (childrenPosts[0].data is VideoData) {
+  //       print("keep ${childrenPosts[0].parentPostId} alive");
+  //       return true;
+  //     } else {
+  //       return true;
+  //     }
+  //   } else {
+  //     return false;
+  //   }
+  // }
 }

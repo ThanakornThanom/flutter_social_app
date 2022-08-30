@@ -150,12 +150,10 @@ class _EditPostScreenState extends State<EditPostScreen> {
                           ),
                           (vm.videoUrl != null)
                               ? MyVideoPlayer2(
+                                  post: widget.post!,
                                   url: vm.videoUrl!,
-                                  isCornerRadiusEnabled: true,
+                                  isInFeed: true,
                                   isEnableVideoTools: false,
-                                  videoPlayerController:
-                                      VideoPlayerController.network(
-                                          vm.videoUrl!),
                                 )
                               : Container(),
                           vm.imageUrlList == null
