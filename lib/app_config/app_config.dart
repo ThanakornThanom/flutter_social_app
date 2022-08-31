@@ -10,4 +10,10 @@ class AppConfig {
     'id': "Bahasa Indonesia",
     'es': "Español",
   };
+  final componentSize = Size();
+}
+
+class Size {
+  double feedIconSize = 18;
+  double feedReactionCountSize = 12;
 }

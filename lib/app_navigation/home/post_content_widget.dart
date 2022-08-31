@@ -26,7 +26,7 @@ class AmityPostWidget extends StatefulWidget {
 
 class _AmityPostWidgetState extends State<AmityPostWidget> {
   List<String> imageURLs = [];
-  String videoUrl = "";
+  String? videoUrl;
   bool isLoading = true;
   @override
   void initState() {
@@ -56,16 +56,17 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
   }
 
   Future<void> getVideoPost() async {
-    final videoData = widget.posts[0].data as VideoData;
+    // final videoData = widget.posts[0].data as VideoData;
 
-    await videoData.getVideo(AmityVideoQuality.HIGH).then((AmityVideo video) {
-      if (this.mounted) {
-        setState(() {
-          isLoading = false;
-          videoUrl = video.fileUrl;
-        });
-      }
-    });
+    // await videoData.getVideo(AmityVideoQuality.HIGH).then((AmityVideo video) {
+    //   if (this.mounted) {
+    //     setState(() {
+    //       isLoading = false;
+    //       videoUrl = video.fileUrl;
+    //       print(">>>>>>>>>>>>>>>>>>>>>>>>${videoUrl}");
+    //     });
+    //   }
+    // });
   }
 
   Future<void> getImagePost() async {
@@ -85,7 +86,33 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
     }
   }
 
-  Widget postWidget() {
+  // Widget postWidget() {
+  //   if (!widget.isChildrenPost) {
+  //     return TextPost(post: widget.posts[0]);
+  //   } else {
+  //     switch (widget.posts[0].type) {
+  //       case AmityDataType.IMAGE:
+  //         return ImagePost(
+  //             posts: widget.posts,
+  //             imageURLs: imageURLs,
+  //             isCornerRadiusEnabled:
+  //                 widget.isCornerRadiusEnabled || imageURLs.length > 1
+  //                     ? true
+  //                     : false);
+  //       case AmityDataType.VIDEO:
+  //         return MyVideoPlayer2(
+  //             post: widget.posts[0],
+  //             url: videoUrl ?? "",
+  //             isInFeed: widget.isCornerRadiusEnabled,
+  //             isEnableVideoTools: false);
+  //       default:
+  //         return Container();
+  //     }
+  //   }
+  // }
+
+  @override
+  Widget build(BuildContext context) {
     if (!widget.isChildrenPost) {
       return TextPost(post: widget.posts[0]);
     } else {
@@ -101,18 +128,13 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
         case AmityDataType.VIDEO:
           return MyVideoPlayer2(
               post: widget.posts[0],
-              url: videoUrl,
+              url: videoUrl ?? "",
               isInFeed: widget.isCornerRadiusEnabled,
               isEnableVideoTools: false);
         default:
           return Container();
       }
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return postWidget();
   }
 }
 
@@ -139,10 +161,12 @@ class TextPost extends StatelessWidget {
                                 )));
                       },
                       child: post.type == AmityDataType.TEXT
-                          ? Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text(textdata.text.toString()),
-                            )
+                          ? textdata.text?.length == 0 || textdata.text == null
+                              ? SizedBox()
+                              : Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Text(textdata.text.toString()),
+                                )
                           : Container()),
                 ],
               ),
@@ -223,89 +247,6 @@ class ImagePost extends StatelessWidget {
           child: child,
         );
       },
-    );
-  }
-}
-
-class VideoPost extends StatefulWidget {
-  final AmityPost post;
-  final String videoURL;
-  final bool isCornerRadiusEnabled;
-  const VideoPost(
-      {Key? key,
-      required this.post,
-      required this.videoURL,
-      required this.isCornerRadiusEnabled})
-      : super(key: key);
-  @override
-  VideoPostState createState() => VideoPostState();
-}
-
-class VideoPostState extends State<VideoPost> {
-  late VideoPlayerController videoPlayerController;
-  ChewieController? chewieController;
-
-  @override
-  void initState() {
-    initializePlayer();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    chewieController?.dispose();
-    super.dispose();
-  }
-
-  Future<void> initializePlayer() async {
-    videoPlayerController =
-        await VideoPlayerController.network(widget.videoURL);
-    await videoPlayerController.initialize().then((value) {
-      ChewieController controller = ChewieController(
-        showControlsOnInitialize: true,
-        videoPlayerController: videoPlayerController,
-        autoPlay: true,
-        deviceOrientationsAfterFullScreen: [
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.portraitDown
-        ],
-        looping: true,
-      );
-
-      controller.setVolume(0.0);
-      setState(() {
-        log("setstate");
-        chewieController = controller;
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius:
-          BorderRadius.circular(widget.isCornerRadiusEnabled ? 10 : 0),
-      child: Container(
-        height: 250,
-        color: Colors.black,
-        child: Center(
-          child: chewieController != null &&
-                  chewieController!.videoPlayerController.value.isInitialized
-              ? Chewie(
-                  controller: chewieController!,
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 20),
-                    Text('Loading',
-                        style: TextStyle(fontWeight: FontWeight.w500)),
-                    // SizedBox(height: 20),
-                  ],
-                ),
-        ),
-      ),
     );
   }
 }

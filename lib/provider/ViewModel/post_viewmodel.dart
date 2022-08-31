@@ -81,6 +81,7 @@ class PostVM extends ChangeNotifier {
       _controller.add(_comment);
       amityComments.clear();
       amityComments.addAll(_controller.loadedItems);
+      scrollcontroller.jumpTo(scrollcontroller.position.maxScrollExtent + 100);
     }).onError((error, stackTrace) async {
       print(error.toString());
       await AmityDialog()

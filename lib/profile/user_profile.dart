@@ -45,6 +45,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
     final myAppBar = AppBar(
       backgroundColor: ApplicationColors.white,
       leading: IconButton(
+        color: theme.primaryColor,
         onPressed: () {
           Navigator.of(context).pop();
         },

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:verbose_share_world/app_config/app_config.dart';
 import 'package:verbose_share_world/app_navigation/comments.dart';
 import 'package:verbose_share_world/app_navigation/home/community_feed.dart';
 import 'package:verbose_share_world/app_navigation/home/post_content_widget.dart';
@@ -111,6 +112,9 @@ class PostWidget extends StatefulWidget {
 class _PostWidgetState extends State<PostWidget>
 // with AutomaticKeepAliveClientMixin
 {
+  var iconSize = AppConfig().componentSize.feedIconSize;
+  var feedReactionCountSize = AppConfig().componentSize.feedReactionCountSize;
+
   Widget postWidgets() {
     List<Widget> widgets = [];
     if (widget.post.data != null) {
@@ -273,20 +277,21 @@ class _PostWidgetState extends State<PostWidget>
                     //   'assets/Icons/ic_share.png',
                     //   scale: 3,
                     // ),
-                    // SizedBox(width: 20),
+                    // SizedBox(width: iconSize.feedIconSize),
                     // Icon(
                     //   Icons.bookmark_border,
-                    //   size: 18,
+                    //   size: iconSize.feedIconSize,
                     //   color: ApplicationColors.grey,
                     // ),
-                    // SizedBox(width: 20),
+                    // SizedBox(width: iconSize.feedIconSize),
                     postOptions(context),
                   ],
                 ),
               ),
               postWidgets(),
+              Divider(),
               Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -294,7 +299,7 @@ class _PostWidgetState extends State<PostWidget>
                     //   children: [
                     //     Icon(
                     //       Icons.remove_red_eye,
-                    //       size: 18,
+                    //       size: iconSize.feedIconSize,
                     //       color: ApplicationColors.grey,
                     //     ),
                     //     SizedBox(width: 8.5),
@@ -312,7 +317,7 @@ class _PostWidgetState extends State<PostWidget>
                     //     FaIcon(
                     //       Icons.repeat_rounded,
                     //       color: ApplicationColors.grey,
-                    //       size: 18,
+                    //       size: iconSize.feedIconSize,
                     //     ),
                     //     SizedBox(width: 8.5),
                     //     Text(
@@ -324,66 +329,72 @@ class _PostWidgetState extends State<PostWidget>
                     //     ),
                     //   ],
                     // ),
-                    Row(
-                      children: [
-                        widget.post.myReactions!.isNotEmpty
-                            ? GestureDetector(
-                                onTap: () {
-                                  HapticFeedback.heavyImpact();
-                                  Provider.of<PostVM>(context, listen: false)
-                                      .removePostReaction(widget.post);
-                                },
-                                child: Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
-                                  size: 18,
-                                ),
-                              )
-                            : GestureDetector(
-                                onTap: () {
-                                  HapticFeedback.heavyImpact();
-                                  Provider.of<PostVM>(context, listen: false)
-                                      .addPostReaction(widget.post);
-                                },
-                                child: Icon(
-                                  Icons.favorite_border,
-                                  color: ApplicationColors.grey,
-                                  size: 18,
-                                ),
-                              ),
-                        SizedBox(width: 8.5),
-                        Text(
-                          widget.post.reactionCount.toString(),
-                          style: TextStyle(
-                              color: ApplicationColors.grey,
-                              fontSize: 12,
-                              letterSpacing: 1),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => CommentScreen(
-                                  amityPost: widget.post,
-                                )));
-                      },
+                    Expanded(
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.chat_bubble_outline,
-                            color: ApplicationColors.grey,
-                            size: 18,
-                          ),
+                          widget.post.myReactions!.isNotEmpty
+                              ? GestureDetector(
+                                  onTap: () {
+                                    HapticFeedback.heavyImpact();
+                                    Provider.of<PostVM>(context, listen: false)
+                                        .removePostReaction(widget.post);
+                                  },
+                                  child: Icon(
+                                    Icons.thumb_up,
+                                    color: Theme.of(context).primaryColor,
+                                    size: iconSize,
+                                  ),
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    HapticFeedback.heavyImpact();
+                                    Provider.of<PostVM>(context, listen: false)
+                                        .addPostReaction(widget.post);
+                                  },
+                                  child: Icon(
+                                    Icons.thumb_up_alt_outlined,
+                                    color: ApplicationColors.grey,
+                                    size: iconSize,
+                                  ),
+                                ),
                           SizedBox(width: 8.5),
                           Text(
-                            widget.post.commentCount.toString(),
+                            widget.post.reactionCount.toString(),
                             style: TextStyle(
                                 color: ApplicationColors.grey,
-                                fontSize: 12,
-                                letterSpacing: 0.5),
+                                fontSize: feedReactionCountSize,
+                                letterSpacing: 1),
                           ),
                         ],
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => CommentScreen(
+                                    amityPost: widget.post,
+                                  )));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.chat_bubble_outline,
+                              color: ApplicationColors.grey,
+                              size: iconSize,
+                            ),
+                            SizedBox(width: 8.5),
+                            Text(
+                              widget.post.commentCount.toString(),
+                              style: TextStyle(
+                                  color: ApplicationColors.grey,
+                                  fontSize: feedReactionCountSize,
+                                  letterSpacing: 0.5),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

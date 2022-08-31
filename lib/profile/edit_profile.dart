@@ -43,6 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       backgroundColor: ApplicationColors.white,
       leading: IconButton(
+        color: theme.primaryColor,
         onPressed: () {
           Navigator.of(context).pop();
         },

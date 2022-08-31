@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:provider/provider.dart';
+import 'package:verbose_share_world/app_config/app_config.dart';
 import 'package:verbose_share_world/app_navigation/home/post_content_widget.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
@@ -72,6 +73,7 @@ class _CommentScreenState extends State<CommentScreen> {
 
     return Consumer<PostVM>(builder: (context, vm, _) {
       return StreamBuilder<AmityPost>(
+          key: Key(postData.postId),
           stream: vm.amityPost.listen,
           initialData: vm.amityPost,
           builder: (context, snapshot) {
@@ -253,10 +255,11 @@ class _CommentScreenState extends State<CommentScreen> {
                                                                             .amityPost);
                                                               },
                                                               child: Icon(
-                                                                Icons.favorite,
+                                                                Icons
+                                                                    .thumb_up_alt,
                                                                 size: 17,
-                                                                color:
-                                                                    Colors.red,
+                                                                color: theme
+                                                                    .primaryColor,
                                                               ),
                                                             )
                                                           : GestureDetector(
@@ -275,7 +278,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                                               },
                                                               child: Icon(
                                                                 Icons
-                                                                    .favorite_border,
+                                                                    .thumb_up_off_alt,
                                                                 size: 17,
                                                                 color:
                                                                     Colors.grey,
@@ -362,9 +365,6 @@ class _CommentScreenState extends State<CommentScreen> {
                                           _commentTextEditController.text);
 
                                   _commentTextEditController.clear();
-                                  // vm.scrollcontroller.jumpTo(vm.scrollcontroller
-                                  //         .position.maxScrollExtent +
-                                  //     100);
                                 },
                                 child: Icon(Icons.send,
                                     color: theme.primaryColor)),
@@ -407,6 +407,15 @@ class _CommentComponentState extends State<CommentComponent> {
     super.initState();
   }
 
+  bool isLiked(AsyncSnapshot<AmityComment> snapshot) {
+    var _comments = snapshot.data!;
+    if (_comments.myReactions != null) {
+      return _comments.myReactions!.isNotEmpty;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<PostVM>(builder: (context, vm, _) {
@@ -416,13 +425,12 @@ class _CommentComponentState extends State<CommentComponent> {
         itemCount: vm.amityComments.length,
         itemBuilder: (context, index) {
           return StreamBuilder<AmityComment>(
-              key: UniqueKey(),
+              key: Key(vm.amityComments[index].commentId!),
               stream: vm.amityComments[index].listen,
               initialData: vm.amityComments[index],
               builder: (context, snapshot) {
                 var _comments = snapshot.data!;
                 var _commentData = snapshot.data!.data as CommentTextData;
-                var isliked = _comments.myReactions?.isNotEmpty;
 
                 return Container(
                   color: Colors.white,
@@ -454,7 +462,7 @@ class _CommentComponentState extends State<CommentComponent> {
                         fontSize: 12,
                       ),
                     ),
-                    trailing: isliked ?? false
+                    trailing: isLiked(snapshot)
                         ? GestureDetector(
                             onTap: () {
                               vm.removeCommentReaction(_comments);

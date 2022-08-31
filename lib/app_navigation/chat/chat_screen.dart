@@ -35,7 +35,8 @@ class ChatSingleScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).pop();
                 },
-                child: Icon(Icons.chevron_left, color: Colors.black, size: 35)),
+                child: Icon(Icons.chevron_left,
+                    color: theme.primaryColor, size: 30)),
             Container(
               height: 45,
               margin: const EdgeInsets.symmetric(vertical: 4),

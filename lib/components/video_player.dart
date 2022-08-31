@@ -110,6 +110,7 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
     var postData = widget.post.data as VideoData;
     if (postData.thumbnail != null) {
       thumbnailURL = postData.thumbnail!.fileUrl;
+      print(thumbnailURL);
     }
     if (!widget.isInFeed) {
       initializePlayer();
@@ -127,7 +128,19 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
   }
 
   Future<void> initializePlayer() async {
-    videoPlayerController = await VideoPlayerController.network(widget.url);
+    var videoUrl = "";
+    final videoData = widget.post.data as VideoData;
+
+    await videoData.getVideo(AmityVideoQuality.HIGH).then((AmityVideo video) {
+      if (this.mounted) {
+        setState(() {
+          videoUrl = video.fileUrl;
+          print(">>>>>>>>>>>>>>>>>>>>>>>>${videoUrl}");
+        });
+      }
+    });
+
+    videoPlayerController = await VideoPlayerController.network(videoUrl);
     await videoPlayerController.initialize();
     ChewieController controller = ChewieController(
       showControls: widget.isInFeed ? false : true,
@@ -172,7 +185,11 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
                               )
                             : Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [CircularProgressIndicator()],
+                                children: [
+                                  CircularProgressIndicator(
+                                    color: Theme.of(context).primaryColor,
+                                  )
+                                ],
                               )
                         : OptimizedCacheImage(
                             imageBuilder: (context, imageProvider) => Column(
@@ -183,10 +200,9 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
                                   children: [
                                     Expanded(
                                       child: Container(
-                                        color: Colors.red,
                                         child: Image(
                                           image: imageProvider,
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.fitHeight,
                                         ),
                                       ),
                                     ),
@@ -194,8 +210,7 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
                                 ))
                               ],
                             ),
-                            imageUrl: thumbnailURL ??
-                                "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/live-stream-logo-design-template-734b190682052e1a5f76a413c7f751ba_screen.jpg?ts=1589561822",
+                            imageUrl: thumbnailURL ?? "",
                             fit: BoxFit.fill,
                             placeholder: (context, url) => Column(
                               mainAxisAlignment: MainAxisAlignment.center,
