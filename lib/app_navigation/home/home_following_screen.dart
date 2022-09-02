@@ -197,7 +197,9 @@ class _PostWidgetState extends State<PostWidget>
                   amityPost: widget.post,
                 )));
       },
-      child: Card(
+      child:Container(
+        margin: EdgeInsets.only(top: 10),
+        child:Card(
         elevation: 0,
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -409,6 +411,7 @@ class _PostWidgetState extends State<PostWidget>
           ),
         ),
       ),
+      ) 
     );
   }
 
