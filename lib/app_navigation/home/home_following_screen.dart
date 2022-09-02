@@ -49,6 +49,7 @@ class _GlobalFeedTabScreenState extends State<GlobalFeedTabScreen> {
     final theme = Theme.of(context);
     return Consumer<FeedVM>(builder: (context, vm, _) {
       return RefreshIndicator(
+        color: theme.primaryColor,
         onRefresh: () async {
           await vm.initAmityGlobalfeed();
         },

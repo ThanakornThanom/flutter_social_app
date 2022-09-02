@@ -68,6 +68,7 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
     final theme = Theme.of(context);
     return Consumer<ChannelVM>(builder: (context, vm, _) {
       return RefreshIndicator(
+        color: theme.primaryColor,
         onRefresh: () async {
           await vm.refreshChannels();
         },

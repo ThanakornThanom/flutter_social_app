@@ -44,7 +44,7 @@ class FeedVM extends ChangeNotifier {
       pageSize: 5,
     )..addListener(
         () async {
-          log("initAmityGlobalfeed");
+          log("initAmityGlobalfeed listener...");
           if (_controllerGlobal.error == null) {
             _amityGlobalFeedPosts.clear();
             _amityGlobalFeedPosts.addAll(_controllerGlobal.loadedItems);
@@ -63,7 +63,7 @@ class FeedVM extends ChangeNotifier {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _controllerGlobal.fetchNextPage();
     });
-
+    scrollcontroller.removeListener(() {});
     scrollcontroller.addListener(loadnextpage);
 
     //inititate the PagingController
@@ -77,6 +77,7 @@ class FeedVM extends ChangeNotifier {
   }
 
   void loadnextpage() async {
+    // print(scrollcontroller.offset);
     if ((scrollcontroller.position.pixels >
             scrollcontroller.position.maxScrollExtent - 800) &&
         _controllerGlobal.hasMoreItems &&
