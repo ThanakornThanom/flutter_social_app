@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
@@ -152,7 +154,7 @@ class _PostWidgetState extends State<PostWidget>
         switch (value) {
           case 'Report Post':
           case 'Unreport Post':
-            print("isflag by me ${isFlaggedByMe}");
+            log("isflag by me ${isFlaggedByMe}");
             if (isFlaggedByMe) {
               Provider.of<PostVM>(context, listen: false)
                   .unflagPost(widget.post);
@@ -427,7 +429,7 @@ class _PostWidgetState extends State<PostWidget>
   //   final childrenPosts = widget.post.children;
   //   if (childrenPosts != null && childrenPosts.isNotEmpty) {
   //     if (childrenPosts[0].data is VideoData) {
-  //       print("keep ${childrenPosts[0].parentPostId} alive");
+  //       log("keep ${childrenPosts[0].parentPostId} alive");
   //       return true;
   //     } else {
   //       return true;

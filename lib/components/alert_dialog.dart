@@ -1,10 +1,15 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/navigation_key.dart';
 
 class AmityDialog {
+  var isshowDialog = kDebugMode;
+
   Future<void> showAlertErrorDialog(
       {required String title, required String message}) async {
+    FirebaseCrashlytics.instance.recordError(message, StackTrace.current);
     bool isbarrierDismissible() {
       if (title.toLowerCase().contains("error")) {
         return true;
@@ -13,21 +18,23 @@ class AmityDialog {
       }
     }
 
-    await showDialog(
-      barrierDismissible: isbarrierDismissible(),
-      context: NavigationService.navigatorKey.currentContext!,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
-          TextButton(
-            child: Text("OK"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      ),
-    );
+    if (isshowDialog) {
+      await showDialog(
+        barrierDismissible: isbarrierDismissible(),
+        context: NavigationService.navigatorKey.currentContext!,
+        builder: (context) => AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        ),
+      );
+    }
   }
 }

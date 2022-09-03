@@ -80,17 +80,37 @@ class _LoginUiState extends State<LoginUi> {
               //   textColor: Colors.white,
               // ),
               // SizedBox(height: 20),
-              // CustomButton(
-              //   label: 'Google',
-              //   radius: 12,
-              //   borderColor: Colors.black,
-              //   onTap: () {
-              //     Navigator.pushNamed(context, LoginRoutes.registration);
-              //   },
-              //   icon: Image.asset('assets/Icons/ic_login_google.png', scale: 3),
-              //   color: Theme.of(context).scaffoldBackgroundColor,
-              //   textColor: Colors.black,
-              // ),
+              CustomButton(
+                label: 'Google',
+                radius: 12,
+                borderColor: Colors.black,
+                onTap: () {
+                  Provider.of<GoogleSignInProvider>(context, listen: false)
+                      .login((isSuccess, error) async {
+                    if (isSuccess) {
+                      log("tap signIn");
+                      setState(() {
+                        isLoggingIn = true;
+                      });
+                      await Provider.of<AmityVM>(context, listen: false).login(
+                          Provider.of<GoogleSignInProvider>(context,
+                                  listen: false)
+                              .user!
+                              .email);
+                      await Provider.of<UserVM>(context, listen: false)
+                          .initAccessToken();
+                      setState(() {
+                        isLoggingIn = false;
+                      });
+
+                      Navigator.pushNamed(context, LoginRoutes.app);
+                    }
+                  });
+                },
+                icon: Image.asset('assets/Icons/ic_login_google.png', scale: 3),
+                color: Theme.of(context).scaffoldBackgroundColor,
+                textColor: Colors.black,
+              ),
               SizedBox(height: 20),
             ],
           ),
@@ -165,6 +185,7 @@ class _LoginUiAuthState extends State<LoginUiAuth> {
               //       Navigator.pushNamed(context, LoginRoutes.registration),
               // ),
               //    Spacer(),
+
               Spacer(),
               // Text(S.of(context).or_Continue_With,
               //    style: theme.textTheme.headline6!.copyWith(fontSize: 14)),

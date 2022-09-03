@@ -44,8 +44,6 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
   }
 
   int getLength(ChannelVM vm) {
-    print(
-        "check channel list length ${vm.getChannelList().length > 0 ? vm.getChannelList()[0] : ""}");
     return vm.getChannelList().length;
   }
 

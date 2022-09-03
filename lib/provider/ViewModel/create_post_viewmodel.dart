@@ -72,11 +72,11 @@ class CreatePostVM extends ChangeNotifier {
               var fileInfo = value as AmityUploadComplete;
               amityImages.last.addFile(fileInfo.getFile);
             } else {
-              print(value);
+              log(value.toString());
             }
             notifyListeners();
           }).onError((error, stackTrace) async {
-            print("error: ${error}");
+            log("error: ${error}");
             await AmityDialog().showAlertErrorDialog(
                 title: "Error!", message: error.toString());
           });
@@ -101,7 +101,7 @@ class CreatePostVM extends ChangeNotifier {
           amityImages.last.addFile(fileInfo.getFile);
           notifyListeners();
         }).onError((error, stackTrace) async {
-          print("error: ${error}");
+          log("error: ${error}");
           await AmityDialog()
               .showAlertErrorDialog(title: "Error!", message: error.toString());
         });
@@ -128,21 +128,21 @@ class CreatePostVM extends ChangeNotifier {
             var fileInfo = value as AmityUploadComplete;
 
             amityVideo!.addFile(fileInfo.getFile);
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${fileInfo.getFile.fileId}");
+            log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${fileInfo.getFile.fileId}");
 
             notifyListeners();
           }).onError((error, stackTrace) async {
-            print("error: ${error}");
+            log("error: ${error}");
             await AmityDialog().showAlertErrorDialog(
                 title: "Error!", message: error.toString());
           });
         } else {
-          print("error: video is null");
+          log("error: video is null");
           await AmityDialog().showAlertErrorDialog(
               title: "Error!", message: "error: video is null");
         }
       } catch (error) {
-        print("error: ${error}");
+        log("error: ${error}");
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error.toString());
       }
@@ -159,34 +159,34 @@ class CreatePostVM extends ChangeNotifier {
     bool isCommunity = (communityId != null) ? true : false;
     if (isCommunity) {
       if (isNotSelectVideoYet() && isNotSelectedImageYet()) {
-        print("isNotSelectVideoYet() & isNotSelectVideoYet()");
+        log("isNotSelectVideoYet() & isNotSelectVideoYet()");
 
         ///create text post
         await createTextpost(context, communityId: communityId);
       } else if (isNotSelectedImageYet()) {
-        print("isNotSelectedImageYet");
+        log("isNotSelectedImageYet");
 
         ///create video post
         await creatVideoPost(context, communityId: communityId);
       } else if (isNotSelectVideoYet()) {
-        print("isNotSelectVideoYet");
+        log("isNotSelectVideoYet");
 
         ///create image post
         await creatImagePost(context, communityId: communityId);
       }
     } else {
       if (isNotSelectVideoYet() && isNotSelectedImageYet()) {
-        print("isNotSelectVideoYet() & isNotSelectVideoYet()");
+        log("isNotSelectVideoYet() & isNotSelectVideoYet()");
 
         ///create text post
         await createTextpost(context);
       } else if (isNotSelectedImageYet()) {
-        print("isNotSelectedImageYet");
+        log("isNotSelectedImageYet");
 
         ///create video post
         await creatVideoPost(context);
       } else if (isNotSelectVideoYet()) {
-        print("isNotSelectVideoYet");
+        log("isNotSelectVideoYet");
 
         ///create image post
         await creatImagePost(context);
@@ -196,10 +196,10 @@ class CreatePostVM extends ChangeNotifier {
 
   Future<void> createTextpost(BuildContext context,
       {String? communityId}) async {
-    print("createTextpost...");
+    log("createTextpost...");
     bool isCommunity = (communityId != null) ? true : false;
     if (isCommunity) {
-      print("in community...");
+      log("in community...");
       await AmitySocialClient.newPostRepository()
           .createPost()
           .targetCommunity(communityId)
@@ -213,7 +213,7 @@ class CreatePostVM extends ChangeNotifier {
             .jumpTo(0);
         notifyListeners();
       }).onError((error, stackTrace) async {
-        print(error);
+        log(error.toString());
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
@@ -231,7 +231,7 @@ class CreatePostVM extends ChangeNotifier {
         Provider.of<FeedVM>(context, listen: false).scrollcontroller.jumpTo(0);
         notifyListeners();
       }).onError((error, stackTrace) async {
-        print(error);
+        log(error.toString());
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
@@ -240,16 +240,16 @@ class CreatePostVM extends ChangeNotifier {
 
   Future<void> creatImagePost(BuildContext context,
       {String? communityId}) async {
-    print("creatImagePost...");
+    log("creatImagePost...");
     List<AmityImage> _images = [];
     for (var amityImage in amityImages) {
       if (amityImage.fileInfo is AmityImage) {
         var image = amityImage.fileInfo as AmityImage;
         _images.add(image);
-        print("add file to _images");
+        log("add file to _images");
       }
     }
-    print(_images.toString());
+    log(_images.toString());
     bool isCommunity = (communityId != null) ? true : false;
     if (isCommunity) {
       await AmitySocialClient.newPostRepository()
@@ -265,7 +265,7 @@ class CreatePostVM extends ChangeNotifier {
             .scrollcontroller
             .jumpTo(0);
       }).onError((error, stackTrace) async {
-        print(error);
+        log(error.toString());
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
@@ -281,7 +281,7 @@ class CreatePostVM extends ChangeNotifier {
         Provider.of<FeedVM>(context, listen: false).addPostToFeed(post);
         Provider.of<FeedVM>(context, listen: false).scrollcontroller.jumpTo(0);
       }).onError((error, stackTrace) async {
-        print(error);
+        log(error.toString());
         await AmityDialog()
             .showAlertErrorDialog(title: "Error!", message: error.toString());
       });
@@ -290,7 +290,7 @@ class CreatePostVM extends ChangeNotifier {
 
   Future<void> creatVideoPost(BuildContext context,
       {String? communityId}) async {
-    print("creatVideoPost...");
+    log("creatVideoPost...");
     if (amityVideo != null) {
       bool isCommunity = (communityId != null) ? true : false;
       if (isCommunity) {

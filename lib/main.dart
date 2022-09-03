@@ -1,7 +1,11 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:country_code_picker/country_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,53 +33,58 @@ import 'package:verbose_share_world/provider/ViewModel/custom_image_picker.dart'
 import 'package:verbose_share_world/utils/navigation_key.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await dotenv.load(fileName: "assets/.env");
-  AmityRegionalHttpEndpoint? amityEndpoint;
-  if (dotenv.env["REGION"] != null) {
-    var region = dotenv.env["REGION"]!.toLowerCase().trim();
+  await runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    await dotenv.load(fileName: "assets/.env");
+    AmityRegionalHttpEndpoint? amityEndpoint;
+    if (dotenv.env["REGION"] != null) {
+      var region = dotenv.env["REGION"]!.toLowerCase().trim();
 
-    if (dotenv.env["REGION"]!.isNotEmpty) {
-      switch (region) {
-        case "":
-          {
-            print("REGION is not specify Please check .env file");
-          }
-          ;
-          break;
-        case "sg":
-          {
-            amityEndpoint = AmityRegionalHttpEndpoint.SG;
-          }
-          ;
-          break;
-        case "us":
-          {
-            amityEndpoint = AmityRegionalHttpEndpoint.US;
-          }
-          ;
-          break;
-        case "eu":
-          {
-            amityEndpoint = AmityRegionalHttpEndpoint.EU;
-          }
-          ;
+      if (dotenv.env["REGION"]!.isNotEmpty) {
+        switch (region) {
+          case "":
+            {
+              log("REGION is not specify Please check .env file");
+            }
+            ;
+            break;
+          case "sg":
+            {
+              amityEndpoint = AmityRegionalHttpEndpoint.SG;
+            }
+            ;
+            break;
+          case "us":
+            {
+              amityEndpoint = AmityRegionalHttpEndpoint.US;
+            }
+            ;
+            break;
+          case "eu":
+            {
+              amityEndpoint = AmityRegionalHttpEndpoint.EU;
+            }
+            ;
+        }
+      } else {
+        throw "REGION is not specify Please check .env file";
       }
     } else {
       throw "REGION is not specify Please check .env file";
     }
-  } else {
-    throw "REGION is not specify Please check .env file";
-  }
 
-  await AmityCoreClient.setup(
-      option: AmityCoreClientOption(
-          apiKey: dotenv.env["API_KEY"]!, httpEndpoint: amityEndpoint!),
-      sycInitialization: true);
+    await AmityCoreClient.setup(
+        option: AmityCoreClientOption(
+            apiKey: dotenv.env["API_KEY"]!, httpEndpoint: amityEndpoint!),
+        sycInitialization: true);
 
-  runApp(Phoenix(child: MyApp()));
+    runApp(Phoenix(child: MyApp()));
+  }, (error, stackTrace) {
+    FirebaseCrashlytics.instance.recordError(error, stackTrace);
+  });
 }
 
 class MyApp extends StatelessWidget {

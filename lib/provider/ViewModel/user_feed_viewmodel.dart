@@ -45,7 +45,7 @@ class UserFeedVM extends ChangeNotifier {
           } else {
             //Error on pagination controller
 
-            print("error");
+            log("error");
           }
         },
       );
@@ -72,9 +72,9 @@ class UserFeedVM extends ChangeNotifier {
           .update()
           .displayName(displayName)
           .update()
-          .then((value) => {print("update displayname success")})
+          .then((value) => {log("update displayname success")})
           .onError((error, stackTrace) async => {
-                print("update displayname fail"),
+                log("update displayname fail"),
                 await AmityDialog().showAlertErrorDialog(
                     title: "Error!", message: error.toString())
               });
@@ -84,9 +84,9 @@ class UserFeedVM extends ChangeNotifier {
           .update()
           .description(description)
           .update()
-          .then((value) => {print("update description success")})
+          .then((value) => {log("update description success")})
           .onError((error, stackTrace) async => {
-                print("update description fail"),
+                log("update description fail"),
                 await AmityDialog().showAlertErrorDialog(
                     title: "Error!", message: error.toString())
               });
@@ -96,9 +96,9 @@ class UserFeedVM extends ChangeNotifier {
           .update()
           .avatarFileId(avatarFileID)
           .update()
-          .then((value) => {print("update avatarFileID success")})
+          .then((value) => {log("update avatarFileID success")})
           .onError((error, stackTrace) async => {
-                print("avatarFileID displayname fail"),
+                log("avatarFileID displayname fail"),
                 await AmityDialog().showAlertErrorDialog(
                     title: "Error!", message: error.toString())
               });

@@ -41,6 +41,7 @@ dependencies:
   firebase_auth: ^3.7.0
   google_sign_in: ^5.4.1
   firebase_core: ^1.21.1
+  firebase_crashlytics: ^2.8.9
 
 
 

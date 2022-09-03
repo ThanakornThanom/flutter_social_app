@@ -110,7 +110,7 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
     var postData = widget.post.data as VideoData;
     if (postData.thumbnail != null) {
       thumbnailURL = postData.thumbnail!.fileUrl;
-      print(thumbnailURL);
+      log(thumbnailURL.toString());
     }
     if (!widget.isInFeed) {
       initializePlayer();
@@ -138,7 +138,7 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
       if (this.mounted) {
         setState(() {
           videoUrl = video.fileUrl;
-          print(">>>>>>>>>>>>>>>>>>>>>>>>${videoUrl}");
+          log(">>>>>>>>>>>>>>>>>>>>>>>>${videoUrl}");
         });
       }
     });

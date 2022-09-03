@@ -37,10 +37,10 @@ class _CategoryListState extends State<CategoryList> {
   //   if (community.categoryIds != null) {
   //     Provider.of<CategoryVM>(context, listen: false)
   //         .setSelectedCategory(community.categoryIds![0]);
-  //     // print("checking community category ids ${community.categoryIds}");
+  //     // log("checking community category ids ${community.categoryIds}");
   //     // for (var id in community.categoryIds!) {
   //     //   if (categoryIds.contains(id)) {
-  //     //     print("category id has a match ${id}");
+  //     //     log("category id has a match ${id}");
   //     //     selectedCategoryIds.add(id);
   //     //   }
   //     // }
@@ -122,7 +122,8 @@ class _CategoryListState extends State<CategoryList> {
                                       theme: theme,
                                       textController:
                                           widget.categoryTextController,
-                                      community: Provider.of<CategoryVM>(context,
+                                      community: Provider.of<CategoryVM>(
+                                              context,
                                               listen: false)
                                           .getCommunity(),
                                       index: index,
@@ -174,10 +175,11 @@ class CategoryWidget extends StatelessWidget {
             Provider.of<CategoryVM>(context, listen: false).setSelectedCategory(
                 Provider.of<CategoryVM>(context, listen: false)
                     .getCategoryIds()[index]);
-            textController.text = Provider.of<CategoryVM>(context, listen: false)
-                .getSelectedCommunityName(
-                    Provider.of<CategoryVM>(context, listen: false)
-                        .getCategoryIds()[index]);
+            textController.text =
+                Provider.of<CategoryVM>(context, listen: false)
+                    .getSelectedCommunityName(
+                        Provider.of<CategoryVM>(context, listen: false)
+                            .getCategoryIds()[index]);
           },
           leading: FadeAnimation(
             child: (category.avatar?.fileUrl != null)
@@ -193,10 +195,11 @@ class CategoryWidget extends StatelessWidget {
             style: theme.textTheme.bodyText1!
                 .copyWith(fontWeight: FontWeight.bold),
           ),
-          trailing: Provider.of<CategoryVM>(context, listen: true).checkIfSelected(
-                  Provider.of<CategoryVM>(context, listen: false)
-                      .getCategories()[index]
-                      .categoryId!)
+          trailing: Provider.of<CategoryVM>(context, listen: true)
+                  .checkIfSelected(
+                      Provider.of<CategoryVM>(context, listen: false)
+                          .getCategories()[index]
+                          .categoryId!)
               ? Icon(
                   Icons.check_rounded,
                   color: theme.primaryColor,

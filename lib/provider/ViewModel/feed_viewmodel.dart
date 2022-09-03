@@ -53,7 +53,7 @@ class FeedVM extends ChangeNotifier {
           } else {
             //Error on pagination controller
 
-            print("error");
+            log("error");
             await AmityDialog().showAlertErrorDialog(
                 title: "Error!", message: _controllerGlobal.error.toString());
           }
@@ -87,14 +87,14 @@ class FeedVM extends ChangeNotifier {
   }
 
   void loadnextpage() async {
-    // print(scrollcontroller.offset);
+    // log(scrollcontroller.offset);
     if ((scrollcontroller.position.pixels >
             scrollcontroller.position.maxScrollExtent - 800) &&
         _controllerGlobal.hasMoreItems &&
         !loadingNexPage) {
       loadingNexPage = true;
       notifyListeners();
-      print("loading Next Page...");
+      log("loading Next Page...");
       await _controllerGlobal.fetchNextPage().then((value) {
         loadingNexPage = false;
         notifyListeners();

@@ -15,7 +15,7 @@ class AmityVM extends ChangeNotifier {
       getUserByID(userID);
       currentamityUser = value;
     }).catchError((error, stackTrace) async {
-      print(error.toString());
+      log(error.toString());
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
@@ -38,9 +38,9 @@ class AmityVM extends ChangeNotifier {
 
   Future<void> getUserByID(String id) async {
     await AmityCoreClient.newUserRepository().getUser(id).then((user) {
-      print("IsGlobalban: ${user.isGlobalBan}");
+      log("IsGlobalban: ${user.isGlobalBan}");
     }).onError((error, stackTrace) async {
-      print(error.toString());
+      log(error.toString());
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });

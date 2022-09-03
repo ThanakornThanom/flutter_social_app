@@ -48,7 +48,7 @@ class PostVM extends ChangeNotifier {
           } else {
             //Error on pagination controller
 
-            print("error");
+            log("error");
             await AmityDialog().showAlertErrorDialog(
                 title: "Error!", message: _controller.error.toString());
           }
@@ -85,7 +85,7 @@ class PostVM extends ChangeNotifier {
         scrollcontroller.jumpTo(scrollcontroller.position.maxScrollExtent);
       });
     }).onError((error, stackTrace) async {
-      print(error.toString());
+      log(error.toString());
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
@@ -105,10 +105,10 @@ class PostVM extends ChangeNotifier {
 
   void flagPost(AmityPost post) {
     post.report().flag().then((value) {
-      print("flag success ${value}");
+      log("flag success ${value}");
       notifyListeners();
     }).onError((error, stackTrace) async {
-      print("flag error ${error.toString()}");
+      log("flag error ${error.toString()}");
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
@@ -117,10 +117,10 @@ class PostVM extends ChangeNotifier {
   void unflagPost(AmityPost post) {
     post.report().unflag().then((value) {
       //success
-      print("unflag success ${value}");
+      log("unflag success ${value}");
       notifyListeners();
     }).onError((error, stackTrace) async {
-      print("unflag error ${error.toString()}");
+      log("unflag error ${error.toString()}");
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
     });
