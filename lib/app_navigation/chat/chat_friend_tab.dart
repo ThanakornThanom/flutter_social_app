@@ -65,6 +65,11 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final bHeight = mediaQuery.size.height -
+        mediaQuery.padding.top -
+        AppBar().preferredSize.height;
+
     final theme = Theme.of(context);
     return Consumer<ChannelVM>(builder: (context, vm, _) {
       return RefreshIndicator(
@@ -74,98 +79,110 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
         },
         child: Scaffold(
           body: FadedSlideAnimation(
-            child: Container(
-              margin: EdgeInsets.only(top: 5),
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                itemCount: getLength(vm),
-                itemBuilder: (context, index) {
-                  var messageCount = vm.getChannelList()[index].unreadCount;
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    color: ApplicationColors.lightGrey,
+                    margin: EdgeInsets.only(top: 5),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: getLength(vm),
+                      itemBuilder: (context, index) {
+                        var messageCount =
+                            vm.getChannelList()[index].unreadCount;
 
-                  bool _rand = messageCount > 0 ? true : false;
-                  // if ((Random().nextInt(10)) % 2 == 0) {
-                  //   _rand = true;
-                  // } else {
-                  //   _rand = false;
-                  // }
-                  return Card(
-                    child: ListTile(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ChangeNotifierProvider(
-                                  create: (context) => MessageVM(),
-                                  child: ChatSingleScreen(
-                                    key: UniqueKey(),
-                                    channel: vm.getChannelList()[index],
+                        bool _rand = messageCount > 0 ? true : false;
+                        // if ((Random().nextInt(10)) % 2 == 0) {
+                        //   _rand = true;
+                        // } else {
+                        //   _rand = false;
+                        // }
+                        return Card(
+                          child: ListTile(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ChangeNotifierProvider(
+                                        create: (context) => MessageVM(),
+                                        child: ChatSingleScreen(
+                                          key: UniqueKey(),
+                                          channel: vm.getChannelList()[index],
+                                        ),
+                                      )));
+                            },
+                            leading: Stack(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                  child: FadedScaleAnimation(
+                                    child: getAvatarImage(null,
+                                        fileId: vm
+                                            .getChannelList()[index]
+                                            .avatarFileId),
                                   ),
-                                )));
-                      },
-                      leading: Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                            child: FadedScaleAnimation(
-                              child: getAvatarImage(null,
-                                  fileId:
-                                      vm.getChannelList()[index].avatarFileId),
+                                ),
+                                Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child: _rand
+                                      ? Container(
+                                          decoration: BoxDecoration(
+                                            color: theme.primaryColor,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          padding:
+                                              EdgeInsets.fromLTRB(4, 0, 4, 2),
+                                          child: Center(
+                                            child: Text(
+                                              vm
+                                                  .getChannelList()[index]
+                                                  .unreadCount
+                                                  .toString(),
+                                              style: theme.textTheme.bodyText1!
+                                                  .copyWith(
+                                                      color: ApplicationColors
+                                                          .white,
+                                                      fontSize: 8),
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                ),
+                              ],
+                            ),
+                            title: Text(
+                              vm.getChannelList()[index].displayName ??
+                                  "Display name",
+                              style: TextStyle(
+                                color: _rand
+                                    ? theme.primaryColor
+                                    : ApplicationColors.black,
+                                fontSize: 13.3,
+                              ),
+                            ),
+                            subtitle: Text(
+                              vm.getChannelList()[index].latestMessage,
+                              style: theme.textTheme.subtitle2!.copyWith(
+                                color: theme.hintColor,
+                                fontSize: 10.7,
+                              ),
+                            ),
+                            trailing: Text(
+                              (vm.getChannelList()[index].lastActivity == null)
+                                  ? ""
+                                  : getDateTime(
+                                      vm.getChannelList()[index].lastActivity!),
+                              style: theme.textTheme.bodyText1!.copyWith(
+                                  color: ApplicationColors.grey, fontSize: 9.3),
                             ),
                           ),
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child: _rand
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      color: theme.primaryColor,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    padding: EdgeInsets.fromLTRB(4, 0, 4, 2),
-                                    child: Center(
-                                      child: Text(
-                                        vm
-                                            .getChannelList()[index]
-                                            .unreadCount
-                                            .toString(),
-                                        style: theme.textTheme.bodyText1!
-                                            .copyWith(
-                                                color: ApplicationColors.white,
-                                                fontSize: 8),
-                                      ),
-                                    ),
-                                  )
-                                : Container(),
-                          ),
-                        ],
-                      ),
-                      title: Text(
-                        vm.getChannelList()[index].displayName ??
-                            "Display name",
-                        style: TextStyle(
-                          color: _rand
-                              ? theme.primaryColor
-                              : ApplicationColors.black,
-                          fontSize: 13.3,
-                        ),
-                      ),
-                      subtitle: Text(
-                        vm.getChannelList()[index].latestMessage,
-                        style: theme.textTheme.subtitle2!.copyWith(
-                          color: theme.hintColor,
-                          fontSize: 10.7,
-                        ),
-                      ),
-                      trailing: Text(
-                        (vm.getChannelList()[index].lastActivity == null)
-                            ? ""
-                            : getDateTime(
-                                vm.getChannelList()[index].lastActivity!),
-                        style: theme.textTheme.bodyText1!.copyWith(
-                            color: ApplicationColors.grey, fontSize: 9.3),
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
+                  ),
+                ),
+              ],
             ),
             beginOffset: Offset(0, 0.3),
             endOffset: Offset(0, 0),

@@ -107,9 +107,11 @@ class _AppNavigationState extends State<AppNavigation> {
                 },
                 child: Container(
                   child: FadedScaleAnimation(
-                      child: getAvatarImage(Provider.of<AmityVM>(context)
-                          .currentamityUser!
-                          .avatarUrl)),
+                      child: getAvatarImage(
+                          Provider.of<AmityVM>(context)
+                              .currentamityUser!
+                              .avatarUrl,
+                          radius: 25)),
                 ),
               ),
             ),

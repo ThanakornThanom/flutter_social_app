@@ -1,5 +1,7 @@
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:country_code_picker/country_localizations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +20,7 @@ import 'package:verbose_share_world/provider/ViewModel/community_Feed_viewmodel.
 import 'package:verbose_share_world/provider/ViewModel/community_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/create_post_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
+import 'package:verbose_share_world/provider/ViewModel/firebase_auth_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/user_feed_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/user_viewmodel.dart';
@@ -27,7 +30,7 @@ import 'package:verbose_share_world/utils/navigation_key.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await dotenv.load(fileName: "assets/.env");
   AmityRegionalHttpEndpoint? amityEndpoint;
@@ -92,6 +95,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<CreatePostVM>(
             create: ((context) => CreatePostVM())),
         ChangeNotifierProvider<ChannelVM>(create: ((context) => ChannelVM())),
+        ChangeNotifierProvider<GoogleSignInProvider>(
+          create: (context) => GoogleSignInProvider(),
+        )
       ],
       child: BlocProvider<LanguageCubit>(
         create: (context) => LanguageCubit()..getCurrentLanguage(),
