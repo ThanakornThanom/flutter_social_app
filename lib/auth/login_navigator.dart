@@ -33,7 +33,7 @@ class LoginNavigator extends StatelessWidget {
           late WidgetBuilder builder;
           switch (settings.name) {
             case LoginRoutes.loginRoot:
-              builder = (BuildContext _) => LoginUi();
+              builder = (BuildContext _) => LoginUiAuth();
               break;
             case LoginRoutes.registration:
               builder = (BuildContext _) => RegistrationUi('9999999999');
