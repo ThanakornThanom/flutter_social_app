@@ -298,19 +298,51 @@ class _PostWidgetState extends State<PostWidget>
                   ),
                   postWidgets(),
                   Padding(
-                      padding: EdgeInsets.only(top: 10,bottom: 10,left: 8, right: 8),
-                      child:Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [Image(
-                        image: AssetImage('assets/Icons/like.png'),
-                        height: 24,
-                        width: 24,
-                      ),   Text(
-                                  
-                                      widget.post.commentCount.toString()+ ' comments',
+                      padding: EdgeInsets.only(
+                          top: 10, bottom: 10, left: 9, right: 9),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image(
+                                image: AssetImage('assets/Icons/like.png'),
+                                height: 21,
+                                width: 21,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(widget.post.reactionCount.toString(),
                                   style: TextStyle(
                                       color: ApplicationColors.grey,
                                       fontSize: feedReactionCountSize,
-                                      letterSpacing: 0.5),
-                                ),],) ),
+                                      letterSpacing: 1))
+                            ],
+                          ),
+                          Builder(builder: (context) {
+                            // any logic needed...
+
+                            return widget.post.commentCount! > 1
+                                ? Text(
+                                    widget.post.commentCount.toString() +
+                                        ' comments',
+                                    style: TextStyle(
+                                        color: ApplicationColors.grey,
+                                        fontSize: feedReactionCountSize,
+                                        letterSpacing: 0.5),
+                                  )
+                                : Text(
+                                    widget.post.commentCount.toString() +
+                                        ' comment',
+                                    style: TextStyle(
+                                        color: ApplicationColors.grey,
+                                        fontSize: feedReactionCountSize,
+                                        letterSpacing: 0.5),
+                                  );
+                          })
+                        ],
+                      )),
                   Divider(
                     color: Colors.grey,
                   ),
@@ -366,13 +398,27 @@ class _PostWidgetState extends State<PostWidget>
                                                 listen: false)
                                             .removePostReaction(widget.post);
                                       },
-                                      child: Icon(
-                                        Icons.thumb_up,
-                                        color: Theme.of(context).primaryColor,
-                                        // size: iconSize,
-                                        size: 20,
-                                      ),
-                                    )
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.thumb_up,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            // size: iconSize,
+                                            size: iconSize,
+                                          ),
+                                          SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Like',
+                                            style: TextStyle(
+                                                color: Theme.of(context).primaryColor,
+                                                fontSize: feedReactionCountSize,
+                                                letterSpacing: 1),
+                                          ),
+                                        ],
+                                      ))
                                   : GestureDetector(
                                       onTap: () {
                                         HapticFeedback.heavyImpact();
@@ -380,20 +426,26 @@ class _PostWidgetState extends State<PostWidget>
                                                 listen: false)
                                             .addPostReaction(widget.post);
                                       },
-                                      child: Icon(
-                                        Icons.thumb_up_alt_outlined,
-                                        color: ApplicationColors.grey,
-                                        size: 20,
-                                      ),
-                                    ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.thumb_up_alt_outlined,
+                                            color: ApplicationColors.grey,
+                                            size: iconSize,
+                                          ),
+                                          SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Like',
+                                            style: TextStyle(
+                                                color: ApplicationColors.grey,
+                                                fontSize: feedReactionCountSize,
+                                                letterSpacing: 1),
+                                          ),
+                                        ],
+                                      )),
                               SizedBox(width: 8.5),
-                              Text(
-                                'Like' + widget.post.reactionCount.toString(),
-                                style: TextStyle(
-                                    color: ApplicationColors.grey,
-                                    fontSize: feedReactionCountSize,
-                                    letterSpacing: 1),
-                              ),
                             ],
                           ),
                         ),
