@@ -14,6 +14,6 @@ class AppConfig {
 }
 
 class Size {
-  double feedIconSize = 22;
+  double feedIconSize = 25;
   double feedReactionCountSize = 14;
 }

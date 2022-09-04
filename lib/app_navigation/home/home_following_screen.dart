@@ -303,23 +303,30 @@ class _PostWidgetState extends State<PostWidget>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Image(
-                                image: AssetImage('assets/Icons/like.png'),
-                                height: 21,
-                                width: 21,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(widget.post.reactionCount.toString(),
-                                  style: TextStyle(
-                                      color: ApplicationColors.grey,
-                                      fontSize: feedReactionCountSize,
-                                      letterSpacing: 1))
-                            ],
-                          ),
+                          Builder(builder: (context) {
+                            return widget.post.reactionCount! > 0
+                                ? Row(
+                                    children: [
+                                      Image(
+                                        image:
+                                            AssetImage('assets/Icons/like.png'),
+                                        height: 21,
+                                        width: 21,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(widget.post.reactionCount.toString(),
+                                          style: TextStyle(
+                                              color: ApplicationColors.grey,
+                                              fontSize: feedReactionCountSize,
+                                              letterSpacing: 1))
+                                    ],
+                                  )
+                                : SizedBox(
+                                    width: 0,
+                                  );
+                          }),
                           Builder(builder: (context) {
                             // any logic needed...
 
@@ -386,6 +393,7 @@ class _PostWidgetState extends State<PostWidget>
                         //     ),
                         //   ],
                         // ),
+
                         Expanded(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -404,16 +412,13 @@ class _PostWidgetState extends State<PostWidget>
                                             Icons.thumb_up,
                                             color:
                                                 Theme.of(context).primaryColor,
-                                            // size: iconSize,
                                             size: iconSize,
                                           ),
-                                          SizedBox(
-                                            width: 7,
-                                          ),
                                           Text(
-                                            'Like',
+                                            ' Like',
                                             style: TextStyle(
-                                                color: Theme.of(context).primaryColor,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
                                                 fontSize: feedReactionCountSize,
                                                 letterSpacing: 1),
                                           ),
@@ -433,11 +438,8 @@ class _PostWidgetState extends State<PostWidget>
                                             color: ApplicationColors.grey,
                                             size: iconSize,
                                           ),
-                                          SizedBox(
-                                            width: 7,
-                                          ),
                                           Text(
-                                            'Like',
+                                            ' Like',
                                             style: TextStyle(
                                                 color: ApplicationColors.grey,
                                                 fontSize: feedReactionCountSize,
@@ -449,6 +451,7 @@ class _PostWidgetState extends State<PostWidget>
                             ],
                           ),
                         ),
+
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
@@ -465,7 +468,7 @@ class _PostWidgetState extends State<PostWidget>
                                   color: ApplicationColors.grey,
                                   size: iconSize,
                                 ),
-                                SizedBox(width: 8.5),
+                                SizedBox(width: 5.5),
                                 Text(
                                   'Comment',
                                   style: TextStyle(
