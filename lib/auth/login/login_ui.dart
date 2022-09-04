@@ -41,6 +41,7 @@ class _LoginUiState extends State<LoginUi> {
               // Spacer(),
               //Image.asset('assets/images/ShareWorldLogo.png', height: 30),
               Spacer(),
+              Image.asset('assets/Icons/amity-logo-banner.png', height: 100),
               SizedBox(height: 20),
               EntryField(
                 controller: _userIDController,
@@ -66,9 +67,9 @@ class _LoginUiState extends State<LoginUi> {
                     Navigator.pushNamed(context, LoginRoutes.app);
                   }),
               Spacer(),
-              // Text(S.of(context).or_Continue_With,
-              //     style: theme.textTheme.headline6!.copyWith(fontSize: 14)),
-              // SizedBox(height: 32),
+              Text(S.of(context).or_Continue_With,
+                  style: theme.textTheme.headline6!.copyWith(fontSize: 14)),
+              SizedBox(height: 32),
               // CustomButton(
               //   icon: Image.asset('assets/Icons/ic_fb.png', scale: 2),
               //   radius: 12,
@@ -80,6 +81,7 @@ class _LoginUiState extends State<LoginUi> {
               //   textColor: Colors.white,
               // ),
               // SizedBox(height: 20),
+
               CustomButton(
                 label: 'Google',
                 radius: 12,
@@ -111,6 +113,7 @@ class _LoginUiState extends State<LoginUi> {
                 color: Theme.of(context).scaffoldBackgroundColor,
                 textColor: Colors.black,
               ),
+              Spacer(),
               SizedBox(height: 20),
             ],
           ),
