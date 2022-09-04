@@ -329,24 +329,29 @@ class _PostWidgetState extends State<PostWidget>
                           }),
                           Builder(builder: (context) {
                             // any logic needed...
-
-                            return widget.post.commentCount! > 1
-                                ? Text(
-                                    widget.post.commentCount.toString() +
-                                        ' comments',
-                                    style: TextStyle(
-                                        color: ApplicationColors.grey,
-                                        fontSize: feedReactionCountSize,
-                                        letterSpacing: 0.5),
-                                  )
-                                : Text(
-                                    widget.post.commentCount.toString() +
-                                        ' comment',
-                                    style: TextStyle(
-                                        color: ApplicationColors.grey,
-                                        fontSize: feedReactionCountSize,
-                                        letterSpacing: 0.5),
-                                  );
+                            if (widget.post.commentCount! > 1) {
+                              return Text(
+                                widget.post.commentCount.toString() +
+                                    ' comments',
+                                style: TextStyle(
+                                    color: ApplicationColors.grey,
+                                    fontSize: feedReactionCountSize,
+                                    letterSpacing: 0.5),
+                              );
+                            } else if (widget.post.commentCount! == 0) {
+                              return SizedBox(
+                                width: 0,
+                              );
+                            } else {
+                              return Text(
+                                widget.post.commentCount.toString() +
+                                    ' comment',
+                                style: TextStyle(
+                                    color: ApplicationColors.grey,
+                                    fontSize: feedReactionCountSize,
+                                    letterSpacing: 0.5),
+                              );
+                            }
                           })
                         ],
                       )),
