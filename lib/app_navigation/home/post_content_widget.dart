@@ -63,7 +63,7 @@ class _AmityPostWidgetState extends State<AmityPostWidget> {
     //     setState(() {
     //       isLoading = false;
     //       videoUrl = video.fileUrl;
-    //       print(">>>>>>>>>>>>>>>>>>>>>>>>${videoUrl}");
+    //       log(">>>>>>>>>>>>>>>>>>>>>>>>${videoUrl}");
     //     });
     //   }
     // });

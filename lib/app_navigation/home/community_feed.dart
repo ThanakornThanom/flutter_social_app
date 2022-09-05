@@ -160,7 +160,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                       });
                     }).onError((error, stackTrace) {
                       //handle error
-                      print(error);
+                      log(error.toString());
                     });
                   } else {
                     AmitySocialClient.newCommunityRepository()
@@ -171,7 +171,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                             !(widget.community.isJoined!);
                       });
                     }).onError((error, stackTrace) {
-                      print(error);
+                      log(error.toString());
                     });
                   }
                 }

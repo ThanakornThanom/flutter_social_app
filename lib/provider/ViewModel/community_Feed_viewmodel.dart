@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +35,7 @@ class CommuFeedVM extends ChangeNotifier {
     )
       ..addListener(
         () async {
-          print("communityListener");
+          log("communityListener");
           if (_controllerCommu.error == null) {
             //handle results, we suggest to clear the previous items
             //and add with the latest _controller.loadedItems

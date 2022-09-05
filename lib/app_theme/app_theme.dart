@@ -3,6 +3,8 @@ import 'package:verbose_share_world/app_theme/application_colors.dart';
 
 class AppTheme {
   static final ThemeData lightTheme = ThemeData(
+    progressIndicatorTheme:
+        ProgressIndicatorThemeData(color: Colors.transparent),
     scaffoldBackgroundColor: Colors.white,
     primaryColor: ApplicationColors.primaryColor,
     fontFamily: 'Poppins',

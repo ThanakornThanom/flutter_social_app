@@ -1,13 +1,17 @@
+import 'dart:developer';
+
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/app_config/app_config.dart';
 import 'package:verbose_share_world/app_navigation/comments.dart';
 import 'package:verbose_share_world/app_navigation/home/community_feed.dart';
 import 'package:verbose_share_world/app_navigation/home/post_content_widget.dart';
+import 'package:verbose_share_world/components/custom_button.dart';
 import 'package:verbose_share_world/components/custom_user_avatar.dart';
 import 'package:verbose_share_world/profile/user_profile.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
@@ -49,43 +53,51 @@ class _GlobalFeedTabScreenState extends State<GlobalFeedTabScreen> {
     final theme = Theme.of(context);
     return Consumer<FeedVM>(builder: (context, vm, _) {
       return RefreshIndicator(
+        color: theme.primaryColor,
         onRefresh: () async {
           await vm.initAmityGlobalfeed();
         },
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                height: bHeight,
-                color: ApplicationColors.lightGrey,
-                child: FadedSlideAnimation(
-                  child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount: vm.getAmityPosts().length,
-                    controller: vm.scrollcontroller,
-                    itemBuilder: (context, index) {
-                      return StreamBuilder<AmityPost>(
-                          key: Key(vm.getAmityPosts()[index].postId!),
-                          stream: vm.getAmityPosts()[index].listen,
-                          initialData: vm.getAmityPosts()[index],
-                          builder: (context, snapshot) {
-                            return PostWidget(
-                              post: snapshot.data!,
-                              theme: theme,
-                              postIndex: index,
-                              isFromFeed: true,
-                            );
-                          });
-                    },
-                  ),
-                  beginOffset: Offset(0, 0.3),
-                  endOffset: Offset(0, 0),
-                  slideCurve: Curves.linearToEaseOut,
+        child: vm.getAmityPosts().isEmpty
+            ? SingleChildScrollView(
+                controller: vm.scrollcontroller,
+                child: Container(
+                  color: ApplicationColors.lightGrey,
+                  height: bHeight,
                 ),
+              )
+            : Column(
+                children: [
+                  Expanded(
+                    child: Container(
+                      color: ApplicationColors.lightGrey,
+                      child: FadedSlideAnimation(
+                        child: ListView.builder(
+                          // shrinkWrap: true,
+
+                          itemCount: vm.getAmityPosts().length,
+                          itemBuilder: (context, index) {
+                            return StreamBuilder<AmityPost>(
+                                key: Key(vm.getAmityPosts()[index].postId!),
+                                stream: vm.getAmityPosts()[index].listen,
+                                initialData: vm.getAmityPosts()[index],
+                                builder: (context, snapshot) {
+                                  return PostWidget(
+                                    post: snapshot.data!,
+                                    theme: theme,
+                                    postIndex: index,
+                                    isFromFeed: true,
+                                  );
+                                });
+                          },
+                        ),
+                        beginOffset: Offset(0, 0.3),
+                        endOffset: Offset(0, 0),
+                        slideCurve: Curves.linearToEaseOut,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       );
     });
   }
@@ -142,7 +154,7 @@ class _PostWidgetState extends State<PostWidget>
         switch (value) {
           case 'Report Post':
           case 'Unreport Post':
-            print("isflag by me ${isFlaggedByMe}");
+            log("isflag by me ${isFlaggedByMe}");
             if (isFlaggedByMe) {
               Provider.of<PostVM>(context, listen: false)
                   .unflagPost(widget.post);
@@ -505,7 +517,7 @@ class _PostWidgetState extends State<PostWidget>
   //   final childrenPosts = widget.post.children;
   //   if (childrenPosts != null && childrenPosts.isNotEmpty) {
   //     if (childrenPosts[0].data is VideoData) {
-  //       print("keep ${childrenPosts[0].parentPostId} alive");
+  //       log("keep ${childrenPosts[0].parentPostId} alive");
   //       return true;
   //     } else {
   //       return true;

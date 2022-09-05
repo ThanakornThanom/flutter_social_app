@@ -33,14 +33,16 @@ dependencies:
   extended_image: ^6.2.1
   intl: ^0.17.0
   image_picker: ^0.8.5+3
-  camera: ^0.10.0
-  video_thumbnail: ^0.5.2
   socket_io_client: ^1.0.0
   get_time_ago: ^1.1.5
   shimmer: ^2.0.0
   dio: ^4.0.6
   flutter_dotenv: ^5.0.2
- 
+  firebase_auth: ^3.7.0
+  google_sign_in: ^5.4.1
+  firebase_core: ^1.21.1
+  firebase_crashlytics: ^2.8.9
+
 
 
 

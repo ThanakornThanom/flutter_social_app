@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:amity_sdk/amity_sdk.dart';
@@ -46,10 +47,10 @@ class ImagePickerVM extends ChangeNotifier {
                         var fileInfo = value as AmityUploadComplete;
 
                         amityImage = fileInfo.getFile;
-                        print("check amity image ${amityImage!.fileId}");
+                        log("check amity image ${amityImage!.fileId}");
                         notifyListeners();
                       }).onError((error, stackTrace) async {
-                        print("error: ${error}");
+                        log("error: ${error}");
                         await AmityDialog().showAlertErrorDialog(
                             title: "Error!", message: error.toString());
                       });
@@ -74,7 +75,7 @@ class ImagePickerVM extends ChangeNotifier {
                       notifyListeners();
                       Navigator.pop(context);
                     }).onError((error, stackTrace) async {
-                      print("error: ${error}");
+                      log("error: ${error}");
                       await AmityDialog().showAlertErrorDialog(
                           title: "Error!", message: error.toString());
                     });

@@ -28,8 +28,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Provider.of<UserFeedVM>(context, listen: false)
         .getUser(AmityCoreClient.getCurrentUser());
 
-    _displayNameController.text = AmityCoreClient.getCurrentUser().displayName!;
-    _descriptionController.text = AmityCoreClient.getCurrentUser().description!;
+    _displayNameController.text =
+        AmityCoreClient.getCurrentUser().displayName ?? "";
+    _descriptionController.text =
+        AmityCoreClient.getCurrentUser().description ?? "";
     super.initState();
   }
 

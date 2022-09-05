@@ -77,7 +77,7 @@ class UserVM extends ChangeNotifier {
       _userList.addAll(users);
       notifyListeners();
     }).catchError((error, stackTrace) async {
-      print(error.toString());
+      log(error.toString());
       await AmityDialog()
           .showAlertErrorDialog(title: "Error!", message: error.toString());
       notifyListeners();

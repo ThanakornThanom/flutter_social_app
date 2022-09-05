@@ -75,7 +75,7 @@ class _LocalVideoPlayerState extends State<LocalVideoPlayer> {
                     SizedBox(height: 20),
                     Text('Loading',
                         style: TextStyle(fontWeight: FontWeight.w500)),
-                    // SizedBox(height: 20),
+                    SizedBox(height: 20),
                   ],
                 ),
         ),
@@ -110,7 +110,7 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
     var postData = widget.post.data as VideoData;
     if (postData.thumbnail != null) {
       thumbnailURL = postData.thumbnail!.fileUrl;
-      print(thumbnailURL);
+      log(thumbnailURL.toString());
     }
     if (!widget.isInFeed) {
       initializePlayer();
@@ -123,7 +123,10 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
     if (!widget.isInFeed) {
       videoPlayerController.dispose();
     }
-    chewieController?.dispose();
+    if (!widget.isInFeed) {
+      chewieController!.dispose();
+    }
+
     super.dispose();
   }
 
@@ -135,17 +138,28 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
       if (this.mounted) {
         setState(() {
           videoUrl = video.fileUrl;
-          print(">>>>>>>>>>>>>>>>>>>>>>>>${videoUrl}");
+          log(">>>>>>>>>>>>>>>>>>>>>>>>${videoUrl}");
         });
       }
     });
 
     videoPlayerController = await VideoPlayerController.network(videoUrl);
     await videoPlayerController.initialize();
+
+    var chewieProgressColors = ChewieProgressColors(
+        // backgroundColor: Theme.of(context).primaryColor,
+        // bufferedColor: Theme.of(context).primaryColor
+        handleColor: Theme.of(context).primaryColor,
+        playedColor: Theme.of(context).primaryColor);
+
     ChewieController controller = ChewieController(
+      showControlsOnInitialize: false,
+      materialProgressColors: chewieProgressColors,
+      cupertinoProgressColors: chewieProgressColors,
       showControls: widget.isInFeed ? false : true,
       videoPlayerController: videoPlayerController,
       autoPlay: widget.isInFeed ? false : true,
+      allowPlaybackSpeedChanging: false,
       deviceOrientationsAfterFullScreen: [
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown
@@ -180,15 +194,20 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
                         ? chewieController != null &&
                                 chewieController!
                                     .videoPlayerController.value.isInitialized
-                            ? Chewie(
-                                controller: chewieController!,
+                            ? GestureDetector(
+                                onDoubleTap: (() {
+                                  chewieController!.enterFullScreen();
+                                }),
+                                child: Chewie(
+                                  controller: chewieController!,
+                                ),
                               )
                             : Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  CircularProgressIndicator(
-                                    color: Theme.of(context).primaryColor,
-                                  )
+                                  // CircularProgressIndicator(
+                                  //   color: Theme.of(context).primaryColor,
+                                  // )
                                 ],
                               )
                         : OptimizedCacheImage(
@@ -214,7 +233,9 @@ class _MyVideoPlayer2State extends State<MyVideoPlayer2> {
                             fit: BoxFit.fill,
                             placeholder: (context, url) => Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [CircularProgressIndicator()],
+                              children: [
+                                //  CircularProgressIndicator()
+                              ],
                             ),
                             errorWidget: (context, url, error) =>
                                 Icon(Icons.error),

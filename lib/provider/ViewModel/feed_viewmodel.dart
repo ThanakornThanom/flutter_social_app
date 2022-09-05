@@ -44,7 +44,7 @@ class FeedVM extends ChangeNotifier {
       pageSize: 5,
     )..addListener(
         () async {
-          log("initAmityGlobalfeed");
+          log("initAmityGlobalfeed listener...");
           if (_controllerGlobal.error == null) {
             _amityGlobalFeedPosts.clear();
             _amityGlobalFeedPosts.addAll(_controllerGlobal.loadedItems);
@@ -53,7 +53,7 @@ class FeedVM extends ChangeNotifier {
           } else {
             //Error on pagination controller
 
-            print("error");
+            log("error");
             await AmityDialog().showAlertErrorDialog(
                 title: "Error!", message: _controllerGlobal.error.toString());
           }
@@ -63,27 +63,38 @@ class FeedVM extends ChangeNotifier {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _controllerGlobal.fetchNextPage();
     });
-
+    scrollcontroller.removeListener(() {});
     scrollcontroller.addListener(loadnextpage);
 
     //inititate the PagingController
     await AmitySocialClient.newFeedRepository()
         .getGlobalFeed()
         .getPagingData()
-        .then((value) {
+        .then((value) async {
       _amityGlobalFeedPosts = value.data;
-    });
+      if (_amityGlobalFeedPosts.isEmpty) {
+        await AmityDialog().showAlertErrorDialog(
+            title: "No Post yet!",
+            message: "please join some community or follow some user 🥳");
+      }
+    }).onError(
+      (error, stackTrace) async {
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error.toString());
+      },
+    );
     notifyListeners();
   }
 
   void loadnextpage() async {
+    // log(scrollcontroller.offset);
     if ((scrollcontroller.position.pixels >
             scrollcontroller.position.maxScrollExtent - 800) &&
         _controllerGlobal.hasMoreItems &&
         !loadingNexPage) {
       loadingNexPage = true;
       notifyListeners();
-      print("loading Next Page...");
+      log("loading Next Page...");
       await _controllerGlobal.fetchNextPage().then((value) {
         loadingNexPage = false;
         notifyListeners();

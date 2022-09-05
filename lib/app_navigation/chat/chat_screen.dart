@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:amity_sdk/amity_sdk.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
@@ -246,7 +248,7 @@ class _MessageComponentState extends State<MessageComponent> {
                 itemCount: vm.amityMessageList?.length,
                 itemBuilder: (context, index) {
                   var data = vm.amityMessageList![index].data;
-                  print(data!.text);
+                  log(data!.text.toString());
                   bool isSendbyCurrentUser =
                       vm.amityMessageList?[index].userId !=
                           AmityCoreClient.getCurrentUser().userId;
