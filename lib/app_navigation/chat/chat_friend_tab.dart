@@ -84,7 +84,9 @@ class _ChatFriendTabScreenState extends State<ChatFriendTabScreen> {
                     color: ApplicationColors.lightGrey,
                     margin: EdgeInsets.only(top: 5),
                     child: ListView.builder(
+                      controller: vm.scrollController,
                       shrinkWrap: true,
+                      physics: AlwaysScrollableScrollPhysics(),
                       itemCount: getLength(vm),
                       itemBuilder: (context, index) {
                         var messageCount =
