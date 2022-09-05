@@ -7,18 +7,34 @@ import '../../components/alert_dialog.dart';
 
 class AmityVM extends ChangeNotifier {
   AmityUser? currentamityUser;
+  bool isProcessing = false;
   Future<void> login(String userID) async {
-    log("login with $userID");
+    if (!isProcessing) {
+      isProcessing = true;
 
-    await AmityCoreClient.login(userID).submit().then((value) async {
-      log("success");
-      getUserByID(userID);
-      currentamityUser = value;
-    }).catchError((error, stackTrace) async {
-      log(error.toString());
-      await AmityDialog()
-          .showAlertErrorDialog(title: "Error!", message: error.toString());
-    });
+      log("login with $userID");
+
+      await AmityCoreClient.login(userID).submit().then((value) async {
+        log("success");
+        isProcessing = false;
+        getUserByID(userID);
+        currentamityUser = value;
+        notifyListeners();
+      }).catchError((error, stackTrace) async {
+        isProcessing = false;
+        log(error.toString());
+        await AmityDialog()
+            .showAlertErrorDialog(title: "Error!", message: error.toString());
+      });
+    } else {
+      /// processing
+      log("processing login...");
+    }
+  }
+
+  void setProcessing(bool isProcessing) {
+    this.isProcessing = isProcessing;
+    notifyListeners();
   }
 
   Future<void> refreshCurrentUserData() async {

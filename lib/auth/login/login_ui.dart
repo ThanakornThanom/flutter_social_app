@@ -52,19 +52,24 @@ class _LoginUiState extends State<LoginUi> {
                   label: S.of(context).signIn,
                   isLoading: isLoggingIn,
                   onTap: () async {
-                    log("tap signIn");
-                    setState(() {
-                      isLoggingIn = true;
-                    });
-                    await Provider.of<AmityVM>(context, listen: false)
-                        .login(_userIDController.text);
-                    await Provider.of<UserVM>(context, listen: false)
-                        .initAccessToken();
-                    setState(() {
-                      isLoggingIn = false;
-                    });
+                    if (!isLoggingIn) {
+                      log("tap signIn");
+                      setState(() {
+                        isLoggingIn = true;
+                      });
+                      await Provider.of<AmityVM>(context, listen: false)
+                          .login(_userIDController.text);
+                      await Provider.of<UserVM>(context, listen: false)
+                          .initAccessToken();
 
-                    Navigator.pushNamed(context, LoginRoutes.app);
+                      Provider.of<AmityVM>(context, listen: false)
+                          .setProcessing(false);
+                      setState(() {
+                        isLoggingIn = false;
+                      });
+
+                      Navigator.pushNamed(context, LoginRoutes.app);
+                    }
                   }),
               Spacer(),
               Text(S.of(context).or_Continue_With,

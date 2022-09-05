@@ -9,7 +9,9 @@ class AmityDialog {
 
   Future<void> showAlertErrorDialog(
       {required String title, required String message}) async {
-    FirebaseCrashlytics.instance.recordError(message, StackTrace.current);
+    await FirebaseCrashlytics.instance
+        .recordError(title, StackTrace.current, reason: message);
+
     bool isbarrierDismissible() {
       if (title.toLowerCase().contains("error")) {
         return true;
