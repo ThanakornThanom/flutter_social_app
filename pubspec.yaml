@@ -42,6 +42,7 @@ dependencies:
   google_sign_in: ^5.4.1
   firebase_core: ^1.21.1
   firebase_crashlytics: ^2.8.9
+  outline_search_bar: ^2.3.0
 
 
 
