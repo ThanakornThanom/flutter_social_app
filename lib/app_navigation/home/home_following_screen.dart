@@ -73,7 +73,8 @@ class _GlobalFeedTabScreenState extends State<GlobalFeedTabScreen> {
                       child: FadedSlideAnimation(
                         child: ListView.builder(
                           // shrinkWrap: true,
-
+                          controller: vm.scrollcontroller,
+                          physics: AlwaysScrollableScrollPhysics(),
                           itemCount: vm.getAmityPosts().length,
                           itemBuilder: (context, index) {
                             return StreamBuilder<AmityPost>(
