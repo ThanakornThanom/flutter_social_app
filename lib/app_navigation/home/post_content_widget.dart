@@ -165,7 +165,7 @@ class TextPost extends StatelessWidget {
                               ? SizedBox()
                               : Padding(
                                   padding: EdgeInsets.all(10),
-                                  child: Text(textdata.text.toString()),
+                                  child: Text(textdata.text.toString(), style: TextStyle(fontSize: 18),),
                                 )
                           : Container()),
                 ],

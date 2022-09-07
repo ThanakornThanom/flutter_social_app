@@ -92,27 +92,34 @@ class _LoginUiState extends State<LoginUi> {
                 radius: 12,
                 borderColor: Colors.black,
                 onTap: () {
-                  Provider.of<GoogleSignInProvider>(context, listen: false)
-                      .login((isSuccess, error) async {
-                    if (isSuccess) {
-                      log("tap signIn");
-                      setState(() {
-                        isLoggingIn = true;
-                      });
-                      await Provider.of<AmityVM>(context, listen: false).login(
-                          Provider.of<GoogleSignInProvider>(context,
-                                  listen: false)
-                              .user!
-                              .email);
-                      await Provider.of<UserVM>(context, listen: false)
-                          .initAccessToken();
-                      setState(() {
-                        isLoggingIn = false;
-                      });
+                  if (!isLoggingIn) {
+                    setState(() {
+                      isLoggingIn = true;
+                    });
+                    Provider.of<GoogleSignInProvider>(context, listen: false)
+                        .login((isSuccess, error) async {
+                      if (isSuccess) {
+                        log("tap signIn");
 
-                      Navigator.pushNamed(context, LoginRoutes.app);
-                    }
-                  });
+                        await Provider.of<AmityVM>(context, listen: false)
+                            .login(Provider.of<GoogleSignInProvider>(context,
+                                    listen: false)
+                                .user!
+                                .email);
+                        await Provider.of<UserVM>(context, listen: false)
+                            .initAccessToken();
+                        setState(() {
+                          isLoggingIn = false;
+                        });
+
+                        Navigator.pushNamed(context, LoginRoutes.app);
+                      } else {
+                        setState(() {
+                          isLoggingIn = false;
+                        });
+                      }
+                    });
+                  }
                 },
                 icon: Image.asset('assets/Icons/ic_login_google.png', scale: 3),
                 color: Theme.of(context).scaffoldBackgroundColor,
