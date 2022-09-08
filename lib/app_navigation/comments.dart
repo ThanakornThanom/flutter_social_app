@@ -179,6 +179,12 @@ class _CommentScreenState extends State<CommentScreen> {
                                                                     .amityPost
                                                                     .postedUser!
                                                                     .displayName!,
+                                                                style: theme
+                                                                    .textTheme
+                                                                    .bodyMedium!
+                                                                    .copyWith(
+                                                                        fontWeight:
+                                                                            FontWeight.w800),
                                                                 overflow:
                                                                     TextOverflow
                                                                         .ellipsis,

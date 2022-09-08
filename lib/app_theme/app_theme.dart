@@ -7,7 +7,7 @@ class AppTheme {
         ProgressIndicatorThemeData(color: Colors.transparent),
     scaffoldBackgroundColor: Colors.white,
     primaryColor: ApplicationColors.primaryColor,
-    fontFamily: 'Poppins',
+    // fontFamily: 'Poppins',
     appBarTheme: AppBarTheme(
       color: Colors.white,
       elevation: 0,
