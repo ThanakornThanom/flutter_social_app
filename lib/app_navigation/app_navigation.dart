@@ -12,6 +12,7 @@ import 'package:verbose_share_world/app_navigation/story/story_page.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 
+import '../community_webview_screen.dart';
 import '../components/custom_user_avatar.dart';
 import '../provider/ViewModel/feed_viewmodel.dart';
 import 'home/community_feed.dart';
@@ -30,7 +31,8 @@ class _AppNavigationState extends State<AppNavigation> {
     HomePage(),
     CommunityTabbar(),
     // CommunityScreen(community: AmityCommunity(),),
-    StoryPage(),
+    AmityCommunityWebPage(),
+    // StoryPage(),
     NotificationPage(),
     ChatsPage(),
   ];
