@@ -19,19 +19,9 @@ import 'package:verbose_share_world/app_theme/app_theme.dart';
 import 'package:verbose_share_world/auth/login_navigator.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/locale/language_cubit.dart';
-import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 
-import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_list_viewmodel.dart';
-
-import 'package:verbose_share_world/provider/ViewModel/community_viewmodel.dart';
-import 'package:verbose_share_world/provider/ViewModel/create_post_viewmodel.dart';
-import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/firebase_auth_viewmodel.dart';
-import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
-import 'package:verbose_share_world/provider/ViewModel/user_feed_viewmodel.dart';
-import 'package:verbose_share_world/provider/ViewModel/user_viewmodel.dart';
 import 'package:verbose_share_world/routes/routes.dart';
-import 'package:verbose_share_world/provider/ViewModel/custom_image_picker.dart';
 import 'package:verbose_share_world/utils/navigation_key.dart';
 
 Future<void> main() async {
@@ -68,9 +58,12 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Builder(builder: (context) {
-      return AmitySLEProvider(
-        child: MultiProvider(
+    return AmitySLEProvider(
+      child: Builder(builder: (context) {
+        AmitySLEUIKit().configAmityThemeColor(context, (config) {
+          config.primaryColor = AppTheme.lightTheme.primaryColor;
+        });
+        return MultiProvider(
           providers: [
             ChangeNotifierProvider<GoogleSignInProvider>(
               create: (context) => GoogleSignInProvider(),
@@ -98,8 +91,8 @@ class MyApp extends StatelessWidget {
               },
             ),
           ),
-        ),
-      );
-    });
+        );
+      }),
+    );
   }
 }

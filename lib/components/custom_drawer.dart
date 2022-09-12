@@ -1,18 +1,14 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/view/user/edit_profile.dart';
+import 'package:amity_uikit_beta_service/view/user/user_profile.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:provider/provider.dart';
-import 'package:verbose_share_world/app_config/app_config.dart';
+
 import 'package:verbose_share_world/components/custom_user_avatar.dart';
-import 'package:verbose_share_world/locale/language_cubit.dart';
-import 'package:verbose_share_world/profile/my_profile_screen.dart';
-import 'package:verbose_share_world/profile/edit_profile.dart';
+
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
-import 'package:verbose_share_world/profile/user_profile.dart';
-import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 
 class MyDrawer extends StatelessWidget {
   @override
@@ -47,11 +43,8 @@ class MyDrawer extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       FadedScaleAnimation(
-                          child: getAvatarImage(
-                              Provider.of<AmityVM>(
-                                context,
-                              ).currentamityUser?.avatarUrl,
-                              radius: 50)),
+                          //TODO: add avatar URL
+                          child: getAvatarImage("", radius: 50)),
                       SizedBox(height: 20),
                       Container(
                         child: Text(
