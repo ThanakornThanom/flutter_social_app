@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
-import 'package:country_code_picker/country_code_picker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:verbose_share_world/auth/login_navigator.dart';
@@ -11,8 +11,6 @@ import 'package:verbose_share_world/components/entry_field.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 
 import 'package:verbose_share_world/provider/ViewModel/firebase_auth_viewmodel.dart';
-
-import '../../routes/routes.dart';
 
 class LoginUi extends StatefulWidget {
   @override
