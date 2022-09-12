@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,22 +54,30 @@ class _LoginUiState extends State<LoginUi> {
                   isLoading: isLoggingIn,
                   onTap: () async {
                     if (!isLoggingIn) {
-                      log("tap signIn");
                       setState(() {
                         isLoggingIn = true;
                       });
-                      await Provider.of<AmityVM>(context, listen: false)
-                          .login(_userIDController.text);
-                      await Provider.of<UserVM>(context, listen: false)
-                          .initAccessToken();
 
-                      Provider.of<AmityVM>(context, listen: false)
-                          .setProcessing(false);
-                      setState(() {
-                        isLoggingIn = false;
-                      });
-
-                      Navigator.pushNamed(context, LoginRoutes.app);
+                      await AmitySLEUIKit().registerDevice(
+                        context: context,
+                        userId: _userIDController.text,
+                        callback: (isSuccess, error) {
+                          if (isSuccess) {
+                            print("login Success..");
+                            Navigator.pushNamed(context, LoginRoutes.app);
+                            setState(() {
+                              isLoggingIn = false;
+                            });
+                          } else {
+                            print("error..");
+                            setState(() {
+                              isSuccess = false;
+                            });
+                            AmityDialog().showAlertErrorDialog(
+                                title: "error!", message: error!);
+                          }
+                        },
+                      );
                     }
                   }),
               Spacer(),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:country_code_picker/country_localizations.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -45,42 +46,14 @@ Future<void> main() async {
       var region = dotenv.env["REGION"]!.toLowerCase().trim();
 
       if (dotenv.env["REGION"]!.isNotEmpty) {
-        switch (region) {
-          case "":
-            {
-              print("REGION is not specify Please check .env file");
-            }
-            ;
-            break;
-          case "sg":
-            {
-              amityEndpoint = AmityRegionalHttpEndpoint.SG;
-            }
-            ;
-            break;
-          case "us":
-            {
-              amityEndpoint = AmityRegionalHttpEndpoint.US;
-            }
-            ;
-            break;
-          case "eu":
-            {
-              amityEndpoint = AmityRegionalHttpEndpoint.EU;
-            }
-            ;
-        }
+        /// Step1 Initialize uikit
+        AmitySLEUIKit().initUIKit(dotenv.env["API_KEY"]!, region);
       } else {
         throw "REGION is not specify Please check .env file";
       }
     } else {
       throw "REGION is not specify Please check .env file";
     }
-
-    await AmityCoreClient.setup(
-        option: AmityCoreClientOption(
-            apiKey: dotenv.env["API_KEY"]!, httpEndpoint: amityEndpoint!),
-        sycInitialization: true);
 
     if (kDebugMode) {
       log("FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);");
@@ -95,46 +68,38 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<UserVM>(create: ((context) => UserVM())),
-        ChangeNotifierProvider<AmityVM>(create: ((context) => AmityVM())),
-        ChangeNotifierProvider<FeedVM>(create: ((context) => FeedVM())),
-        ChangeNotifierProvider<CommunityVM>(
-            create: ((context) => CommunityVM())),
-        ChangeNotifierProvider<PostVM>(create: ((context) => PostVM())),
-        ChangeNotifierProvider<UserFeedVM>(create: ((context) => UserFeedVM())),
-        ChangeNotifierProvider<ImagePickerVM>(
-            create: ((context) => ImagePickerVM())),
-        ChangeNotifierProvider<CreatePostVM>(
-            create: ((context) => CreatePostVM())),
-        ChangeNotifierProvider<ChannelVM>(create: ((context) => ChannelVM())),
-        ChangeNotifierProvider<GoogleSignInProvider>(
-          create: (context) => GoogleSignInProvider(),
-        )
-      ],
-      child: BlocProvider<LanguageCubit>(
-        create: (context) => LanguageCubit()..getCurrentLanguage(),
-        child: BlocBuilder<LanguageCubit, Locale>(
-          builder: (context, locale) {
-            return MaterialApp(
-              navigatorKey: NavigationService.navigatorKey,
-              localizationsDelegates: [
-                S.delegate,
-                CountryLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-              ],
-              locale: locale,
-              supportedLocales: S.delegate.supportedLocales,
-              debugShowCheckedModeBanner: false,
-              theme: AppTheme.lightTheme,
-              home: LoginNavigator(),
-              routes: PageRoutes().routes(),
-            );
-          },
+    return Builder(builder: (context) {
+      return AmitySLEProvider(
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider<GoogleSignInProvider>(
+              create: (context) => GoogleSignInProvider(),
+            )
+          ],
+          child: BlocProvider<LanguageCubit>(
+            create: (context) => LanguageCubit()..getCurrentLanguage(),
+            child: BlocBuilder<LanguageCubit, Locale>(
+              builder: (context, locale) {
+                return MaterialApp(
+                  navigatorKey: NavigationService.navigatorKey,
+                  localizationsDelegates: [
+                    S.delegate,
+                    CountryLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                  ],
+                  locale: locale,
+                  supportedLocales: S.delegate.supportedLocales,
+                  debugShowCheckedModeBanner: false,
+                  theme: AppTheme.lightTheme,
+                  home: LoginNavigator(),
+                  routes: PageRoutes().routes(),
+                );
+              },
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

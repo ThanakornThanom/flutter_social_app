@@ -1,21 +1,19 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/view/chat/chat_friend_tab.dart';
+import 'package:amity_uikit_beta_service/view/social/community_tabbar.dart';
+import 'package:amity_uikit_beta_service/view/social/home_following_screen.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
+
 import 'package:verbose_share_world/app_config/app_config.dart';
 import 'package:verbose_share_world/components/custom_drawer.dart';
-import 'package:verbose_share_world/app_navigation/chat/chats_page.dart';
-import 'package:verbose_share_world/app_navigation/home/home_page.dart';
+
 import 'package:verbose_share_world/app_navigation/notification/notification_page.dart';
-import 'package:verbose_share_world/app_navigation/story/story_page.dart';
+
 import 'package:verbose_share_world/generated/l10n.dart';
-import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 
 import '../components/custom_user_avatar.dart';
-import '../provider/ViewModel/feed_viewmodel.dart';
-import 'home/community_feed.dart';
-import 'home/community_tabbar.dart';
 
 class AppNavigation extends StatefulWidget {
   @override
@@ -27,12 +25,12 @@ class _AppNavigationState extends State<AppNavigation> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final List<Widget> _children = [
-    HomePage(),
-    CommunityTabbar(),
+    GlobalFeedScreen(),
+
     // CommunityScreen(community: AmityCommunity(),),
-    StoryPage(),
+    CommunityTabbar(),
     NotificationPage(),
-    ChatsPage(),
+    AmitySLEChannelScreen()
   ];
 
   void changeLanguage(String langCode) {
@@ -52,13 +50,6 @@ class _AppNavigationState extends State<AppNavigation> {
         size: 20,
       ),
       label: 'Explore',
-    ),
-    BottomNavigationBarItem(
-      icon: FaIcon(
-        FontAwesomeIcons.video,
-        size: 20,
-      ),
-      label: 'Video',
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.notifications),
@@ -107,11 +98,7 @@ class _AppNavigationState extends State<AppNavigation> {
                 },
                 child: Container(
                   child: FadedScaleAnimation(
-                      child: getAvatarImage(
-                          Provider.of<AmityVM>(context)
-                              .currentamityUser!
-                              .avatarUrl,
-                          radius: 25)),
+                      child: getAvatarImage("", radius: 25)),
                 ),
               ),
             ),
