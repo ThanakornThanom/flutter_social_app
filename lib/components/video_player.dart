@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:amity_sdk/amity_sdk.dart';
@@ -6,8 +5,7 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:video_player/video_player.dart';
 
@@ -58,7 +56,9 @@ class _LocalVideoPlayerState extends State<LocalVideoPlayer> {
 
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(true ? 10 : 0),
+      borderRadius: BorderRadius.circular(
+          //TODO: fix this when support 1:1
+          true ? 10 : 0),
       child: Container(
         height: 250,
         color: Color.fromRGBO(0, 0, 0, 1),

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:country_code_picker/country_localizations.dart';
 
@@ -31,7 +30,7 @@ Future<void> main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     await dotenv.load(fileName: "assets/.env");
-    AmityRegionalHttpEndpoint? amityEndpoint;
+
     if (dotenv.env["REGION"] != null) {
       var region = dotenv.env["REGION"]!.toLowerCase().trim();
 
@@ -62,6 +61,7 @@ class MyApp extends StatelessWidget {
       child: Builder(builder: (context) {
         AmitySLEUIKit().configAmityThemeColor(context, (config) {
           config.primaryColor = AppTheme.lightTheme.primaryColor;
+          config.channelListConfig.backgroundColor = Colors.white;
         });
         return MultiProvider(
           providers: [

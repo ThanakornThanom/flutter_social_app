@@ -3,7 +3,6 @@ import 'package:amity_uikit_beta_service/view/user/edit_profile.dart';
 import 'package:amity_uikit_beta_service/view/user/user_profile.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'package:verbose_share_world/components/custom_user_avatar.dart';
 
@@ -164,8 +163,10 @@ class MyDrawer extends StatelessWidget {
                       // SizedBox(height: 30),
                       GestureDetector(
                         onTap: () {
-                          AmityCoreClient.logout();
-                          Phoenix.rebirth(context);
+                          // AmityCoreClient.logout();
+
+                          Navigator.of(context).popUntil(
+                              (route) => !Navigator.of(context).canPop());
                         },
                         child: Container(
                           width: double.infinity,

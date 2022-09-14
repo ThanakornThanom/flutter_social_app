@@ -1,4 +1,3 @@
-import 'package:amity_sdk/amity_sdk.dart';
 import 'package:amity_uikit_beta_service/view/chat/chat_friend_tab.dart';
 import 'package:amity_uikit_beta_service/view/social/community_tabbar.dart';
 import 'package:amity_uikit_beta_service/view/social/home_following_screen.dart';
