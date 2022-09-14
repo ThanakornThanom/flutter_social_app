@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:country_code_picker/country_localizations.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -18,19 +19,9 @@ import 'package:verbose_share_world/app_theme/app_theme.dart';
 import 'package:verbose_share_world/auth/login_navigator.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/locale/language_cubit.dart';
-import 'package:verbose_share_world/provider/ViewModel/amity_viewmodel.dart';
 
-import 'package:verbose_share_world/provider/ViewModel/chat_viewmodel/channel_list_viewmodel.dart';
-
-import 'package:verbose_share_world/provider/ViewModel/community_viewmodel.dart';
-import 'package:verbose_share_world/provider/ViewModel/create_post_viewmodel.dart';
-import 'package:verbose_share_world/provider/ViewModel/feed_viewmodel.dart';
 import 'package:verbose_share_world/provider/ViewModel/firebase_auth_viewmodel.dart';
-import 'package:verbose_share_world/provider/ViewModel/post_viewmodel.dart';
-import 'package:verbose_share_world/provider/ViewModel/user_feed_viewmodel.dart';
-import 'package:verbose_share_world/provider/ViewModel/user_viewmodel.dart';
 import 'package:verbose_share_world/routes/routes.dart';
-import 'package:verbose_share_world/provider/ViewModel/custom_image_picker.dart';
 import 'package:verbose_share_world/utils/navigation_key.dart';
 
 Future<void> main() async {
@@ -45,42 +36,14 @@ Future<void> main() async {
       var region = dotenv.env["REGION"]!.toLowerCase().trim();
 
       if (dotenv.env["REGION"]!.isNotEmpty) {
-        switch (region) {
-          case "":
-            {
-              print("REGION is not specify Please check .env file");
-            }
-            ;
-            break;
-          case "sg":
-            {
-              amityEndpoint = AmityRegionalHttpEndpoint.SG;
-            }
-            ;
-            break;
-          case "us":
-            {
-              amityEndpoint = AmityRegionalHttpEndpoint.US;
-            }
-            ;
-            break;
-          case "eu":
-            {
-              amityEndpoint = AmityRegionalHttpEndpoint.EU;
-            }
-            ;
-        }
+        /// Step1 Initialize uikit
+        AmitySLEUIKit().initUIKit(dotenv.env["API_KEY"]!, region);
       } else {
         throw "REGION is not specify Please check .env file";
       }
     } else {
       throw "REGION is not specify Please check .env file";
     }
-
-    await AmityCoreClient.setup(
-        option: AmityCoreClientOption(
-            apiKey: dotenv.env["API_KEY"]!, httpEndpoint: amityEndpoint!),
-        sycInitialization: true);
 
     if (kDebugMode) {
       log("FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);");
@@ -95,46 +58,41 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<UserVM>(create: ((context) => UserVM())),
-        ChangeNotifierProvider<AmityVM>(create: ((context) => AmityVM())),
-        ChangeNotifierProvider<FeedVM>(create: ((context) => FeedVM())),
-        ChangeNotifierProvider<CommunityVM>(
-            create: ((context) => CommunityVM())),
-        ChangeNotifierProvider<PostVM>(create: ((context) => PostVM())),
-        ChangeNotifierProvider<UserFeedVM>(create: ((context) => UserFeedVM())),
-        ChangeNotifierProvider<ImagePickerVM>(
-            create: ((context) => ImagePickerVM())),
-        ChangeNotifierProvider<CreatePostVM>(
-            create: ((context) => CreatePostVM())),
-        ChangeNotifierProvider<ChannelVM>(create: ((context) => ChannelVM())),
-        ChangeNotifierProvider<GoogleSignInProvider>(
-          create: (context) => GoogleSignInProvider(),
-        )
-      ],
-      child: BlocProvider<LanguageCubit>(
-        create: (context) => LanguageCubit()..getCurrentLanguage(),
-        child: BlocBuilder<LanguageCubit, Locale>(
-          builder: (context, locale) {
-            return MaterialApp(
-              navigatorKey: NavigationService.navigatorKey,
-              localizationsDelegates: [
-                S.delegate,
-                CountryLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-              ],
-              locale: locale,
-              supportedLocales: S.delegate.supportedLocales,
-              debugShowCheckedModeBanner: false,
-              theme: AppTheme.lightTheme,
-              home: LoginNavigator(),
-              routes: PageRoutes().routes(),
-            );
-          },
-        ),
-      ),
+    return AmitySLEProvider(
+      child: Builder(builder: (context) {
+        AmitySLEUIKit().configAmityThemeColor(context, (config) {
+          config.primaryColor = AppTheme.lightTheme.primaryColor;
+        });
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider<GoogleSignInProvider>(
+              create: (context) => GoogleSignInProvider(),
+            )
+          ],
+          child: BlocProvider<LanguageCubit>(
+            create: (context) => LanguageCubit()..getCurrentLanguage(),
+            child: BlocBuilder<LanguageCubit, Locale>(
+              builder: (context, locale) {
+                return MaterialApp(
+                  navigatorKey: NavigationService.navigatorKey,
+                  localizationsDelegates: [
+                    S.delegate,
+                    CountryLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                  ],
+                  locale: locale,
+                  supportedLocales: S.delegate.supportedLocales,
+                  debugShowCheckedModeBanner: false,
+                  theme: AppTheme.lightTheme,
+                  home: LoginNavigator(),
+                  routes: PageRoutes().routes(),
+                );
+              },
+            ),
+          ),
+        );
+      }),
     );
   }
 }

@@ -14,6 +14,10 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  # To integrate with local package  your file path here
+  amity_uikit_beta_service:
+        path: /Users/mark/Projects/ThanakornThanom--flutter_amity_uikit_beta_service
+
   cupertino_icons: ^1.0.3
   animation_wrappers: ^3.0.0
   font_awesome_flutter: ^10.1.0

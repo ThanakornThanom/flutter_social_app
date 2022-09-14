@@ -1,7 +1,7 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/view/user/user_profile.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
-import 'package:verbose_share_world/profile/user_profile.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 
