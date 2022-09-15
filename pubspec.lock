@@ -2,7 +2,7 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   amity_sdk:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: amity_sdk
       url: "https://pub.dartlang.org"
