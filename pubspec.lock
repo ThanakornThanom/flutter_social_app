@@ -11,7 +11,7 @@ packages:
   amity_uikit_beta_service:
     dependency: "direct main"
     description:
-      path: "/Users/au/Downloads/testFluttersampleapp/amity_uikit_beta_service"
+      path: "/Users/mark/Projects/ThanakornThanom--flutter_amity_uikit_beta_service"
       relative: false
     source: path
     version: "0.2.0"
@@ -963,7 +963,7 @@ packages:
       name: webview_flutter_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.10.0"
+    version: "2.10.1"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
@@ -977,7 +977,7 @@ packages:
       name: webview_flutter_wkwebview
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.9.3"
+    version: "2.9.4"
   webviewx:
     dependency: "direct main"
     description:
