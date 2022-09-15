@@ -19,6 +19,7 @@ import 'package:verbose_share_world/app_theme/app_theme.dart';
 import 'package:verbose_share_world/auth/login_navigator.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/locale/language_cubit.dart';
+import 'package:verbose_share_world/provider/ViewModel/authentication_viewmodel.dart';
 
 import 'package:verbose_share_world/provider/ViewModel/firebase_auth_viewmodel.dart';
 import 'package:verbose_share_world/routes/routes.dart';
@@ -67,6 +68,9 @@ class MyApp extends StatelessWidget {
           providers: [
             ChangeNotifierProvider<GoogleSignInProvider>(
               create: (context) => GoogleSignInProvider(),
+            ),
+            ChangeNotifierProvider<AuthenTicationVM>(
+              create: (context) => AuthenTicationVM(),
             )
           ],
           child: BlocProvider<LanguageCubit>(
