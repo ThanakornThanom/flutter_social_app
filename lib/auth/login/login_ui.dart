@@ -5,6 +5,7 @@ import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:verbose_share_world/app_navigation/app_navigation.dart';
 import 'package:verbose_share_world/auth/login_navigator.dart';
 import 'package:verbose_share_world/components/custom_button.dart';
 import 'package:verbose_share_world/components/entry_field.dart';
@@ -19,8 +20,7 @@ class LoginUi extends StatefulWidget {
 
 class _LoginUiState extends State<LoginUi> {
   bool isLoggingIn = false;
-  TextEditingController _userIDController =
-      TextEditingController(text: "johnwick2");
+  TextEditingController _userIDController = TextEditingController(text: "");
   // TextEditingController _countryController = TextEditingController();
   String? isoCode;
 
@@ -42,7 +42,13 @@ class _LoginUiState extends State<LoginUi> {
               SizedBox(height: 20),
               EntryField(
                 controller: _userIDController,
-                hint: 'enter userID',
+                hint: 'UserID',
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              EntryField(
+                hint: 'Password',
               ),
               SizedBox(height: 40),
               CustomButton(
@@ -76,6 +82,19 @@ class _LoginUiState extends State<LoginUi> {
                       );
                     }
                   }),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, LoginRoutes.registration);
+                      },
+                      child: Text("Sign up")),
+                ],
+              ),
               Spacer(),
               Text(S.of(context).or_Continue_With,
                   style: theme.textTheme.headline6!.copyWith(fontSize: 14)),

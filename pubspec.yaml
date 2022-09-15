@@ -16,7 +16,7 @@ dependencies:
 
   # To integrate with local package  your file path here
   amity_uikit_beta_service:
-        path: /Users/mark/Projects/ThanakornThanom--flutter_amity_uikit_beta_service
+        path: /Users/au/Downloads/testFluttersampleapp/amity_uikit_beta_service
 
   cupertino_icons: ^1.0.3
   animation_wrappers: ^3.0.0
@@ -28,7 +28,6 @@ dependencies:
   flutter_phoenix: ^1.0.0
   flutter_launcher_icons: ^0.10.0
   modal_bottom_sheet: ^2.1.0
-  amity_sdk: ^0.6.0
   provider: ^6.0.3
   optimized_cached_image: ^3.0.1
   carousel_slider: ^4.1.1

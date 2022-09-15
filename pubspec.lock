@@ -2,7 +2,7 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   amity_sdk:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: amity_sdk
       url: "https://pub.dartlang.org"
@@ -11,7 +11,7 @@ packages:
   amity_uikit_beta_service:
     dependency: "direct main"
     description:
-      path: "/Users/mark/Projects/ThanakornThanom--flutter_amity_uikit_beta_service"
+      path: "/Users/au/Downloads/testFluttersampleapp/amity_uikit_beta_service"
       relative: false
     source: path
     version: "0.2.0"
