@@ -1,9 +1,10 @@
 import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
+import 'package:amity_uikit_beta_service/components/custom_user_avatar.dart';
 import 'package:amity_uikit_beta_service/view/user/edit_profile.dart';
 import 'package:amity_uikit_beta_service/view/user/user_profile.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'package:verbose_share_world/components/custom_user_avatar.dart';
 
@@ -43,8 +44,9 @@ class MyDrawer extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       FadedScaleAnimation(
-                          //TODO: add avatar URL
-                          child: getAvatarImage("", radius: 50)),
+                          child: getAvatarImage(
+                              AmitySLEUIKit().getCurrentUser().avatarUrl,
+                              radius: 50)),
                       SizedBox(height: 20),
                       Container(
                         child: Text(
@@ -164,6 +166,7 @@ class MyDrawer extends StatelessWidget {
                       // SizedBox(height: 30),
                       GestureDetector(
                         onTap: () {
+                          AmitySLEUIKit().unRegisterDevice();
                           Navigator.of(context).popUntil(
                               (route) => !Navigator.of(context).canPop());
                         },

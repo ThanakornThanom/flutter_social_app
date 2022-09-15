@@ -2,6 +2,8 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 
+//TODO: FIx this
+// ignore: must_be_immutable
 class CustomButton extends StatelessWidget {
   final String? label;
   final Widget? icon;

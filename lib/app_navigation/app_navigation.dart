@@ -1,4 +1,5 @@
-import 'package:amity_sdk/amity_sdk.dart';
+import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
+import 'package:amity_uikit_beta_service/components/custom_user_avatar.dart';
 import 'package:amity_uikit_beta_service/view/chat/chat_friend_tab.dart';
 import 'package:amity_uikit_beta_service/view/social/community_tabbar.dart';
 import 'package:amity_uikit_beta_service/view/social/home_following_screen.dart';
@@ -14,6 +15,7 @@ import 'package:verbose_share_world/app_navigation/notification/notification_pag
 import 'package:verbose_share_world/generated/l10n.dart';
 
 import '../components/custom_user_avatar.dart';
+import 'home.dart';
 
 class AppNavigation extends StatefulWidget {
   @override
@@ -25,7 +27,7 @@ class _AppNavigationState extends State<AppNavigation> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final List<Widget> _children = [
-    GlobalFeedScreen(),
+    HomePage(),
 
     // CommunityScreen(community: AmityCommunity(),),
     CommunityTabbar(),
@@ -98,7 +100,9 @@ class _AppNavigationState extends State<AppNavigation> {
                 },
                 child: Container(
                   child: FadedScaleAnimation(
-                      child: getAvatarImage("", radius: 25)),
+                      child: getAvatarImage(
+                          AmitySLEUIKit().getCurrentUser().avatarUrl,
+                          radius: 25)),
                 ),
               ),
             ),

@@ -4,9 +4,6 @@ import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:verbose_share_world/app_navigation/app_navigation.dart';
-
-import 'package:verbose_share_world/utils/navigation_key.dart';
 
 import '../../auth/login_navigator.dart';
 import 'firebase_auth_viewmodel.dart';

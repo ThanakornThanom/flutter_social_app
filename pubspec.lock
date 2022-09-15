@@ -554,7 +554,7 @@ packages:
     source: hosted
     version: "1.0.2"
   optimized_cached_image:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: optimized_cached_image
       url: "https://pub.dartlang.org"
