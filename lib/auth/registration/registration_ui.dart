@@ -29,7 +29,7 @@ class _RegistrationUiState extends State<RegistrationUi> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).New_User, style: theme.textTheme.headline6),
+        title: Text("Sign Up", style: theme.textTheme.headline6),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -40,18 +40,16 @@ class _RegistrationUiState extends State<RegistrationUi> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Padding(
-                padding: EdgeInsetsDirectional.only(start: 56),
-                child: Text(
-                  S.of(context).Register_now_to_continue,
-                  style: theme.textTheme.headline6!
-                      .copyWith(fontSize: 12, color: theme.hintColor),
-                ),
+              Text(
+                S.of(context).Register_now_to_continue,
+                style: theme.textTheme.headline6!
+                    .copyWith(fontSize: 12, color: theme.hintColor),
+                textAlign: TextAlign.center,
               ),
               SizedBox(height: 70),
               EntryField(
                 controller: _fullNameController,
-                hint: S.of(context).Full_name,
+                hint: "Display Name",
               ),
               SizedBox(height: 20),
               EntryField(
@@ -61,7 +59,12 @@ class _RegistrationUiState extends State<RegistrationUi> {
               SizedBox(height: 20),
               EntryField(
                 initialValue: widget.phoneNumber,
-                hint: S.of(context).Phone_Number,
+                hint: "Password",
+              ),
+              SizedBox(height: 20),
+              EntryField(
+                initialValue: widget.phoneNumber,
+                hint: "Repeat Password",
               ),
               Spacer(flex: 2),
               CustomButton(

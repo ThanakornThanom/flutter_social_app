@@ -36,7 +36,7 @@ class LoginNavigator extends StatelessWidget {
               builder = (BuildContext _) => LoginUi();
               break;
             case LoginRoutes.registration:
-              builder = (BuildContext _) => RegistrationUi('9999999999');
+              builder = (BuildContext _) => RegistrationUi('');
               break;
             case LoginRoutes.verification:
               builder = (BuildContext _) => VerificationUi(() =>

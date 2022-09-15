@@ -164,8 +164,8 @@ class MyDrawer extends StatelessWidget {
                       // SizedBox(height: 30),
                       GestureDetector(
                         onTap: () {
-                          AmityCoreClient.logout();
-                          Phoenix.rebirth(context);
+                          Navigator.of(context).popUntil(
+                              (route) => !Navigator.of(context).canPop());
                         },
                         child: Container(
                           width: double.infinity,
