@@ -11,6 +11,15 @@ import 'firebase_auth_viewmodel.dart';
 class AuthenTicationVM extends ChangeNotifier {
   bool isLoading = false;
   Future<void> loginWithEmailAndPassWord() async {}
+
+  Future<void> registerPushNotification(String fcmToken) async {
+    AmitySLEUIKit().registerNotification(fcmToken, (isSuccess, error) {
+      if (isSuccess) {
+        log("Successfully register notification");
+      }
+    });
+  }
+
   Future<void> loginWithGoogleAuth() async {
     if (!isLoading) {
       isLoading = true;
