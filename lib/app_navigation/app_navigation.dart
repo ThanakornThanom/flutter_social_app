@@ -3,6 +3,7 @@ import 'package:amity_uikit_beta_service/components/custom_user_avatar.dart';
 import 'package:amity_uikit_beta_service/view/chat/chat_friend_tab.dart';
 import 'package:amity_uikit_beta_service/view/social/community_tabbar.dart';
 import 'package:amity_uikit_beta_service/view/social/home_following_screen.dart';
+import 'package:amity_uikit_beta_service/view/user/user_profile.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -32,7 +33,11 @@ class _AppNavigationState extends State<AppNavigation> {
     // CommunityScreen(community: AmityCommunity(),),
     CommunityTabbar(),
     NotificationPage(),
-    AmitySLEChannelScreen()
+    // AmitySLEChannelScreen()
+    UserProfileScreen(
+      amityUser: AmitySLEUIKit().getCurrentUser(),
+      isEnableAppbar: false,
+    )
   ];
 
   void changeLanguage(String langCode) {
@@ -55,14 +60,18 @@ class _AppNavigationState extends State<AppNavigation> {
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.notifications),
-      label: 'Noti',
+      label: 'Notification',
     ),
+    // BottomNavigationBarItem(
+    //   icon: FaIcon(
+    //     FontAwesomeIcons.comments,
+    //     size: 20,
+    //   ),
+    //   label: 'Chat',
+    // ),
     BottomNavigationBarItem(
-      icon: FaIcon(
-        FontAwesomeIcons.comments,
-        size: 20,
-      ),
-      label: 'Chat',
+      icon: Icon(Icons.person),
+      label: 'Profile',
     ),
   ];
 
@@ -77,9 +86,10 @@ class _AppNavigationState extends State<AppNavigation> {
     final List<String> _titles = [
       AppConfig.appName,
       "Explore",
-      S.of(context).video,
+      // S.of(context).video,
       S.of(context).notifications,
-      S.of(context).chats,
+      // S.of(context).chats,
+      "My Profile"
     ];
 
     return Scaffold(
@@ -99,11 +109,12 @@ class _AppNavigationState extends State<AppNavigation> {
                   _scaffoldKey.currentState!.openEndDrawer();
                 },
                 child: Container(
-                  child: FadedScaleAnimation(
-                      child: getAvatarImage(
-                          AmitySLEUIKit().getCurrentUser().avatarUrl,
-                          radius: 25)),
-                ),
+                    // child: FadedScaleAnimation(
+                    //     child: getAvatarImage(
+                    //         AmitySLEUIKit().getCurrentUser().avatarUrl,
+                    //         radius: 25)
+                    //         ),
+                    ),
               ),
             ),
           ),

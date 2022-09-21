@@ -10,28 +10,74 @@ import 'firebase_auth_viewmodel.dart';
 
 class AuthenTicationVM extends ChangeNotifier {
   bool isLoading = false;
-  Future<void> loginWithEmailAndPassWord() async {}
+  Future<void> loginWithEmailAndPassWord({
+    required String emailAddress,
+    required String password,
+  }) async {
+    if (!isLoading) {
+      isLoading = true;
+      notifyListeners();
+      Provider.of<GoogleAuthVM>(navigatorKey.currentContext!, listen: false)
+          .loginWithEmail(
+        emailAddress: emailAddress,
+        password: password,
+        callback: (userCredential, error) async {
+          if (userCredential != null) {
+            log("tap signIn");
+
+            await enterTheAppWith(userId: userCredential.user!.email!);
+          } else {
+            AmityDialog().showAlertErrorDialog(
+                title: "Error!", message: error.toString());
+            isLoading = false;
+
+            notifyListeners();
+          }
+        },
+      );
+    }
+  }
+
   Future<void> loginWithGoogleAuth() async {
     if (!isLoading) {
       isLoading = true;
       notifyListeners();
-      Provider.of<GoogleSignInProvider>(navigatorKey.currentContext!,
-              listen: false)
-          .login((isSuccess, error) async {
-        if (isSuccess) {
+      Provider.of<GoogleAuthVM>(navigatorKey.currentContext!, listen: false)
+          .loginWithGoogleAccount((googleAccount, error) async {
+        if (googleAccount != null) {
           log("tap signIn");
 
-          await enterTheAppWith(
-              userId: Provider.of<GoogleSignInProvider>(
-                      navigatorKey.currentContext!,
-                      listen: false)
-                  .user!
-                  .email);
+          await enterTheAppWith(userId: googleAccount.email);
         } else {
           isLoading = false;
           notifyListeners();
         }
       });
+    }
+  }
+
+  Future<void> registerWithEmail({
+    required String emailAddress,
+    required String password,
+  }) async {
+    if (!isLoading) {
+      isLoading = true;
+      notifyListeners();
+      Provider.of<GoogleAuthVM>(navigatorKey.currentContext!, listen: false)
+          .register(
+        emailAddress: emailAddress,
+        password: password,
+        callback: (userCredntial, error) async {
+          if (userCredntial != null) {
+            await enterTheAppWith(userId: userCredntial.user!.email!);
+          } else {
+            isLoading = false;
+            notifyListeners();
+            AmityDialog()
+                .showAlertErrorDialog(title: "Error!", message: error!);
+          }
+        },
+      );
     }
   }
 

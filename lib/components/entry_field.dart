@@ -5,15 +5,24 @@ class EntryField extends StatelessWidget {
   final String? hint;
   final Widget? prefix;
   final String? initialValue;
-
-  EntryField({this.controller, this.hint, this.prefix, this.initialValue});
+  final String? Function(String? value)? validator;
+  final bool? obscureText;
+  EntryField(
+      {this.controller,
+      this.hint,
+      this.prefix,
+      this.initialValue,
+      this.validator,
+      this.obscureText});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return TextFormField(
+      obscureText: obscureText ?? false,
       controller: controller,
       initialValue: initialValue,
+      validator: validator,
       decoration: InputDecoration(
         hintText: hint,
         prefix: prefix,

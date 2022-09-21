@@ -12,8 +12,8 @@ class LoginUi extends StatefulWidget {
 }
 
 class _LoginUiState extends State<LoginUi> {
-  TextEditingController _userIDController =
-      TextEditingController(text: "johnwick2");
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   // TextEditingController _countryController = TextEditingController();
   String? isoCode;
 
@@ -35,13 +35,15 @@ class _LoginUiState extends State<LoginUi> {
                 Image.asset('assets/Icons/amity-logo-banner.png', height: 100),
                 SizedBox(height: 20),
                 EntryField(
-                  controller: _userIDController,
+                  controller: _emailController,
                   hint: 'UserID',
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 EntryField(
+                  controller: _passwordController,
+                  obscureText: true,
                   hint: 'Password',
                 ),
                 SizedBox(height: 40),
@@ -49,7 +51,9 @@ class _LoginUiState extends State<LoginUi> {
                     label: S.of(context).signIn,
                     isLoading: vm.isLoading,
                     onTap: () async {
-                      vm.enterTheAppWith(userId: _userIDController.text);
+                      vm.loginWithEmailAndPassWord(
+                          emailAddress: _emailController.text,
+                          password: _passwordController.text);
                     }),
                 SizedBox(
                   height: 20,
@@ -59,8 +63,10 @@ class _LoginUiState extends State<LoginUi> {
                   children: [
                     GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(
-                              context, LoginRoutes.registration);
+                          if (!vm.isLoading) {
+                            Navigator.pushNamed(
+                                context, LoginRoutes.registration);
+                          }
                         },
                         child: Text("Sign up")),
                   ],
