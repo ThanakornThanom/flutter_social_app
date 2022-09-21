@@ -27,6 +27,7 @@ import 'package:verbose_share_world/utils/navigation_key.dart';
 
 Future<void> main() async {
   await runZonedGuarded(() async {
+    ///Initialize Firebase
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
