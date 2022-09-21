@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -97,13 +98,21 @@ class AuthenTicationVM extends ChangeNotifier {
       await AmitySLEUIKit().registerDevice(
         context: context,
         userId: userId,
-        callback: (isSuccess, error) {
+        callback: (isSuccess, error) async {
           if (isSuccess) {
             print("login Success..");
             isLoading = false;
             notifyListeners();
             print("Navigate To app");
-            Navigator.pushNamed(navigatorKey.currentContext!, LoginRoutes.app);
+           
+             FirebaseMessaging messaging = FirebaseMessaging.instance;
+        String fcmToken = await messaging.getToken() ?? "";
+        print("check fcmToken ${fcmToken}");
+        if (fcmToken != "") {
+          await AmitySLEUIKit()
+              .registerNotification("", (isSuccess, error) => null);
+        }
+         Navigator.pushNamed(navigatorKey.currentContext!, LoginRoutes.app);
           } else {
             print("error..");
 

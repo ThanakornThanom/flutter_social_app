@@ -38,14 +38,8 @@ Future<void> main() async {
 
       if (dotenv.env["REGION"]!.isNotEmpty) {
         /// Step1 Initialize uikit
-        await AmitySLEUIKit().initUIKit(dotenv.env["API_KEY"]!, region);
-        FirebaseMessaging messaging = FirebaseMessaging.instance;
-        String fcmToken = await messaging.getToken() ?? "";
-        print("check fcmToken ${fcmToken}");
-        if (fcmToken != "") {
-          await AmitySLEUIKit()
-              .registerNotification("", (isSuccess, error) => null);
-        }
+         AmitySLEUIKit().initUIKit(dotenv.env["API_KEY"]!, region);
+       
       } else {
         throw "REGION is not specify Please check .env file";
       }
