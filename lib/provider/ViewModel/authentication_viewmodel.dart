@@ -110,7 +110,7 @@ class AuthenTicationVM extends ChangeNotifier {
         print("check fcmToken ${fcmToken}");
         if (fcmToken != "") {
           await AmitySLEUIKit()
-              .registerNotification("", (isSuccess, error) => null);
+              .registerNotification(fcmToken, (isSuccess, error) => null);
         }
          Navigator.pushNamed(navigatorKey.currentContext!, LoginRoutes.app);
           } else {
