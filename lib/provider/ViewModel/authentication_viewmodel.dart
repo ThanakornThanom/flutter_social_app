@@ -44,8 +44,21 @@ class AuthenTicationVM extends ChangeNotifier {
     String fcmToken = await messaging.getToken() ?? "";
     print("check fcmToken ${fcmToken}");
     if (fcmToken != "") {
-      await AmitySLEUIKit()
-          .registerNotification(fcmToken, (isSuccess, error) => null);
+      NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        badge: true,
+        provisional: false,
+        sound: true,
+      );
+
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        print('User granted permission');
+       await AmitySLEUIKit()
+            .registerNotification(fcmToken, (isSuccess, error) => null);
+      } else {
+        print('User declined or has not accepted permission');
+      }
+     
     }
   }
 
