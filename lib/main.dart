@@ -1,104 +1,114 @@
-import 'dart:async';
-import 'dart:developer';
+// To parse this JSON data, do
+//
+//     final notifications = notificationsFromJson(jsonString);
 
-import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
-import 'package:country_code_picker/country_localizations.dart';
+import 'dart:convert';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:provider/provider.dart';
-import 'package:verbose_share_world/app_theme/app_theme.dart';
-import 'package:verbose_share_world/auth/login_navigator.dart';
-import 'package:verbose_share_world/generated/l10n.dart';
-import 'package:verbose_share_world/locale/language_cubit.dart';
-import 'package:verbose_share_world/provider/ViewModel/authentication_viewmodel.dart';
+Notifications notificationsFromJson(String str) =>
+    Notifications.fromJson(json.decode(str));
 
-import 'package:verbose_share_world/provider/ViewModel/firebase_auth_viewmodel.dart';
-import 'package:verbose_share_world/routes/routes.dart';
-import 'package:verbose_share_world/utils/navigation_key.dart';
+String notificationsToJson(Notifications data) => json.encode(data.toJson());
 
-Future<void> main() async {
-  await runZonedGuarded(() async {
-    ///Initialize Firebase
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    await dotenv.load(fileName: "assets/.env");
+class Notifications {
+  Notifications({
+    this.lastRead,
+    required this.data,
+  });
 
-    if (dotenv.env["REGION"] != null) {
-      var region = dotenv.env["REGION"]!.toLowerCase().trim();
+  dynamic lastRead;
+  List<Datum> data;
 
-      if (dotenv.env["REGION"]!.isNotEmpty) {
-        /// Step1 Initialize uikit
-         AmitySLEUIKit().initUIKit(dotenv.env["API_KEY"]!, region);
-       
-      } else {
-        throw "REGION is not specify Please check .env file";
-      }
-    } else {
-      throw "REGION is not specify Please check .env file";
-    }
+  factory Notifications.fromJson(Map<String, dynamic> json) => Notifications(
+        lastRead: json["lastRead"],
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+      );
 
-    if (kDebugMode) {
-      log("FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);");
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-    }
-    runApp(Phoenix(child: MyApp()));
-  }, ((error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack);
-  }));
+  Map<String, dynamic> toJson() => {
+        "lastRead": lastRead,
+        "data": data == null
+            ? null
+            : List<dynamic>.from(data.map((x) => x.toJson())),
+      };
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return AmitySLEProvider(
-      child: Builder(builder: (context) {
-        AmitySLEUIKit().configAmityThemeColor(context, (config) {
-          config.primaryColor = AppTheme.lightTheme.primaryColor;
-        });
-        return MultiProvider(
-          providers: [
-            ChangeNotifierProvider<GoogleAuthVM>(
-              create: (context) => GoogleAuthVM(),
-            ),
-            ChangeNotifierProvider<AuthenTicationVM>(
-              create: (context) => AuthenTicationVM(),
-            )
-          ],
-          child: BlocProvider<LanguageCubit>(
-            create: (context) => LanguageCubit()..getCurrentLanguage(),
-            child: BlocBuilder<LanguageCubit, Locale>(
-              builder: (context, locale) {
-                return MaterialApp(
-                  navigatorKey: NavigationService.navigatorKey,
-                  localizationsDelegates: [
-                    S.delegate,
-                    CountryLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                  ],
-                  locale: locale,
-                  supportedLocales: S.delegate.supportedLocales,
-                  debugShowCheckedModeBanner: false,
-                  theme: AppTheme.lightTheme,
-                  home: LoginNavigator(),
-                  routes: PageRoutes().routes(),
-                );
-              },
-            ),
-          ),
-        );
-      }),
-    );
-  }
+class Datum {
+  Datum({
+    required this.description,
+    required this.networkId,
+    required this.userId,
+    required this.verb,
+    required this.targetId,
+    required this.targetGroup,
+    required this.imageUrl,
+    required this.targetType,
+    required this.hasRead,
+    required this.lastUpdate,
+    required this.actors,
+    required this.actorsCount,
+  });
+
+  String description;
+  String networkId;
+  String userId;
+  String verb;
+  String targetId;
+  String targetGroup;
+  String imageUrl;
+  String targetType;
+  bool hasRead;
+  int lastUpdate;
+  List<Actor> actors;
+  int actorsCount;
+
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+        description: json["description"] == null ? null : json["description"],
+        networkId: json["networkId"] == null ? null : json["networkId"],
+        userId: json["userId"] == null ? null : json["userId"],
+        verb: json["verb"] == null ? null : json["verb"],
+        targetId: json["targetId"] == null ? null : json["targetId"],
+        targetGroup: json["targetGroup"] == null ? null : json["targetGroup"],
+        imageUrl: json["imageUrl"] == null ? null : json["imageUrl"],
+        targetType: json["targetType"] == null ? null : json["targetType"],
+        hasRead: json["hasRead"] == null ? null : json["hasRead"],
+        lastUpdate: json["lastUpdate"] == null ? null : json["lastUpdate"],
+        actors: List<Actor>.from(json["actors"].map((x) => Actor.fromJson(x))),
+        actorsCount: json["actorsCount"] == null ? null : json["actorsCount"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "description": description == null ? null : description,
+        "networkId": networkId == null ? null : networkId,
+        "userId": userId == null ? null : userId,
+        "verb": verb == null ? null : verb,
+        "targetId": targetId == null ? null : targetId,
+        "targetGroup": targetGroup == null ? null : targetGroup,
+        "imageUrl": imageUrl == null ? null : imageUrl,
+        "targetType": targetType == null ? null : targetType,
+        "hasRead": hasRead == null ? null : hasRead,
+        "lastUpdate": lastUpdate == null ? null : lastUpdate,
+        "actors": actors == null
+            ? null
+            : List<dynamic>.from(actors.map((x) => x.toJson())),
+        "actorsCount": actorsCount == null ? null : actorsCount,
+      };
+}
+
+class Actor {
+  Actor({
+    required this.name,
+    required this.id,
+  });
+
+  String name;
+  String id;
+
+  factory Actor.fromJson(Map<String, dynamic> json) => Actor(
+        name: json["name"] == null ? null : json["name"],
+        id: json["id"] == null ? null : json["id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "id": id,
+      };
 }
