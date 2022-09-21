@@ -39,12 +39,14 @@ class AuthenTicationVM extends ChangeNotifier {
     }
   }
 
-  Future<void> registerPushNotification(String fcmToken) async {
-    AmitySLEUIKit().registerNotification(fcmToken, (isSuccess, error) {
-      if (isSuccess) {
-        log("Successfully register notification");
-      }
-    });
+  Future<void> registerPushNotification() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    String fcmToken = await messaging.getToken() ?? "";
+    print("check fcmToken ${fcmToken}");
+    if (fcmToken != "") {
+      await AmitySLEUIKit()
+          .registerNotification(fcmToken, (isSuccess, error) => null);
+    }
   }
 
   Future<void> loginWithGoogleAuth() async {
@@ -104,15 +106,9 @@ class AuthenTicationVM extends ChangeNotifier {
             isLoading = false;
             notifyListeners();
             print("Navigate To app");
-           
-             FirebaseMessaging messaging = FirebaseMessaging.instance;
-        String fcmToken = await messaging.getToken() ?? "";
-        print("check fcmToken ${fcmToken}");
-        if (fcmToken != "") {
-          await AmitySLEUIKit()
-              .registerNotification(fcmToken, (isSuccess, error) => null);
-        }
-         Navigator.pushNamed(navigatorKey.currentContext!, LoginRoutes.app);
+
+            await registerPushNotification();
+            Navigator.pushNamed(navigatorKey.currentContext!, LoginRoutes.app);
           } else {
             print("error..");
 
