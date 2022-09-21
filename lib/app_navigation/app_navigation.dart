@@ -1,6 +1,7 @@
 import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:amity_uikit_beta_service/components/custom_user_avatar.dart';
 import 'package:amity_uikit_beta_service/view/chat/chat_friend_tab.dart';
+import 'package:amity_uikit_beta_service/view/notification/notification_page.dart';
 import 'package:amity_uikit_beta_service/view/social/community_tabbar.dart';
 import 'package:amity_uikit_beta_service/view/social/home_following_screen.dart';
 import 'package:amity_uikit_beta_service/view/user/user_profile.dart';
@@ -10,8 +11,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:verbose_share_world/app_config/app_config.dart';
 import 'package:verbose_share_world/components/custom_drawer.dart';
-
-import 'package:verbose_share_world/app_navigation/notification/notification_page.dart';
 
 import 'package:verbose_share_world/generated/l10n.dart';
 
