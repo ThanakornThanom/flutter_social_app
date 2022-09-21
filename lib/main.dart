@@ -6,6 +6,7 @@ import 'package:country_code_picker/country_localizations.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,7 +38,14 @@ Future<void> main() async {
 
       if (dotenv.env["REGION"]!.isNotEmpty) {
         /// Step1 Initialize uikit
-        AmitySLEUIKit().initUIKit(dotenv.env["API_KEY"]!, region);
+        await AmitySLEUIKit().initUIKit(dotenv.env["API_KEY"]!, region);
+        FirebaseMessaging messaging = FirebaseMessaging.instance;
+        String fcmToken = await messaging.getToken() ?? "";
+        print("check fcmToken ${fcmToken}");
+        if (fcmToken != "") {
+          await AmitySLEUIKit()
+              .registerNotification("", (isSuccess, error) => null);
+        }
       } else {
         throw "REGION is not specify Please check .env file";
       }
