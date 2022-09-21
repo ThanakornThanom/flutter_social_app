@@ -38,6 +38,14 @@ class AuthenTicationVM extends ChangeNotifier {
     }
   }
 
+  Future<void> registerPushNotification(String fcmToken) async {
+    AmitySLEUIKit().registerNotification(fcmToken, (isSuccess, error) {
+      if (isSuccess) {
+        log("Successfully register notification");
+      }
+    });
+  }
+
   Future<void> loginWithGoogleAuth() async {
     if (!isLoading) {
       isLoading = true;

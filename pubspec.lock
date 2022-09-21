@@ -11,7 +11,7 @@ packages:
   amity_uikit_beta_service:
     dependency: "direct main"
     description:
-      path: "/Users/au/Downloads/testFluttersampleapp/amity_uikit_beta_service"
+      path: "/Users/mark/Projects/ThanakornThanom--flutter_amity_uikit_beta_service"
       relative: false
     source: path
     version: "0.2.0"
