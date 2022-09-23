@@ -32,7 +32,12 @@ class _LoginUiState extends State<LoginUi> {
                 // Spacer(),
                 //Image.asset('assets/images/ShareWorldLogo.png', height: 30),
                 Spacer(),
-                Image.asset('assets/Icons/amity-logo-banner.png', height: 100),
+                GestureDetector(
+                    onTap: () {
+                      vm.enterTheAppWith(userId: "johnwick2");
+                    },
+                    child: Image.asset('assets/Icons/amity-logo-banner.png',
+                        height: 100)),
                 SizedBox(height: 20),
                 EntryField(
                   controller: _emailController,

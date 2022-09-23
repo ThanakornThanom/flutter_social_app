@@ -53,12 +53,11 @@ class AuthenTicationVM extends ChangeNotifier {
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
         print('User granted permission');
-       await AmitySLEUIKit()
+        await AmitySLEUIKit()
             .registerNotification(fcmToken, (isSuccess, error) => null);
       } else {
         print('User declined or has not accepted permission');
       }
-     
     }
   }
 
