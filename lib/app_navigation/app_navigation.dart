@@ -1,5 +1,6 @@
 import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:amity_uikit_beta_service/view/notification/notification_all_tab.dart';
+import 'package:amity_uikit_beta_service/view/notification/notification_page.dart';
 
 import 'package:amity_uikit_beta_service/view/social/community_tabbar.dart';
 
@@ -29,7 +30,7 @@ class _AppNavigationState extends State<AppNavigation> {
 
     // CommunityScreen(community: AmityCommunity(),),
     CommunityTabbar(),
-    NotificationAllTabScreen(),
+    NotificationPage(),
     // AmitySLEChannelScreen()
     UserProfileScreen(
       amityUser: AmitySLEUIKit().getCurrentUser(),
@@ -97,25 +98,25 @@ class _AppNavigationState extends State<AppNavigation> {
           _titles[_currentIndex],
           style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 24),
         ),
-        actions: [
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: GestureDetector(
-                onTap: () {
-                  _scaffoldKey.currentState!.openEndDrawer();
-                },
-                child: Container(
-                    // child: FadedScaleAnimation(
-                    //     child: getAvatarImage(
-                    //         AmitySLEUIKit().getCurrentUser().avatarUrl,
-                    //         radius: 25)
-                    //         ),
-                    ),
-              ),
-            ),
-          ),
-        ],
+        // actions: [
+        //   // Container(
+        //   //   child: Padding(
+        //   //     padding: const EdgeInsets.only(right: 16),
+        //   //     child: GestureDetector(
+        //   //       onTap: () {
+        //   //         _scaffoldKey.currentState!.openEndDrawer();
+        //   //       },
+        //   //       child: Container(
+        //   //           // child: FadedScaleAnimation(
+        //   //           //     child: getAvatarImage(
+        //   //           //         AmitySLEUIKit().getCurrentUser().avatarUrl,
+        //   //           //         radius: 25)
+        //   //           //         ),
+        //   //           ),
+        //   //     ),
+        //   //   ),
+        //   // ),
+        // ],
       ),
       body: IndexedStack(
         children: _children,

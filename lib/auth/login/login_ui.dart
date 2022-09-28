@@ -35,6 +35,8 @@ class _LoginUiState extends State<LoginUi> {
                 GestureDetector(
                     onTap: () {
                       vm.enterTheAppWith(userId: "johnwick2");
+
+                      ///testerman2
                     },
                     child: Image.asset('assets/Icons/amity-logo-banner.png',
                         height: 100)),
