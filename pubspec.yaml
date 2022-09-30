@@ -62,13 +62,15 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/Icons/appIcon.png"
+  image_path: "assets/app_icon/appstore.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
 
 flutter:
   uses-material-design: true
 
   assets:
     - assets/images/
+    - assets/app_icon/appstore.png
     - assets/images/profile_pics/
     - assets/Icons/
     - assets/.env

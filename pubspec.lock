@@ -7,7 +7,7 @@ packages:
       name: amity_sdk
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.0"
+    version: "0.7.0"
   amity_uikit_beta_service:
     dependency: "direct main"
     description:
