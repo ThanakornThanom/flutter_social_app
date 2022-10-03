@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,23 @@ import 'firebase_auth_viewmodel.dart';
 
 class AuthenTicationVM extends ChangeNotifier {
   bool isLoading = false;
+  bool isChecking = true;
+
+  Future checkIfLoggingIn() async {
+    isChecking = true;
+    notifyListeners();
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print('User is signed in!');
+        Provider.of<AuthenTicationVM>(navigatorKey.currentContext!,
+                listen: false)
+            .enterTheAppWith(userId: user.email!);
+      }
+    });
+  }
+
   Future<void> loginWithEmailAndPassWord({
     required String emailAddress,
     required String password,
@@ -125,6 +143,8 @@ class AuthenTicationVM extends ChangeNotifier {
             print("error..");
 
             isLoading = false;
+            isChecking = false;
+
             notifyListeners();
             AmityDialog()
                 .showAlertErrorDialog(title: "error!", message: error!);

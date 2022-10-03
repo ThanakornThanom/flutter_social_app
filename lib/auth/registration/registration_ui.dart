@@ -67,11 +67,13 @@ class _RegistrationUiState extends State<RegistrationUi> {
                 ),
                 SizedBox(height: 20),
                 EntryField(
+                  obscureText: true,
                   controller: _passwordController,
                   hint: "Password",
                 ),
                 SizedBox(height: 20),
                 EntryField(
+                  obscureText: true,
                   controller: _repeatPasswordController,
                   hint: "Repeat Password",
                 ),
