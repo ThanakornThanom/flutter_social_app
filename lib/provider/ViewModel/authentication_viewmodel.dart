@@ -20,6 +20,8 @@ class AuthenTicationVM extends ChangeNotifier {
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
         print('User is currently signed out!');
+        isChecking = false;
+        notifyListeners();
       } else {
         print('User is signed in!');
         Provider.of<AuthenTicationVM>(navigatorKey.currentContext!,
@@ -66,20 +68,22 @@ class AuthenTicationVM extends ChangeNotifier {
       sound: true,
     );
     print("check notification setting ${settings.authorizationStatus}");
-    if(settings.authorizationStatus == AuthorizationStatus.authorized || settings.authorizationStatus == AuthorizationStatus.provisional){
+    if (settings.authorizationStatus == AuthorizationStatus.authorized ||
+        settings.authorizationStatus == AuthorizationStatus.provisional) {
       String fcmToken = await messaging.getToken() ?? "";
       print("check fcmToken ${fcmToken}");
       if (fcmToken != "") {
         if (settings.authorizationStatus == AuthorizationStatus.authorized) {
           print('User granted permission');
-          await AmitySLEUIKit()
-              .registerNotification(fcmToken, (isSuccess, error) => print("register ASC Noti success ${isSuccess}"));
+          await AmitySLEUIKit().registerNotification(
+              fcmToken,
+              (isSuccess, error) =>
+                  print("register ASC Noti success ${isSuccess}"));
         } else {
           print('User declined or has not accepted permission');
         }
       }
     }
-    
   }
 
   Future<void> loginWithGoogleAuth() async {

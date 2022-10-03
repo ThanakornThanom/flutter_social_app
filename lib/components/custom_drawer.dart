@@ -4,6 +4,7 @@ import 'package:amity_uikit_beta_service/components/custom_user_avatar.dart';
 import 'package:amity_uikit_beta_service/view/user/edit_profile.dart';
 import 'package:amity_uikit_beta_service/view/user/user_profile.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:verbose_share_world/components/custom_user_avatar.dart';
@@ -165,8 +166,9 @@ class MyDrawer extends StatelessWidget {
                       // ),
                       // SizedBox(height: 30),
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           AmitySLEUIKit().unRegisterDevice();
+                          await FirebaseAuth.instance.signOut();
                           Navigator.of(context).popUntil(
                               (route) => !Navigator.of(context).canPop());
                         },
