@@ -59,24 +59,27 @@ class AuthenTicationVM extends ChangeNotifier {
 
   Future<void> registerPushNotification() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-    String fcmToken = await messaging.getToken() ?? "";
-    print("check fcmToken ${fcmToken}");
-    if (fcmToken != "") {
-      NotificationSettings settings = await messaging.requestPermission(
-        alert: true,
-        badge: true,
-        provisional: false,
-        sound: true,
-      );
-
-      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        print('User granted permission');
-        await AmitySLEUIKit()
-            .registerNotification(fcmToken, (isSuccess, error) => null);
-      } else {
-        print('User declined or has not accepted permission');
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: false,
+      sound: true,
+    );
+    print("check notification setting ${settings.authorizationStatus}");
+    if(settings.authorizationStatus == AuthorizationStatus.authorized || settings.authorizationStatus == AuthorizationStatus.provisional){
+      String fcmToken = await messaging.getToken() ?? "";
+      print("check fcmToken ${fcmToken}");
+      if (fcmToken != "") {
+        if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+          print('User granted permission');
+          await AmitySLEUIKit()
+              .registerNotification(fcmToken, (isSuccess, error) => print("register ASC Noti success ${isSuccess}"));
+        } else {
+          print('User declined or has not accepted permission');
+        }
       }
     }
+    
   }
 
   Future<void> loginWithGoogleAuth() async {
