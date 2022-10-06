@@ -145,7 +145,8 @@ class AuthenTicationVM extends ChangeNotifier {
             print("Navigate To app");
 
             await registerPushNotification();
-            Navigator.pushNamed(navigatorKey.currentContext!, LoginRoutes.app);
+            Navigator.pushNamedAndRemoveUntil(navigatorKey.currentContext!,
+                LoginRoutes.app, (route) => !Navigator.of(context).canPop());
           } else {
             print("error..");
 

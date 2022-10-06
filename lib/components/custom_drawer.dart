@@ -12,6 +12,8 @@ import 'package:verbose_share_world/components/custom_user_avatar.dart';
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 
+import '../auth/login_navigator.dart';
+
 class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -169,7 +171,12 @@ class MyDrawer extends StatelessWidget {
                         onTap: () async {
                           AmitySLEUIKit().unRegisterDevice();
                           await FirebaseAuth.instance.signOut();
-                          Navigator.of(context).popUntil(
+                          // Navigator.of(context).popUntil(
+                          //     (route) => !Navigator.of(context).canPop());
+
+                          Navigator.pushNamedAndRemoveUntil(
+                              navigatorKey.currentContext!,
+                              LoginRoutes.loginRoot,
                               (route) => !Navigator.of(context).canPop());
                         },
                         child: Container(
