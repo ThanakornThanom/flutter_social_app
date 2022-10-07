@@ -62,6 +62,11 @@ class _RegistrationUiState extends State<RegistrationUi> {
                 // ),
                 // SizedBox(height: 20),
                 EntryField(
+                  controller: _displayNameController,
+                  hint: "Display Name",
+                ),
+                SizedBox(height: 20),
+                EntryField(
                   controller: _emailController,
                   hint: S.of(context).Email_address,
                 ),
@@ -83,7 +88,8 @@ class _RegistrationUiState extends State<RegistrationUi> {
                   onTap: () {
                     vm.registerWithEmail(
                         emailAddress: _emailController.text,
-                        password: _passwordController.text);
+                        password: _passwordController.text,
+                        displayName: _displayNameController.text);
                   },
                 ),
                 SizedBox(height: 28),

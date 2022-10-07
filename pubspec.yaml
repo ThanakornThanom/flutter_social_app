@@ -48,6 +48,8 @@ dependencies:
   firebase_crashlytics: ^2.8.9
   outline_search_bar: ^2.3.0
   firebase_messaging: ^13.0.2
+  sign_in_with_apple: ^4.1.0
+  crypto: ^3.0.1
 
 
 

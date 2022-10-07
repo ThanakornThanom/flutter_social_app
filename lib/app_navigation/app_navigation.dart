@@ -98,25 +98,22 @@ class _AppNavigationState extends State<AppNavigation> {
           _titles[_currentIndex],
           style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 24),
         ),
-        // actions: [
-        //   // Container(
-        //   //   child: Padding(
-        //   //     padding: const EdgeInsets.only(right: 16),
-        //   //     child: GestureDetector(
-        //   //       onTap: () {
-        //   //         _scaffoldKey.currentState!.openEndDrawer();
-        //   //       },
-        //   //       child: Container(
-        //   //           // child: FadedScaleAnimation(
-        //   //           //     child: getAvatarImage(
-        //   //           //         AmitySLEUIKit().getCurrentUser().avatarUrl,
-        //   //           //         radius: 25)
-        //   //           //         ),
-        //   //           ),
-        //   //     ),
-        //   //   ),
-        //   // ),
-        // ],
+        actions: [
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: GestureDetector(
+                onTap: () {
+                  _scaffoldKey.currentState!.openEndDrawer();
+                },
+                child: Icon(
+                  Icons.settings,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: IndexedStack(
         children: _children,

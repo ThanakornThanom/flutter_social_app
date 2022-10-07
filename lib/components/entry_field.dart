@@ -19,7 +19,6 @@ class EntryField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(obscureText);
     final theme = Theme.of(context);
     return TextFormField(
       keyboardType: textInputType,

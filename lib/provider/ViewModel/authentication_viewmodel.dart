@@ -26,7 +26,8 @@ class AuthenTicationVM extends ChangeNotifier {
         print('User is signed in!');
         Provider.of<AuthenTicationVM>(navigatorKey.currentContext!,
                 listen: false)
-            .enterTheAppWith(userId: user.email!);
+            .enterTheAppWith(
+                userId: user.email!, displayName: user.displayName);
       }
     });
   }
@@ -95,7 +96,9 @@ class AuthenTicationVM extends ChangeNotifier {
         if (googleAccount != null) {
           log("tap signIn");
 
-          await enterTheAppWith(userId: googleAccount.email);
+          await enterTheAppWith(
+              userId: googleAccount.email,
+              displayName: googleAccount.displayName);
         } else {
           isLoading = false;
           notifyListeners();
@@ -104,10 +107,10 @@ class AuthenTicationVM extends ChangeNotifier {
     }
   }
 
-  Future<void> registerWithEmail({
-    required String emailAddress,
-    required String password,
-  }) async {
+  Future<void> registerWithEmail(
+      {required String emailAddress,
+      required String password,
+      String? displayName}) async {
     if (!isLoading) {
       isLoading = true;
       notifyListeners();
@@ -117,7 +120,8 @@ class AuthenTicationVM extends ChangeNotifier {
         password: password,
         callback: (userCredntial, error) async {
           if (userCredntial != null) {
-            await enterTheAppWith(userId: userCredntial.user!.email!);
+            await enterTheAppWith(
+                userId: userCredntial.user!.email!, displayName: displayName);
           } else {
             isLoading = false;
             notifyListeners();
@@ -129,14 +133,16 @@ class AuthenTicationVM extends ChangeNotifier {
     }
   }
 
-  Future<void> enterTheAppWith({required String userId}) async {
+  Future<void> enterTheAppWith(
+      {required String userId, String? displayName}) async {
     var context = navigatorKey.currentContext!;
 
     if (userId != "") {
-      print("Navigating...");
+      print("Navigating...with Displayname: ${displayName}");
       await AmitySLEUIKit().registerDevice(
         context: context,
         userId: userId,
+        displayName: displayName,
         callback: (isSuccess, error) async {
           if (isSuccess) {
             print("login Success..");
