@@ -7,8 +7,6 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:verbose_share_world/components/custom_user_avatar.dart';
-
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
 
@@ -90,7 +88,9 @@ class MyDrawer extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).pop();
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ProfileScreen()));
+                              builder: (context) => ProfileScreen(
+                                    user: AmityCoreClient.getCurrentUser(),
+                                  )));
                         },
                         child: Container(
                           width: double.infinity,

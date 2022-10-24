@@ -1,5 +1,5 @@
 class AppConfig {
-  static final String appName = 'Amity Commu';
+  static final String appName = 'Home';
   static final String packageName = '<package_name>';
   static final String languageDefault = "en";
   static final Map<String, String> languagesSupported = {

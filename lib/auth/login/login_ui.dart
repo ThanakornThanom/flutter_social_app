@@ -67,9 +67,9 @@ class _LoginUiState extends State<LoginUi> {
                       Spacer(),
                       GestureDetector(
                           onTap: () {
-                            vm.enterTheAppWith(userId: "johnwick2");
+                            // vm.enterTheAppWith(userId: "erterterrt");
 
-                            ///testerman2
+                            // ///testerman2
                           },
                           child: Image.asset(
                               'assets/Icons/amity-logo-banner.png',
@@ -144,50 +144,50 @@ class _LoginUiState extends State<LoginUi> {
                       SizedBox(
                         height: 10,
                       ),
-                      CustomButton(
-                        label: 'Apple',
-                        radius: 12,
-                        borderColor: Colors.black,
-                        onTap: () async {
-                          // final credential =
-                          //     await SignInWithApple.getAppleIDCredential(
-                          //   scopes: [
-                          //     AppleIDAuthorizationScopes.email,
-                          //     AppleIDAuthorizationScopes.fullName,
-                          //   ],
-                          // );
+                      // CustomButton(
+                      //   label: 'Apple',
+                      //   radius: 12,
+                      //   borderColor: Colors.black,
+                      //   onTap: () async {
+                      //     // final credential =
+                      //     //     await SignInWithApple.getAppleIDCredential(
+                      //     //   scopes: [
+                      //     //     AppleIDAuthorizationScopes.email,
+                      //     //     AppleIDAuthorizationScopes.fullName,
+                      //     //   ],
+                      //     // );
 
-                          // print(credential);
-                          final rawNonce = generateNonce();
-                          final nonce = sha256ofString(rawNonce);
+                      //     // print(credential);
+                      //     final rawNonce = generateNonce();
+                      //     final nonce = sha256ofString(rawNonce);
 
-                          // Request credential for the currently signed in Apple account.
-                          final appleCredential =
-                              await SignInWithApple.getAppleIDCredential(
-                            scopes: [
-                              AppleIDAuthorizationScopes.email,
-                              AppleIDAuthorizationScopes.fullName,
-                            ],
-                            nonce: nonce,
-                          );
+                      //     // Request credential for the currently signed in Apple account.
+                      //     final appleCredential =
+                      //         await SignInWithApple.getAppleIDCredential(
+                      //       scopes: [
+                      //         AppleIDAuthorizationScopes.email,
+                      //         AppleIDAuthorizationScopes.fullName,
+                      //       ],
+                      //       nonce: nonce,
+                      //     );
 
-                          // Create an `OAuthCredential` from the credential returned by Apple.
-                          final oauthCredential =
-                              OAuthProvider("apple.com").credential(
-                            idToken: appleCredential.identityToken,
-                            rawNonce: rawNonce,
-                          );
+                      //     // Create an `OAuthCredential` from the credential returned by Apple.
+                      //     final oauthCredential =
+                      //         OAuthProvider("apple.com").credential(
+                      //       idToken: appleCredential.identityToken,
+                      //       rawNonce: rawNonce,
+                      //     );
 
-                          // Sign in the user with Firebase. If the nonce we generated earlier does
-                          // not match the nonce in `appleCredential.identityToken`, sign in will fail.
-                          return await FirebaseAuth.instance
-                              .signInWithCredential(oauthCredential);
-                        },
-                        icon:
-                            Image.asset('assets/Icons/apple-48.png', scale: 2),
-                        color: Colors.black,
-                        textColor: Colors.white,
-                      ),
+                      //     // Sign in the user with Firebase. If the nonce we generated earlier does
+                      //     // not match the nonce in `appleCredential.identityToken`, sign in will fail.
+                      //     return await FirebaseAuth.instance
+                      //         .signInWithCredential(oauthCredential);
+                      //   },
+                      //   icon:
+                      //       Image.asset('assets/Icons/apple-48.png', scale: 2),
+                      //   color: Colors.black,
+                      //   textColor: Colors.white,
+                      // ),
 
                       Spacer(),
                       SizedBox(height: 20),
