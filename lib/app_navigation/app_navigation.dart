@@ -30,7 +30,7 @@ class _AppNavigationState extends State<AppNavigation> {
 
     // CommunityScreen(community: AmityCommunity(),),
     CommunityTabbar(),
-    NotificationPage(),
+    // NotificationPage(),
     // AmitySLEChannelScreen()
     UserProfileScreen(
       amityUser: AmitySLEUIKit().getCurrentUser(),
@@ -56,10 +56,10 @@ class _AppNavigationState extends State<AppNavigation> {
       ),
       label: 'Explore',
     ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.notifications),
-      label: 'Notification',
-    ),
+    // BottomNavigationBarItem(
+    //   icon: Icon(Icons.notifications),
+    //   label: 'Notification',
+    // ),
     // BottomNavigationBarItem(
     //   icon: FaIcon(
     //     FontAwesomeIcons.comments,

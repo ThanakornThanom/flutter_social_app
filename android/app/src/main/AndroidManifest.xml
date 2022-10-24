@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ekoenterprise.flutter_social_app">
    <application
-        android:label="flutter_social_app"
+        android:label="Amity Community"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
