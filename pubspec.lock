@@ -14,7 +14,7 @@ packages:
       path: "/Users/au/Downloads/testFluttersampleapp/amity_uikit_beta_service"
       relative: false
     source: path
-    version: "0.2.0"
+    version: "0.2.1"
   animation_wrappers:
     dependency: "direct main"
     description:
