@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>414132843101-c7dq9uaeqofogf852jbhun5p7sl2bpap.apps.googleusercontent.com</string>
+	<string>414132843101-nhhhsldaijvd28ptv3mong8gic94qovd.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.414132843101-c7dq9uaeqofogf852jbhun5p7sl2bpap</string>
+	<string>com.googleusercontent.apps.414132843101-nhhhsldaijvd28ptv3mong8gic94qovd</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>414132843101-mf41mvc007er69q0chhv4mfae0aamrsn.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ekoenterprise.flutterSocialApp</string>
+	<string>com.thanakorn.amityCommunity</string>
 	<key>PROJECT_ID</key>
 	<string>flutter-social-app-c38c1</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:414132843101:ios:a1184c262d9445faebd3b4</string>
+	<string>1:414132843101:ios:0578458ec125f504ebd3b4</string>
 </dict>
 </plist>

@@ -107,6 +107,26 @@ class AuthenTicationVM extends ChangeNotifier {
     }
   }
 
+  Future<void> loginWithAppleAuth() async {
+    if (!isLoading) {
+      isLoading = true;
+      notifyListeners();
+      Provider.of<GoogleAuthVM>(navigatorKey.currentContext!, listen: false)
+          .loginWithAppleAccount((appleAccount, error) async {
+        if (appleAccount != null) {
+          log("tap signIn");
+
+          await enterTheAppWith(
+              userId: appleAccount.email,
+              displayName: appleAccount.displayName);
+        } else {
+          isLoading = false;
+          notifyListeners();
+        }
+      });
+    }
+  }
+
   Future<void> registerWithEmail(
       {required String emailAddress,
       required String password,
