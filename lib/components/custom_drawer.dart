@@ -3,14 +3,18 @@ import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:amity_uikit_beta_service/components/custom_user_avatar.dart';
 import 'package:amity_uikit_beta_service/view/user/edit_profile.dart';
 import 'package:amity_uikit_beta_service/view/user/user_profile.dart';
+import 'package:amity_uikit_beta_service/viewmodel/amity_viewmodel.dart';
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:verbose_share_world/generated/l10n.dart';
 import 'package:verbose_share_world/app_theme/application_colors.dart';
+import 'package:verbose_share_world/provider/ViewModel/authentication_viewmodel.dart';
 
 import '../auth/login_navigator.dart';
+import '../provider/ViewModel/firebase_auth_viewmodel.dart';
 
 class MyDrawer extends StatelessWidget {
   @override
@@ -46,7 +50,9 @@ class MyDrawer extends StatelessWidget {
                       SizedBox(height: 20),
                       FadedScaleAnimation(
                           child: getAvatarImage(
-                              AmitySLEUIKit().getCurrentUser().avatarUrl,
+                              Provider.of<AmityVM>(context)
+                                  .currentamityUser
+                                  ?.avatarUrl,
                               radius: 50)),
                       SizedBox(height: 20),
                       Container(
@@ -59,7 +65,10 @@ class MyDrawer extends StatelessWidget {
                       ),
                       Container(
                         child: Text(
-                          AmityCoreClient.getCurrentUser().displayName ?? "",
+                          Provider.of<AmityVM>(context)
+                                  .currentamityUser
+                                  ?.displayName ??
+                              "",
                           style: theme.textTheme.subtitle2!.copyWith(
                             color: theme.hintColor,
                           ),
@@ -169,8 +178,11 @@ class MyDrawer extends StatelessWidget {
                       // SizedBox(height: 30),
                       GestureDetector(
                         onTap: () async {
+                          Provider.of<FirebaseAuthVM>(context, listen: false)
+                              .deleteCredential();
                           AmitySLEUIKit().unRegisterDevice();
                           await FirebaseAuth.instance.signOut();
+
                           // Navigator.of(context).popUntil(
                           //     (route) => !Navigator.of(context).canPop());
 

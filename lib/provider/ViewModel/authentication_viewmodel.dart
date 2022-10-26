@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,19 +19,15 @@ class AuthenTicationVM extends ChangeNotifier {
   Future checkIfLoggingIn() async {
     isChecking = true;
     notifyListeners();
-    FirebaseAuth.instance.authStateChanges().listen((user) {
-      if (user == null) {
-        print('User is currently signed out!');
-        isChecking = false;
-        notifyListeners();
-      } else {
-        print('User is signed in!');
-        Provider.of<AuthenTicationVM>(navigatorKey.currentContext!,
-                listen: false)
-            .enterTheAppWith(
-                userId: user.email!, displayName: user.displayName);
-      }
-    });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      log('User is currently signed out!');
+      isChecking = false;
+      notifyListeners();
+    } else {
+      log('User is signed in!');
+      enterTheAppWith(userId: user.email!);
+    }
   }
 
   Future<void> loginWithEmailAndPassWord({
@@ -39,7 +37,7 @@ class AuthenTicationVM extends ChangeNotifier {
     if (!isLoading) {
       isLoading = true;
       notifyListeners();
-      Provider.of<GoogleAuthVM>(navigatorKey.currentContext!, listen: false)
+      Provider.of<FirebaseAuthVM>(navigatorKey.currentContext!, listen: false)
           .loginWithEmail(
         emailAddress: emailAddress,
         password: password,
@@ -68,20 +66,20 @@ class AuthenTicationVM extends ChangeNotifier {
       provisional: false,
       sound: true,
     );
-    print("check notification setting ${settings.authorizationStatus}");
+    log("check notification setting ${settings.authorizationStatus}");
     if (settings.authorizationStatus == AuthorizationStatus.authorized ||
         settings.authorizationStatus == AuthorizationStatus.provisional) {
       String fcmToken = await messaging.getToken() ?? "";
-      print("check fcmToken ${fcmToken}");
+      log("check fcmToken ${fcmToken}");
       if (fcmToken != "") {
         if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-          print('User granted permission');
+          log('User granted permission');
           await AmitySLEUIKit().registerNotification(
               fcmToken,
               (isSuccess, error) =>
-                  print("register ASC Noti success ${isSuccess}"));
+                  log("register ASC Noti success ${isSuccess}"));
         } else {
-          print('User declined or has not accepted permission');
+          log('User declined or has not accepted permission');
         }
       }
     }
@@ -91,14 +89,14 @@ class AuthenTicationVM extends ChangeNotifier {
     if (!isLoading) {
       isLoading = true;
       notifyListeners();
-      Provider.of<GoogleAuthVM>(navigatorKey.currentContext!, listen: false)
-          .loginWithGoogleAccount((googleAccount, error) async {
-        if (googleAccount != null) {
+      Provider.of<FirebaseAuthVM>(navigatorKey.currentContext!, listen: false)
+          .loginWithGoogleAccount((userCredential, error) async {
+        if (userCredential != null) {
           log("tap signIn");
 
           await enterTheAppWith(
-              userId: googleAccount.email,
-              displayName: googleAccount.displayName);
+              userId: userCredential.user!.email!,
+              displayName: userCredential.user!.displayName);
         } else {
           isLoading = false;
           notifyListeners();
@@ -108,17 +106,19 @@ class AuthenTicationVM extends ChangeNotifier {
   }
 
   Future<void> loginWithAppleAuth() async {
+    log("loginWithAppleAuth...");
     if (!isLoading) {
       isLoading = true;
       notifyListeners();
-      Provider.of<GoogleAuthVM>(navigatorKey.currentContext!, listen: false)
-          .loginWithAppleAccount((appleAccount, error) async {
-        if (appleAccount != null) {
+      Provider.of<FirebaseAuthVM>(navigatorKey.currentContext!, listen: false)
+          .loginWithAppleAccount((userCredential, error) async {
+        if (userCredential != null) {
           log("tap signIn");
+          log("GIVEN NAME:${userCredential.user!.displayName}");
 
           await enterTheAppWith(
-              userId: appleAccount.email,
-              displayName: appleAccount.displayName);
+              userId: userCredential.user!.email!,
+              displayName: userCredential.user!.displayName);
         } else {
           isLoading = false;
           notifyListeners();
@@ -134,7 +134,7 @@ class AuthenTicationVM extends ChangeNotifier {
     if (!isLoading) {
       isLoading = true;
       notifyListeners();
-      Provider.of<GoogleAuthVM>(navigatorKey.currentContext!, listen: false)
+      Provider.of<FirebaseAuthVM>(navigatorKey.currentContext!, listen: false)
           .register(
         emailAddress: emailAddress,
         password: password,
@@ -158,23 +158,23 @@ class AuthenTicationVM extends ChangeNotifier {
     var context = navigatorKey.currentContext!;
 
     if (userId != "") {
-      print("Navigating...with Displayname: ${displayName}");
+      log("Navigating...with Displayname: ${displayName}");
       await AmitySLEUIKit().registerDevice(
         context: context,
         userId: userId,
         displayName: displayName,
         callback: (isSuccess, error) async {
           if (isSuccess) {
-            print("login Success..");
+            log("login Success..");
             isLoading = false;
             notifyListeners();
-            print("Navigate To app");
+            log("Navigate To app");
 
             await registerPushNotification();
             Navigator.pushNamedAndRemoveUntil(navigatorKey.currentContext!,
                 LoginRoutes.app, (route) => !Navigator.of(context).canPop());
           } else {
-            print("error..");
+            log("error..");
 
             isLoading = false;
             isChecking = false;

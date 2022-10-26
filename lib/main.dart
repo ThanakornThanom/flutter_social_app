@@ -66,8 +66,8 @@ class MyApp extends StatelessWidget {
         });
         return MultiProvider(
           providers: [
-            ChangeNotifierProvider<GoogleAuthVM>(
-              create: (context) => GoogleAuthVM(),
+            ChangeNotifierProvider<FirebaseAuthVM>(
+              create: (context) => FirebaseAuthVM(),
             ),
             ChangeNotifierProvider<AuthenTicationVM>(
               create: (context) => AuthenTicationVM(),

@@ -7,32 +7,32 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-class GoogleAuthVM extends ChangeNotifier {
+class FirebaseAuthVM extends ChangeNotifier {
   final _googleSignIn = GoogleSignIn();
 
-  GoogleSignInAccount? _user;
   UserCredential? _userCredential;
 
-  GoogleSignInAccount? get user => _user;
   UserCredential? get userCredential => _userCredential;
+
+  void deleteCredential() {
+    _userCredential = null;
+  }
 
   Future _googleLogin() async {
     try {
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return;
 
-      _user = googleUser;
-
       final googleAuth = await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      _userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
-      print(e);
+      log(e.toString());
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -44,60 +44,51 @@ class GoogleAuthVM extends ChangeNotifier {
 
   Future _appleLogin() async {
     try {
-      // final credential =
-      //     await SignInWithApple.getAppleIDCredential(
-      //   scopes: [
-      //     AppleIDAuthorizationScopes.email,
-      //     AppleIDAuthorizationScopes.fullName,
-      //   ],
-      // );
-
-      // print(credential);
+      log("APPLE:_appleLogin");
       final rawNonce = generateNonce();
       final nonce = sha256ofString(rawNonce);
 
       // Request credential for the currently signed in Apple account.
-      final appleCredential = await SignInWithApple.getAppleIDCredential(
+      final _appleUser = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
         nonce: nonce,
       );
-
+      log("APPLE:_appleUser: $_appleUser");
       // Create an `OAuthCredential` from the credential returned by Apple.
       final oauthCredential = OAuthProvider("apple.com").credential(
-        idToken: appleCredential.identityToken,
+        idToken: _appleUser.identityToken,
         rawNonce: rawNonce,
       );
-
+      log("APPLE:oauthCredential: $oauthCredential");
       // Sign in the user with Firebase. If the nonce we generated earlier does
       // not match the nonce in `appleCredential.identityToken`, sign in will fail.
-      return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+      _userCredential =
+          await FirebaseAuth.instance.signInWithCredential(oauthCredential);
     } on FirebaseAuthException catch (e) {
-      print(e);
+      log("APPLE:FirebaseAuthException:$e");
     } catch (e) {
-      print(e);
+      log("APPLE:catch:$e");
     }
   }
 
   Future loginWithAppleAccount(
-      Function(GoogleSignInAccount? googleAccount, String? error)
-          callback) async {
+      Function(UserCredential? userCredential, String? error) callback) async {
     await _appleLogin();
-    if (_user != null) {
-      callback(_user, null);
+    if (userCredential != null) {
+      callback(userCredential, null);
     } else {
       callback(null, "logIn Fail");
     }
   }
 
   Future loginWithGoogleAccount(
-      Function(GoogleSignInAccount? googleAccount, String? error)
-          callback) async {
+      Function(UserCredential? userCredential, String? error) callback) async {
     await _googleLogin();
-    if (_user != null) {
-      callback(_user, null);
+    if (userCredential != null) {
+      callback(userCredential, null);
     } else {
       callback(null, "logIn Fail");
     }
@@ -117,10 +108,10 @@ class GoogleAuthVM extends ChangeNotifier {
       callback(credential, null);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        log('The password provided is too weak.');
         callback(null, e.code);
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        log('The account already exists for that email.');
         callback(null, e.code);
       } else {
         callback(null, e.code);
@@ -135,7 +126,7 @@ class GoogleAuthVM extends ChangeNotifier {
       required String password,
       required Function(UserCredential? userCredential, String? error)
           callback}) async {
-    if (_user == null) {
+    if (_userCredential == null) {
       try {
         final credential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
@@ -145,19 +136,19 @@ class GoogleAuthVM extends ChangeNotifier {
         callback(credential, null);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
-          print('No user found for that email.');
+          log('No user found for that email.');
           callback(null, e.code);
         } else if (e.code == 'wrong-password') {
           log('Wrong password provided for that user.');
           callback(null, e.code);
         } else {
-          print(e);
+          log(e.toString());
           callback(null, e.code);
         }
       }
     } else {
       log("Already logIn please logout first");
-      _user = null;
+
       _userCredential = null;
       notifyListeners();
       callback(null, "Already logIn please logout first");
