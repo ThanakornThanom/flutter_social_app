@@ -2,21 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<key>CFBundleURLTypes</key>
-<array>
-	<dict>
-		<key>CFBundleTypeRole</key>
-		<string>Editor</string>
-		<key>CFBundleURLSchemes</key>
-		<array>
-			<string>com.googleusercontent.apps.414132843101-nhhhsldaijvd28ptv3mong8gic94qovd</string>
-		</array>
-	</dict>
-</array>
-	<key>NSCameraUsageDescription</key>
-	<string>your usage description here</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>your usage description here</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>requires user’s location for better user experience.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -30,17 +17,38 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>flutter_social_app</string>
+	<string>Amity Community</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.414132843101-jih6ct9b8c0mk64v05nvpu6g7hdrs1i6</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>your usage description here</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>requires user’s location for better user experience.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>requires user’s location for better user experience.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>requires user’s location for better user experience.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>your usage description here</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
