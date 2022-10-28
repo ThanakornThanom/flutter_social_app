@@ -5,9 +5,11 @@ import 'package:amity_uikit_beta_service/view/notification/notification_page.dar
 import 'package:amity_uikit_beta_service/view/social/community_tabbar.dart';
 
 import 'package:amity_uikit_beta_service/view/user/user_profile.dart';
+import 'package:amity_uikit_beta_service/viewmodel/feed_viewmodel.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import 'package:verbose_share_world/app_config/app_config.dart';
 import 'package:verbose_share_world/components/custom_drawer.dart';
@@ -79,13 +81,19 @@ class _AppNavigationState extends State<AppNavigation> {
     });
   }
 
+  void onDoubleTap() {
+    if (_currentIndex == 0) {
+      Provider.of<FeedVM>(context, listen: false).scrollcontroller.jumpTo(0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<String> _titles = [
       AppConfig.appName,
       "Explore",
       // S.of(context).video,
-      S.of(context).notifications,
+      // S.of(context).notifications,
       // S.of(context).chats,
       "My Profile"
     ];

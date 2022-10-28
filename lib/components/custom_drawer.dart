@@ -57,7 +57,7 @@ class MyDrawer extends StatelessWidget {
                       SizedBox(height: 20),
                       Container(
                         child: Text(
-                          S.of(context).hey,
+                          "Hey,",
                           style: theme.textTheme.subtitle2!.copyWith(
                             color: theme.hintColor,
                           ),

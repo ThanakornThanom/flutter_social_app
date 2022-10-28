@@ -145,20 +145,20 @@ class _LoginUiState extends State<LoginUi> {
                       SizedBox(
                         height: 10,
                       ),
-                      Platform.isIOS
-                          ? CustomButton(
-                              label: 'Apple',
-                              radius: 12,
-                              borderColor: Colors.black,
-                              onTap: () async {
-                                vm.loginWithAppleAuth();
-                              },
-                              icon: Image.asset('assets/Icons/apple-48.png',
-                                  scale: 2),
-                              color: Colors.black,
-                              textColor: Colors.white,
-                            )
-                          : Container(),
+                      // Platform.isIOS
+                      //     ? CustomButton(
+                      //         label: 'Apple',
+                      //         radius: 12,
+                      //         borderColor: Colors.black,
+                      //         onTap: () async {
+                      //           vm.loginWithAppleAuth();
+                      //         },
+                      //         icon: Image.asset('assets/Icons/apple-48.png',
+                      //             scale: 2),
+                      //         color: Colors.black,
+                      //         textColor: Colors.white,
+                      //       )
+                      //     : Container(),
 
                       Spacer(),
                       SizedBox(height: 20),

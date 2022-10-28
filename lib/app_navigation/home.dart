@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
           indicatorSize: TabBarIndicatorSize.label,
           tabs: [
             // Tab(icon: Icon(Icons.search)),
-            Tab(text: S.of(context).following),
+            Tab(text: "Feed"),
             // Tab(text: S.of(context).trending),
             // Tab(text: S.of(context).style),
             // Tab(text: S.of(context).travel),

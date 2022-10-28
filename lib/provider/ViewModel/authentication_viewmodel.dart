@@ -70,10 +70,12 @@ class AuthenTicationVM extends ChangeNotifier {
     if (settings.authorizationStatus == AuthorizationStatus.authorized ||
         settings.authorizationStatus == AuthorizationStatus.provisional) {
       String fcmToken = await messaging.getToken() ?? "";
+      print("FCM_TOKEN: $fcmToken");
       log("check fcmToken ${fcmToken}");
       if (fcmToken != "") {
         if (settings.authorizationStatus == AuthorizationStatus.authorized) {
           log('User granted permission');
+
           await AmitySLEUIKit().registerNotification(
               fcmToken,
               (isSuccess, error) =>
