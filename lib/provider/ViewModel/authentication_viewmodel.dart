@@ -171,7 +171,8 @@ class AuthenTicationVM extends ChangeNotifier {
             isLoading = false;
             notifyListeners();
             log("Navigate To app");
-
+            await AmitySLEUIKit()
+                .joinInitialCommunity(["63563d38d3070ea63b95c92e"]);
             await registerPushNotification();
             Navigator.pushNamedAndRemoveUntil(navigatorKey.currentContext!,
                 LoginRoutes.app, (route) => !Navigator.of(context).canPop());
