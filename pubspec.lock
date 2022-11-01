@@ -11,7 +11,7 @@ packages:
   amity_uikit_beta_service:
     dependency: "direct main"
     description:
-      path: "/Users/au/Downloads/testFluttersampleapp/amity_uikit_beta_service"
+      path: "/Users/au/Developer/amity_uikit_beta_service"
       relative: false
     source: path
     version: "0.2.1"
@@ -561,7 +561,7 @@ packages:
     source: hosted
     version: "4.1.0"
   linkwell:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: linkwell
       url: "https://pub.dartlang.org"
@@ -637,6 +637,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.0"
+  package_info_plus:
+    dependency: "direct main"
+    description:
+      name: package_info_plus
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
+  package_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: package_info_plus_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   path:
     dependency: transitive
     description:

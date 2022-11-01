@@ -38,17 +38,17 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>your usage description here</string>
+	<string>To enable users to record videos/take pictures inside the application. </string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>requires user’s location for better user experience.</string>
+	<string>requires user’s location for analytic purpose.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>requires user’s location for better user experience.</string>
+	<string>requires user’s location for analytic purpose.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>requires user’s location for better user experience.</string>
+	<string>requires user’s location for analytic purpose.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>your usage description here</string>
+	<string>To enable users to record video and post images inside the application. </string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>requires user’s location for better user experience.</string>
+	<string>To enable users to post images inside the application. </string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

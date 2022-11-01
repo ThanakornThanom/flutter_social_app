@@ -131,7 +131,7 @@ class _LoginUiState extends State<LoginUi> {
                       // SizedBox(height: 20),
 
                       CustomButton(
-                        label: 'Google',
+                        label: 'Sign in with Google',
                         radius: 12,
                         borderColor: Colors.black,
                         onTap: () {
@@ -147,7 +147,7 @@ class _LoginUiState extends State<LoginUi> {
                       ),
                       // Platform.isIOS
                       //     ? CustomButton(
-                      //         label: 'Apple',
+                      //         label: 'Sign in with Apple',
                       //         radius: 12,
                       //         borderColor: Colors.black,
                       //         onTap: () async {

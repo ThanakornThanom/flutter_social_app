@@ -1,20 +1,26 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
 import 'package:amity_uikit_beta_service/components/alert_dialog.dart';
-import 'package:crypto/crypto.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:verbose_share_world/model/version_model.dart';
+import 'package:verbose_share_world/repository/version_repo_Imp.dart';
 
+import '../../app_navigation/need_update_screen.dart';
 import '../../auth/login_navigator.dart';
+import '../../utils/version_checker.dart';
 import 'firebase_auth_viewmodel.dart';
 
 class AuthenTicationVM extends ChangeNotifier {
   bool isLoading = false;
   bool isChecking = true;
+  var versionVM = VersionRepoImp();
 
   Future checkIfLoggingIn() async {
     isChecking = true;
@@ -155,39 +161,59 @@ class AuthenTicationVM extends ChangeNotifier {
     }
   }
 
+  Future<VersionModel?> getVersionInfo() async {
+    return await versionVM.getVersion();
+  }
+
   Future<void> enterTheAppWith(
       {required String userId, String? displayName}) async {
     var context = navigatorKey.currentContext!;
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    VersionModel? versionInfo = await getVersionInfo();
+    var appVersion = versionInfo;
+    var currentVersion = packageInfo.version;
 
-    if (userId != "") {
-      log("Navigating...with Displayname: ${displayName}");
-      await AmitySLEUIKit().registerDevice(
-        context: context,
-        userId: userId,
-        displayName: displayName,
-        callback: (isSuccess, error) async {
-          if (isSuccess) {
-            log("login Success..");
-            isLoading = false;
-            notifyListeners();
-            log("Navigate To app");
-            await AmitySLEUIKit()
-                .joinInitialCommunity(["63563d38d3070ea63b95c92e"]);
-            await registerPushNotification();
-            Navigator.pushNamedAndRemoveUntil(navigatorKey.currentContext!,
-                LoginRoutes.app, (route) => !Navigator.of(context).canPop());
-          } else {
-            log("error..");
+    print(appVersion);
+    if (isVersionGreaterThan(appVersion?.version ?? "0.0.0", currentVersion)) {
+      Navigator.pushAndRemoveUntil(
+          navigatorKey.currentContext!,
+          MaterialPageRoute<void>(
+              builder: (BuildContext context) => NeedUpdateScreen(
+                    url: versionInfo!.downloadUrl,
+                  )),
+          (route) => !Navigator.of(context).canPop());
+    } else {
+      if (userId != "") {
+        log("Navigating...with Displayname: ${displayName}");
+        await AmitySLEUIKit().registerDevice(
+          context: context,
+          userId: userId,
+          displayName: displayName,
+          callback: (isSuccess, error) async {
+            if (isSuccess) {
+              log("login Success..");
+              isLoading = false;
+              notifyListeners();
+              log("Navigate To app");
+              await AmitySLEUIKit()
+                  .joinInitialCommunity(["63563d38d3070ea63b95c92e"]);
+              await registerPushNotification();
+              log("Navigate to the app ✅ ");
+              Navigator.pushNamedAndRemoveUntil(navigatorKey.currentContext!,
+                  LoginRoutes.app, (route) => !Navigator.of(context).canPop());
+            } else {
+              log("error..");
 
-            isLoading = false;
-            isChecking = false;
+              isLoading = false;
+              isChecking = false;
 
-            notifyListeners();
-            AmityDialog()
-                .showAlertErrorDialog(title: "error!", message: error!);
-          }
-        },
-      );
+              notifyListeners();
+              AmityDialog()
+                  .showAlertErrorDialog(title: "error!", message: error!);
+            }
+          },
+        );
+      }
     }
   }
 }

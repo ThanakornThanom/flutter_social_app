@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none'
 
-version: 1.0.6+7
+version: 1.0.10+10
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -17,7 +17,7 @@ dependencies:
   # To integrate with local package  your file path here
   amity_uikit_beta_service:
         # path: /Users/mark/Projects/ThanakornThanom--flutter_amity_uikit_beta_service
-        path: /Users/au/Downloads/testFluttersampleapp/amity_uikit_beta_service
+        path: /Users/au/Developer/amity_uikit_beta_service
 
   cupertino_icons: ^1.0.3
   animation_wrappers: ^3.0.0
@@ -50,6 +50,8 @@ dependencies:
   firebase_messaging: ^13.0.2
   sign_in_with_apple: ^4.1.0
   crypto: ^3.0.1
+  package_info_plus: ^3.0.1
+  linkwell: ^2.0.6
 
 
 
