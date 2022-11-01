@@ -75,20 +75,31 @@ class AuthenTicationVM extends ChangeNotifier {
     log("check notification setting ${settings.authorizationStatus}");
     if (settings.authorizationStatus == AuthorizationStatus.authorized ||
         settings.authorizationStatus == AuthorizationStatus.provisional) {
-      String fcmToken = await messaging.getToken() ?? "";
-      print("FCM_TOKEN: $fcmToken");
-      log("check fcmToken ${fcmToken}");
-      if (fcmToken != "") {
-        if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-          log('User granted permission');
+      String? fcmToken =
+          await messaging.getToken().onError((error, stackTrace) {
+        log("❌${error.toString()}");
+      });
+      if (fcmToken != null) {
+        print("FCM_TOKEN: $fcmToken");
+        log("check fcmToken ${fcmToken}");
+        if (fcmToken != "") {
+          if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+            log('User granted permission');
 
-          await AmitySLEUIKit().registerNotification(
-              fcmToken,
-              (isSuccess, error) =>
-                  log("register ASC Noti success ${isSuccess}"));
-        } else {
-          log('User declined or has not accepted permission');
+            await AmitySLEUIKit().registerNotification(fcmToken,
+                (isSuccess, error) {
+              if (error == null) {
+                log("register ASC Noti success ${isSuccess}");
+              } else {
+                log("register ASC Noti fail ${isSuccess}");
+              }
+            });
+          } else {
+            log('User declined or has not accepted permission');
+          }
         }
+      } else {
+        log('Unable to get FCM token');
       }
     }
   }
@@ -197,7 +208,11 @@ class AuthenTicationVM extends ChangeNotifier {
               log("Navigate To app");
               await AmitySLEUIKit()
                   .joinInitialCommunity(["63563d38d3070ea63b95c92e"]);
-              await registerPushNotification();
+              try {
+                await registerPushNotification();
+              } catch (e) {
+                print(e);
+              }
               log("Navigate to the app ✅ ");
               Navigator.pushNamedAndRemoveUntil(navigatorKey.currentContext!,
                   LoginRoutes.app, (route) => !Navigator.of(context).canPop());
