@@ -1,4 +1,4 @@
-# verbose_share_world
+# flutter social app 
 
 A new Flutter project.
 
