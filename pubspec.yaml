@@ -52,6 +52,7 @@ dependencies:
   crypto: ^3.0.1
   package_info_plus: ^3.0.1
   linkwell: ^2.0.6
+  webview_flutter: ^4.0.2
 
 
 

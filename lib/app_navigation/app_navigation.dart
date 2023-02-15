@@ -1,4 +1,5 @@
 import 'package:amity_uikit_beta_service/amity_sle_uikit.dart';
+import 'package:amity_uikit_beta_service/view/chat/chat_friend_tab.dart';
 import 'package:amity_uikit_beta_service/view/notification/notification_all_tab.dart';
 import 'package:amity_uikit_beta_service/view/notification/notification_page.dart';
 
@@ -33,7 +34,7 @@ class _AppNavigationState extends State<AppNavigation> {
     // CommunityScreen(community: AmityCommunity(),),
     CommunityTabbar(),
     NotificationPage(),
-    // AmitySLEChannelScreen()
+    AmitySLEChannelScreen(),
     UserProfileScreen(
       amityUser: AmitySLEUIKit().getCurrentUser(),
       isEnableAppbar: false,
@@ -62,13 +63,13 @@ class _AppNavigationState extends State<AppNavigation> {
       icon: Icon(Icons.notifications),
       label: 'Notification',
     ),
-    // BottomNavigationBarItem(
-    //   icon: FaIcon(
-    //     FontAwesomeIcons.comments,
-    //     size: 20,
-    //   ),
-    //   label: 'Chat',
-    // ),
+    BottomNavigationBarItem(
+      icon: FaIcon(
+        FontAwesomeIcons.comments,
+        size: 20,
+      ),
+      label: 'Chat',
+    ),
     BottomNavigationBarItem(
       icon: Icon(Icons.person),
       label: 'Profile',
@@ -94,7 +95,7 @@ class _AppNavigationState extends State<AppNavigation> {
       "Explore",
       // S.of(context).video,
       S.of(context).notifications,
-      // S.of(context).chats,
+      S.of(context).chats,
       "My Profile"
     ];
 
